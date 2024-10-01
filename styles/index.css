@@ -8,3 +8,8 @@ html,
 body {
   height: 100;
 }
+
+canvas {
+  display: block;
+  background-color: #000;
+}
