@@ -1,10 +1,12 @@
 export class Fighter {
-  constructor(position, width, height, velocity, color) {
+  constructor(name, position, width, height, velocity, color) {
+    this.name = name;
     this.position = { ...position };
     this.width = width;
     this.height = height;
     this.velocity = velocity;
     this.color = color;
+    this.originPositionY = this.position.y;
   }
 
   draw(ctx) {
@@ -14,5 +16,9 @@ export class Fighter {
 
   update(ctx) {
     this.draw(ctx);
+
+    if (this.position.y + this.height < ctx.canvas.height) {
+      this.position.y += 10 * 0.5;
+    }
   }
 }
