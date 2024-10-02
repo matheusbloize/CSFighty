@@ -1,4 +1,4 @@
-export function isColliding(x, width, canvasWidth) {
+export function isFighterCollidingBorder(x, width, canvasWidth) {
   if (x + width > canvasWidth || x < 0) {
     return true;
   }
