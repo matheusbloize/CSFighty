@@ -1,13 +1,16 @@
 import { Fighter } from './entities/Fighter.js';
+import { SpecialAttack } from './entities/SpecialAttack.js';
+import { chargeSpecialBar } from './utils/chargeSpecialBar.js';
 import { isFighterCollidingAttack } from './utils/isFighterCollidingAttack.js';
 import { isFighterCollidingBorder } from './utils/isFighterCollidingBorder.js';
+import { specialAttackHitOpponent } from './utils/specialAttackHitOpponent.js';
+import { specialReset } from './utils/specialReset.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const defaultWidth = 50;
 const defaultHeight = 100;
 const widthSpace = 40;
-
 const entities = [
   new Fighter(
     'player',
@@ -39,7 +42,16 @@ const keys = {
   space: {
     pressed: false,
   },
+  r: {
+    pressed: false,
+  },
 };
+const specialAttacks = [];
+const damageSpec = {
+  attack: 10,
+  special: 30,
+};
+
 let lastKey;
 let jumpCooldown = {
   active: true,
@@ -48,6 +60,10 @@ let jumpCooldown = {
 let attackCooldown = {
   active: true,
   time: 100,
+};
+let specialAttackCooldown = {
+  active: true,
+  time: 1000,
 };
 ctx.font = '16px Verdana';
 
@@ -63,7 +79,7 @@ function animate() {
         entity.position.y -= 10;
 
         // apply gravity force
-        setTimeout(() => (keys.w.pressed = false), 200);
+        setTimeout(() => (keys.w.pressed = false), jumpCooldown.time);
 
         // move left or right while jumping
         if (keys.a.pressed && lastKey === 'a') {
@@ -92,7 +108,15 @@ function animate() {
           setTimeout(() => {
             attackCooldown.active = true;
           }, attackCooldown.time);
-          entities[1].life -= 10;
+          // apply damage
+          entities[1].life -= damageSpec.attack;
+          // increase special bar
+          if (entity.specialBar + damageSpec.attack < entity.specialBarLimit) {
+            entity.specialBar += damageSpec.attack;
+          } else {
+            const fillSpecialBar = entity.specialBarLimit - entity.specialBar;
+            entity.specialBar += fillSpecialBar;
+          }
         }
       }
       if (keys.a.pressed && lastKey === 'a') {
@@ -108,14 +132,46 @@ function animate() {
           entity.position.x += 2;
         }
       }
+      if (keys.r.pressed) {
+        if (entity.specialBar === entity.specialBarLimit) {
+          specialAttacks.push(new SpecialAttack(entity));
+          entity.specialBar = 0;
+        }
+        setTimeout(() => (keys.r.pressed = false), 0);
+      }
     }
 
     entity.update(ctx);
   }
+
+  // special attacks loop
+  specialAttacks.forEach((special, index) => {
+    // special attack gets removed from array when crosses canvas or hit opponent
+    if (special.x + special.width >= canvas.width) {
+      setTimeout(() => {
+        specialReset(special, specialAttacks, index);
+      }, 0);
+    }
+
+    if (specialAttackHitOpponent(special, entities[1])) {
+      entities[1].life -= damageSpec.special;
+      setTimeout(() => {
+        specialReset(special, specialAttacks, index);
+      }, 0);
+    }
+
+    special.update(ctx);
+  });
+
+  // draw players info
   ctx.fillStyle = 'limegreen';
   ctx.fillText(`${entities[0].name} - ${entities[0].life}`, 30, 20 + 16);
+  ctx.fillText(`${entities[0].specialBar}`, 30, (20 + 16) * 2);
   ctx.fillText(`${entities[1].name} - ${entities[1].life}`, canvas.width - 130, 20 + 16);
 }
+
+// increase special bar by 1 overtime
+setInterval(() => chargeSpecialBar(entities[0]), 100);
 
 requestAnimationFrame(animate);
 
@@ -126,6 +182,10 @@ document.addEventListener('keydown', ({ repeat, key }) => {
   }
   if (repeat && key.toLowerCase() === ' ') {
     keys.space.pressed = false;
+    return;
+  }
+  if (repeat && key.toLowerCase() === 'r') {
+    keys.r.pressed = false;
     return;
   }
   switch (key.toLowerCase()) {
@@ -152,6 +212,16 @@ document.addEventListener('keydown', ({ repeat, key }) => {
     case ' ': {
       if (attackCooldown.active === true) {
         keys.space.pressed = true;
+      }
+      break;
+    }
+    case 'r': {
+      if (specialAttackCooldown.active === true) {
+        keys.r.pressed = true;
+        specialAttackCooldown.active = false;
+        setTimeout(() => {
+          specialAttackCooldown.active = true;
+        }, specialAttackCooldown.time);
       }
       break;
     }

@@ -14,6 +14,8 @@ export class Fighter {
       height: 30,
     };
     this.life = 100;
+    this.specialBar = 0;
+    this.specialBarLimit = 100;
   }
 
   draw(ctx) {
