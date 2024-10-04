@@ -11,22 +11,28 @@ const ctx = canvas.getContext('2d');
 const defaultWidth = 50;
 const defaultHeight = 100;
 const widthSpace = 40;
+const differenceSpace = 32;
 const entities = [
   new Fighter(
     'player',
-    { x: widthSpace, y: canvas.height - defaultHeight },
+    { x: widthSpace, y: canvas.height - defaultHeight - differenceSpace },
     defaultWidth,
     defaultHeight,
     1,
-    'red'
+    'red',
+    differenceSpace
   ),
   new Fighter(
     'enemy',
-    { x: canvas.width - widthSpace - defaultWidth, y: canvas.height - defaultHeight },
+    {
+      x: canvas.width - widthSpace - defaultWidth,
+      y: canvas.height - defaultHeight - differenceSpace,
+    },
     defaultWidth,
     defaultHeight,
     1,
-    'blue'
+    'blue',
+    differenceSpace
   ),
 ];
 const keys = {
@@ -51,6 +57,19 @@ const damageSpec = {
   attack: 10,
   special: 30,
 };
+const countdown = document.querySelector('#hud .hud_time');
+const firstFighterHealthBar = document.querySelector(
+  '#hud .hud_fighter-1_health-bar_content'
+);
+const secondFighterHealthBar = document.querySelector(
+  '#hud .hud_fighter-2_health-bar_content'
+);
+const firstFighterSpecialBar = document.querySelector(
+  '#special-bar .special-bar_fighter-1_content'
+);
+const secondFighterSpecialBar = document.querySelector(
+  '#special-bar .special-bar_fighter-2_content'
+);
 
 let lastKey;
 let jumpCooldown = {
@@ -66,6 +85,10 @@ let specialAttackCooldown = {
   time: 1000,
 };
 ctx.font = '16px Verdana';
+firstFighterHealthBar.style.width = '100%';
+secondFighterHealthBar.style.width = '100%';
+firstFighterSpecialBar.style.width = '0%';
+secondFighterSpecialBar.style.width = '0%';
 
 function animate() {
   requestAnimationFrame(animate);
@@ -109,13 +132,23 @@ function animate() {
             attackCooldown.active = true;
           }, attackCooldown.time);
           // apply damage
-          entities[1].life -= damageSpec.attack;
+          if (entities[1].life - damageSpec.attack >= 0) {
+            entities[1].life -= damageSpec.attack;
+            secondFighterHealthBar.style.width = `${
+              Number(secondFighterHealthBar.style.width.split('%')[0]) - damageSpec.attack
+            }%`;
+            if (entities[1].life == 0) {
+              setTimeout(() => {
+                secondFighterHealthBar.style.border = 'none';
+              }, 400);
+            }
+          }
           // increase special bar
           if (entity.specialBar + damageSpec.attack < entity.specialBarLimit) {
-            entity.specialBar += damageSpec.attack;
+            setTimeout(() => (entity.specialBar += damageSpec.attack), 0);
           } else {
             const fillSpecialBar = entity.specialBarLimit - entity.specialBar;
-            entity.specialBar += fillSpecialBar;
+            setTimeout(() => (entity.specialBar += fillSpecialBar), 0);
           }
         }
       }
@@ -136,6 +169,7 @@ function animate() {
         if (entity.specialBar === entity.specialBarLimit) {
           specialAttacks.push(new SpecialAttack(entity));
           entity.specialBar = 0;
+          firstFighterSpecialBar.parentElement.classList.remove('special-bar_charged');
         }
         setTimeout(() => (keys.r.pressed = false), 0);
       }
@@ -154,7 +188,19 @@ function animate() {
     }
 
     if (specialAttackHitOpponent(special, entities[1])) {
-      entities[1].life -= damageSpec.special;
+      if (entities[1].life - damageSpec.special >= 0) {
+        entities[1].life -= damageSpec.special;
+        secondFighterHealthBar.style.width = `${
+          Number(secondFighterHealthBar.style.width.split('%')[0]) - damageSpec.special
+        }%`;
+      } else {
+        entities[1].life = 0;
+        secondFighterHealthBar.style.width = `${entities[1].life}%`;
+        setTimeout(() => {
+          secondFighterHealthBar.style.border = 'none';
+        }, 400);
+      }
+      entities[0].specialBar += 20;
       setTimeout(() => {
         specialReset(special, specialAttacks, index);
       }, 0);
@@ -162,16 +208,22 @@ function animate() {
 
     special.update(ctx);
   });
-
-  // draw players info
-  ctx.fillStyle = 'limegreen';
-  ctx.fillText(`${entities[0].name} - ${entities[0].life}`, 30, 20 + 16);
-  ctx.fillText(`${entities[0].specialBar}`, 30, (20 + 16) * 2);
-  ctx.fillText(`${entities[1].name} - ${entities[1].life}`, canvas.width - 130, 20 + 16);
 }
 
 // increase special bar by 1 overtime
-setInterval(() => chargeSpecialBar(entities[0]), 100);
+const specialBarInterval = setInterval(() => {
+  chargeSpecialBar(entities[0], firstFighterSpecialBar);
+  chargeSpecialBar(entities[1], secondFighterSpecialBar);
+}, 100);
+// start countdown
+const countdownInterval = setInterval(() => {
+  // end match
+  if (countdown.innerHTML <= '0') {
+    clearInterval(countdownInterval);
+  } else {
+    countdown.innerHTML = Number(countdown.innerHTML) - 1;
+  }
+}, 1000);
 
 requestAnimationFrame(animate);
 
