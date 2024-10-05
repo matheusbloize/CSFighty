@@ -24,12 +24,12 @@ canvas {
 
 #hud {
   position: absolute;
-  margin: 2.4em 1em;
+  margin: 1.75em 1em;
   max-width: 64em;
   width: 100%;
   display: flex;
   justify-content: space-around;
-  align-items: self-start;
+  align-items: baseline;
   height: 6em;
   color: #FFFFFF;
 }
@@ -39,7 +39,11 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3.5em;
+  font-size: 3em;
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
 }
 
 .hud_fighter-1,
