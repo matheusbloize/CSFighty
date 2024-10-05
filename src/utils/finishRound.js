@@ -27,28 +27,20 @@ export function finishRound(battleInfo) {
     console.log(battleInfo.winners);
 
     // restart round time
-    battleInfo.time.duration = 99;
+    battleInfo.matchTime.duration = 99;
 
-    // set countdown interval after 2 seconds
+    // set countdown interval and fighters health bars style after 2 seconds
     setTimeout(() => {
-      manageInterval(
-        'set',
-        battleInfo.intervals,
-        'countdown',
-        battleInfo.references,
-        1000
-      );
+      manageInterval('set', battleInfo.intervals, 'countdown', battleInfo, 1000);
+      battleInfo.firstFighterHealthBar.style.width = '100%';
+      battleInfo.secondFighterHealthBar.style.width = '100%';
+      battleInfo.firstFighterHealthBar.style.border = '2px solid';
+      battleInfo.secondFighterHealthBar.style.border = '2px solid';
     }, 2000);
 
     // start round and set special bar interval after 3 seconds
     setTimeout(() => {
-      manageInterval(
-        'set',
-        battleInfo.intervals,
-        'specialBar',
-        battleInfo.references,
-        100
-      );
+      manageInterval('set', battleInfo.intervals, 'specialBar', battleInfo, 100);
       battleReset(battleInfo);
     }, 3000);
   } else {

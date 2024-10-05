@@ -16,22 +16,7 @@ function content(type, references) {
         ) {
           references.actualRound.finished = true;
           finishRound({
-            firstFighter: references.firstFighter,
-            secondFighter: references.secondFighter,
-            time: references.matchTime,
-            ctx: references.ctx,
-            actualRound: references.actualRound,
-            healthBar: {
-              firstFighter: references.firstFighterHealthBar,
-              secondFighter: references.secondFighterHealthBar,
-            },
-            specialBar: {
-              firstFighter: references.firstFighterSpecialBar,
-              secondFighter: references.secondFighterSpecialBar,
-            },
-            intervals: references.intervals,
-            references: references,
-            winners: references.winners,
+            ...references,
           });
         }
       } else {

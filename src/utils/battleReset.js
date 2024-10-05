@@ -3,8 +3,10 @@ export function battleReset({
   firstFighter,
   secondFighter,
   ctx,
-  healthBar,
-  specialBar,
+  firstFighterHealthBar,
+  secondFighterHealthBar,
+  firstFighterSpecialBar,
+  secondFighterSpecialBar,
 }) {
   const defaultWidth = 50;
   const defaultHeight = 100;
@@ -36,10 +38,8 @@ export function battleReset({
   // health bar fighters
   firstFighter.life = 100;
   secondFighter.life = 100;
-  healthBar.firstFighter.style.width = '100%';
-  healthBar.secondFighter.style.width = '100%';
-  healthBar.firstFighter.style.border = '2px solid';
-  healthBar.secondFighter.style.border = '2px solid';
-  specialBar.firstFighter.style.width = '0%';
-  specialBar.secondFighter.style.width = '0%';
+
+  // special bar style
+  firstFighterSpecialBar.style.width = '0%';
+  secondFighterSpecialBar.style.width = '0%';
 }

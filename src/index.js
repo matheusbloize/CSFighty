@@ -194,22 +194,7 @@ function animate() {
                 }, 400);
                 actualRound.finished = true;
                 finishRound({
-                  firstFighter: entities[0],
-                  secondFighter: entities[1],
-                  time: matchTime,
-                  ctx,
-                  actualRound,
-                  healthBar: {
-                    firstFighter: firstFighterHealthBar,
-                    secondFighter: secondFighterHealthBar,
-                  },
-                  specialBar: {
-                    firstFighter: firstFighterSpecialBar,
-                    secondFighter: secondFighterSpecialBar,
-                  },
-                  intervals,
-                  references,
-                  winners,
+                  ...references,
                 });
               }
             } else {
@@ -219,22 +204,7 @@ function animate() {
                 }, 400);
                 actualRound.finished = true;
                 finishRound({
-                  firstFighter: entities[0],
-                  secondFighter: entities[1],
-                  time: matchTime,
-                  ctx,
-                  actualRound,
-                  healthBar: {
-                    firstFighter: firstFighterHealthBar,
-                    secondFighter: secondFighterHealthBar,
-                  },
-                  specialBar: {
-                    firstFighter: firstFighterSpecialBar,
-                    secondFighter: secondFighterSpecialBar,
-                  },
-                  intervals,
-                  references,
-                  winners,
+                  ...references,
                 });
               }
             }
@@ -295,22 +265,7 @@ function animate() {
             }, 400);
             actualRound.finished = true;
             finishRound({
-              firstFighter: entities[0],
-              secondFighter: entities[1],
-              time: matchTime,
-              ctx,
-              actualRound,
-              healthBar: {
-                firstFighter: firstFighterHealthBar,
-                secondFighter: secondFighterHealthBar,
-              },
-              specialBar: {
-                firstFighter: firstFighterSpecialBar,
-                secondFighter: secondFighterSpecialBar,
-              },
-              intervals,
-              references,
-              winners,
+              ...references,
             });
           }
         } else {
@@ -321,22 +276,7 @@ function animate() {
           }, 400);
           actualRound.finished = true;
           finishRound({
-            firstFighter: entities[0],
-            secondFighter: entities[1],
-            time: matchTime,
-            ctx,
-            actualRound,
-            healthBar: {
-              firstFighter: firstFighterHealthBar,
-              secondFighter: secondFighterHealthBar,
-            },
-            specialBar: {
-              firstFighter: firstFighterSpecialBar,
-              secondFighter: secondFighterSpecialBar,
-            },
-            intervals,
-            references,
-            winners,
+            ...references,
           });
         }
         entities[0].specialBar += 20;
