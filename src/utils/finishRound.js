@@ -8,7 +8,23 @@ export function finishRound(battleInfo) {
 
   if (battleInfo.actualRound.number == 1 || battleInfo.actualRound.number == 2) {
     // add winner
-    battleInfo.winners[`round${battleInfo.actualRound.number}`] = battleInfo.healthBar.firstFighter == 0 ? battleInfo.secondFighter.name : battleInfo.firstFighter.name;
+    let winner = null;
+    if (battleInfo.firstFighter.life === 0 || battleInfo.secondFighter.life === 0) {
+      winner =
+        battleInfo.firstFighter.life === 0
+          ? battleInfo.secondFighter.name
+          : battleInfo.firstFighter.name;
+    } else {
+      winner =
+        battleInfo.firstFighter.life < battleInfo.secondFighter.life
+          ? battleInfo.secondFighter.name
+          : battleInfo.firstFighter.name;
+    }
+
+    if (winner !== null) {
+      battleInfo.winners[`round${battleInfo.actualRound.number}`] = winner;
+    }
+    console.log(battleInfo.winners);
 
     // restart round time
     battleInfo.time.duration = 99;

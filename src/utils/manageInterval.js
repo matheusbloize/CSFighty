@@ -9,25 +9,31 @@ function content(type, references) {
       // end match
       if (references.matchTime.duration <= 0) {
         references.countdownDOM.innerHTML = 0;
-        references.actualRound.finished = true;
-        finishRound({
-          firstFighter: references.firstFighter,
-          secondFighter: references.secondFighter,
-          time: references.matchTime,
-          ctx: references.ctx,
-          actualRound: references.actualRound,
-          healthBar: {
-            firstFighter: references.firstFighterHealthBar,
-            secondFighter: references.secondFighterHealthBar,
-          },
-          specialBar: {
-            firstFighter: references.firstFighterSpecialBar,
-            secondFighter: references.secondFighterSpecialBar,
-          },
-          intervals: references.intervals,
-          references: references,
-          winners: references.winners,
-        });
+        // prevent draw if none fighter hit each other
+        if (
+          references.firstFighter.life < references.secondFighter.life ||
+          references.firstFighter.life > references.secondFighter.life
+        ) {
+          references.actualRound.finished = true;
+          finishRound({
+            firstFighter: references.firstFighter,
+            secondFighter: references.secondFighter,
+            time: references.matchTime,
+            ctx: references.ctx,
+            actualRound: references.actualRound,
+            healthBar: {
+              firstFighter: references.firstFighterHealthBar,
+              secondFighter: references.secondFighterHealthBar,
+            },
+            specialBar: {
+              firstFighter: references.firstFighterSpecialBar,
+              secondFighter: references.secondFighterSpecialBar,
+            },
+            intervals: references.intervals,
+            references: references,
+            winners: references.winners,
+          });
+        }
       } else {
         // decrease time by 1
         references.countdownDOM.innerHTML = references.matchTime.duration--;
