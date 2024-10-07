@@ -294,7 +294,7 @@ function animate() {
   ctx.fillText(
     `actual round ${actualRound.number}`,
     canvas.width / 2 - differenceSpace - differenceSpace / 2,
-    20
+    canvas.height / 6
   );
 }
 

@@ -54,6 +54,7 @@ canvas {
   flex-direction: column;
   padding: .75em;
   gap: .75em;
+  position: relative;
 }
 
 .hud_fighter-1 {
@@ -62,6 +63,52 @@ canvas {
 
 .hud_fighter-2 {
   padding-right: 2em;
+}
+
+.hud_fighter-1_round-count,
+.hud_fighter-2_round-count {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  top: 0;
+}
+
+.hud_fighter-1_round-count_1,
+.hud_fighter-1_round-count_2,
+.hud_fighter-2_round-count_1,
+.hud_fighter-2_round-count_2 {
+  position: absolute;
+  border: 2px solid #333333;
+  width: 1em;
+  height: 1em;
+  top: -.5em;
+  outline: 1px solid #333333;
+}
+
+.hud_fighter-1_round-count {
+  right: 0;
+  transform: skew(10deg);
+}
+
+.hud_fighter-1_round-count_1 {
+  right: 1em;
+}
+
+.hud_fighter-1_round-count_2 {
+  right: 2.5em;
+}
+
+.hud_fighter-2_round-count {
+  left: 0;
+  transform: skew(-10deg);
+}
+
+.hud_fighter-2_round-count_1 {
+  left: 1em;
+}
+
+.hud_fighter-2_round-count_2 {
+  left: 2.5em;
 }
 
 .hud_fighter-1_health-bar,
@@ -214,7 +261,9 @@ canvas {
 /* animations */
 
 @keyframes glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: none;
   }
 

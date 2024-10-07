@@ -23,6 +23,13 @@ export function finishRound(battleInfo) {
 
     if (winner !== null) {
       battleInfo.winners[`round${battleInfo.actualRound.number}`] = winner;
+      // add winner hud
+      const fighterRoundHud = document.querySelector(
+        `#hud .hud_fighter-${winner === 'player' ? '1' : '2'}_round-count_${
+          battleInfo.actualRound.number
+        }`
+      );
+      fighterRoundHud.style.backgroundColor = '#FFFFFF';
     }
     console.log(battleInfo.winners);
 
