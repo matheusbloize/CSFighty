@@ -44,6 +44,9 @@ export function finishRound(battleInfo) {
     hasMatchWinner = true;
   }
 
+  // remove time pulsing
+  battleInfo.countdownDOM.classList.remove('hud_time-pulsing');
+
   // restart round variables
   if (!hasMatchWinner) {
     // restart round time

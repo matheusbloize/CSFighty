@@ -16,7 +16,7 @@ canvas {
 }
 
 .pixel {
-  font-family: "Pixelify Sans", sans-serif;
+  font-family: 'Pixelify Sans', sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -31,7 +31,7 @@ canvas {
   justify-content: space-around;
   align-items: baseline;
   height: 6em;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .hud_time {
@@ -40,10 +40,14 @@ canvas {
   justify-content: center;
   align-items: center;
   font-size: 3em;
-  font-family: "Oswald", sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
+}
+
+.hud_time-pulsing {
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .hud_fighter-1,
@@ -52,8 +56,8 @@ canvas {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: .75em;
-  gap: .75em;
+  padding: 0.75em;
+  gap: 0.75em;
   position: relative;
 }
 
@@ -81,8 +85,9 @@ canvas {
   border: 2px solid #333333;
   width: 1em;
   height: 1em;
-  top: -.5em;
+  top: -0.5em;
   outline: 1px solid #333333;
+  transition: 0.5s;
 }
 
 .hud_fighter-1_round-count {
@@ -131,10 +136,10 @@ canvas {
 
 .hud_fighter-1_health-bar::before,
 .hud_fighter-2_health-bar::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
-  left: .1em;
+  left: 0.1em;
   width: 99%;
   height: 100%;
 }
@@ -155,7 +160,7 @@ canvas {
   height: 100%;
   z-index: 1;
   box-shadow: 0 0 12px rgb(255 255 255 / 50%) inset;
-  transition: width .5s;
+  transition: width 0.5s;
   border: 2px solid;
 }
 
@@ -176,15 +181,13 @@ canvas {
 
 .hud_fighter-1_name {
   text-align: left;
-  margin-left: .5em;
+  margin-left: 0.5em;
 }
 
 .hud_fighter-2_name {
   text-align: right;
-  margin-right: .5em;
+  margin-right: 0.5em;
 }
-
-/*  */
 
 #special-bar {
   position: absolute;
@@ -219,7 +222,7 @@ canvas {
 
 .special-bar_fighter-1::before,
 .special-bar_fighter-2::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   width: 100%;
@@ -255,13 +258,12 @@ canvas {
 }
 
 .special-bar_charged {
-  animation: glow .75s ease infinite;
+  animation: glow 0.75s ease infinite;
 }
 
 /* animations */
 
 @keyframes glow {
-
   0%,
   100% {
     filter: none;
@@ -269,5 +271,16 @@ canvas {
 
   50% {
     filter: brightness(1.5);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
   }
 }

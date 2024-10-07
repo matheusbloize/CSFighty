@@ -9,6 +9,7 @@ function content(type, references) {
       // end match
       if (references.matchTime.duration <= 0) {
         references.countdownDOM.innerHTML = 0;
+        references.countdownDOM.classList.add('hud_time-pulsing');
         // prevent draw if none fighter hit each other
         if (
           references.firstFighter.life < references.secondFighter.life ||
