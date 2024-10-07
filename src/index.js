@@ -208,12 +208,22 @@ function animate() {
                 });
               }
             }
-            // increase special bar
+            // increase player special bar
             if (entity.specialBar + damageSpec.attack < entity.specialBarLimit) {
               setTimeout(() => (entity.specialBar += damageSpec.attack), 0);
             } else {
               const fillSpecialBar = entity.specialBarLimit - entity.specialBar;
               setTimeout(() => (entity.specialBar += fillSpecialBar), 0);
+            }
+            // increase enemy special bar
+            if (
+              entities[1].specialBar + damageSpec.attack <
+              entities[1].specialBarLimit
+            ) {
+              setTimeout(() => (entities[1].specialBar += damageSpec.attack), 0);
+            } else {
+              const fillSpecialBar = entities[1].specialBarLimit - entities[1].specialBar;
+              setTimeout(() => (entities[1].specialBar += fillSpecialBar), 0);
             }
           }
         }
