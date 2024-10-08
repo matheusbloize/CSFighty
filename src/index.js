@@ -1,7 +1,8 @@
 import { Fighter } from './entities/Fighter.js';
 import { SpecialAttack } from './entities/SpecialAttack.js';
+import { basicAttack } from './utils/basicAttack.js';
+import { enemyAction } from './utils/enemyAction.js';
 import { finishRound } from './utils/finishRound.js';
-import { isFighterCollidingAttack } from './utils/isFighterCollidingAttack.js';
 import { isFighterCollidingBorder } from './utils/isFighterCollidingBorder.js';
 import { manageInterval } from './utils/manageInterval.js';
 import { specialAttackHitOpponent } from './utils/specialAttackHitOpponent.js';
@@ -110,6 +111,7 @@ const references = {
   intervals,
   winners,
   specialAttacks,
+  damageSpec,
 };
 
 ctx.font = '16px Verdana';
@@ -142,6 +144,8 @@ function defeatEnemy() {
     ...references,
   });
 }
+
+setInterval(() => !actualRound.finished && enemyAction({ ...references }), 1000);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -183,52 +187,10 @@ function animate() {
           }
         }
         if (keys.space.pressed && attackCooldown.active) {
-          entity.attack(ctx);
           keys.space.pressed = false;
           attackCooldown.active = false;
           setTimeout(() => (attackCooldown.active = true), attackCooldown.time);
-          if (
-            isFighterCollidingAttack(
-              entity.direction,
-              entity.attackBox.x,
-              entity.attackBox.width,
-              entities[1].position.x,
-              entities[1].width
-            )
-          ) {
-            // apply damage
-            if (entities[1].life - damageSpec.attack >= 0) {
-              entities[1].life -= damageSpec.attack;
-              secondFighterHealthBar.style.width = `${
-                Number(secondFighterHealthBar.style.width.split('%')[0]) -
-                damageSpec.attack
-              }%`;
-              if (entities[1].life == 0) {
-                defeatEnemy();
-              }
-            } else {
-              if (secondFighterHealthBar.style.border != 'none') {
-                defeatEnemy();
-              }
-            }
-            // increase player special bar
-            if (entity.specialBar + damageSpec.attack < entity.specialBarLimit) {
-              setTimeout(() => (entity.specialBar += damageSpec.attack), 0);
-            } else {
-              const fillSpecialBar = entity.specialBarLimit - entity.specialBar;
-              setTimeout(() => (entity.specialBar += fillSpecialBar), 0);
-            }
-            // increase enemy special bar
-            if (
-              entities[1].specialBar + damageSpec.attack <
-              entities[1].specialBarLimit
-            ) {
-              setTimeout(() => (entities[1].specialBar += damageSpec.attack), 0);
-            } else {
-              const fillSpecialBar = entities[1].specialBarLimit - entities[1].specialBar;
-              setTimeout(() => (entities[1].specialBar += fillSpecialBar), 0);
-            }
-          }
+          basicAttack(entity, entities[1], secondFighterHealthBar, references);
         }
         if (keys.a.pressed && lastKey === 'a') {
           if (

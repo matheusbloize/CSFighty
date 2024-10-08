@@ -18,14 +18,6 @@ export function finishRound(battleInfo) {
 
   if (winner !== null) {
     battleInfo.winners[`round${battleInfo.actualRound.number}`] = winner;
-
-    // add winner hud
-    const fighterRoundHud = document.querySelector(
-      `#hud .hud_fighter-${winner === 'player' ? '1' : '2'}_round-count_${
-        battleInfo.actualRound.number
-      }`
-    );
-    setTimeout(() => (fighterRoundHud.style.backgroundColor = '#FFFFFF'), 2000);
   }
 
   // check if match ended
@@ -39,6 +31,14 @@ export function finishRound(battleInfo) {
     battleInfo.winners[winner] === battleInfo.secondFighter.name &&
       secondFighterRoundsWon++;
   }
+
+  // add winner hud
+  const fighterRoundHud = document.querySelector(
+    `#hud .hud_fighter-${winner === 'player' ? '1' : '2'}_round-count_${
+      winner === 'player' ? firstFighterRoundsWon : secondFighterRoundsWon
+    }`
+  );
+  setTimeout(() => (fighterRoundHud.style.backgroundColor = '#FFFFFF'), 2000);
 
   if (firstFighterRoundsWon === 2 || secondFighterRoundsWon === 2) {
     hasMatchWinner = true;
