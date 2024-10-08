@@ -13,10 +13,11 @@ const defaultWidth = 50;
 const defaultHeight = 100;
 const widthSpace = 40;
 const differenceSpace = 32;
+const floorPositionY = canvas.height - defaultHeight - differenceSpace;
 const entities = [
   new Fighter(
     'player',
-    { x: widthSpace, y: canvas.height - defaultHeight - differenceSpace },
+    { x: widthSpace, y: floorPositionY },
     defaultWidth,
     defaultHeight,
     1,
@@ -27,7 +28,7 @@ const entities = [
     'enemy',
     {
       x: canvas.width - widthSpace - defaultWidth,
-      y: canvas.height - defaultHeight - differenceSpace,
+      y: floorPositionY,
     },
     defaultWidth,
     defaultHeight,
@@ -73,17 +74,9 @@ const secondFighterSpecialBar = document.querySelector(
 );
 
 let lastKey;
-let jumpCooldown = {
-  active: true,
-  time: 200,
-};
 let attackCooldown = {
   active: true,
-  time: 100,
-};
-let specialAttackCooldown = {
-  active: true,
-  time: 1000,
+  time: 200,
 };
 let matchTime = {
   duration: matchTimeDuration - 1,
@@ -139,6 +132,16 @@ manageInterval(
   100
 );
 
+function defeatEnemy() {
+  setTimeout(() => {
+    secondFighterHealthBar.style.border = 'none';
+  }, 400);
+  actualRound.finished = true;
+  finishRound({
+    ...references,
+  });
+}
+
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -148,11 +151,8 @@ function animate() {
       // player loop
       if (entity.name == 'player') {
         // move player
-        if (keys.w.pressed) {
-          entity.position.y -= 10;
-
-          // apply gravity force
-          setTimeout(() => (keys.w.pressed = false), jumpCooldown.time);
+        if (keys.w.pressed && entity.position.y == floorPositionY) {
+          entity.velocity -= 20;
 
           // move left or right while jumping
           if (keys.a.pressed && lastKey === 'a') {
@@ -168,19 +168,18 @@ function animate() {
               entity.position.x += 1;
             }
           }
-        } else if (keys.space.pressed && attackCooldown.active) {
+        }
+        if (keys.space.pressed && attackCooldown.active) {
           entity.attack(ctx);
-          setTimeout(() => (keys.space.pressed = false), attackCooldown.time);
+          keys.space.pressed = false;
+          attackCooldown.active = false;
+          setTimeout(() => (attackCooldown.active = true), attackCooldown.time);
           if (
             isFighterCollidingAttack(
               entity.attackBox.x + entity.attackBox.width,
               entities[1].position.x
             )
           ) {
-            attackCooldown.active = false;
-            setTimeout(() => {
-              attackCooldown.active = true;
-            }, attackCooldown.time);
             // apply damage
             if (entities[1].life - damageSpec.attack >= 0) {
               entities[1].life -= damageSpec.attack;
@@ -189,23 +188,11 @@ function animate() {
                 damageSpec.attack
               }%`;
               if (entities[1].life == 0) {
-                setTimeout(() => {
-                  secondFighterHealthBar.style.border = 'none';
-                }, 400);
-                actualRound.finished = true;
-                finishRound({
-                  ...references,
-                });
+                defeatEnemy();
               }
             } else {
               if (secondFighterHealthBar.style.border != 'none') {
-                setTimeout(() => {
-                  secondFighterHealthBar.style.border = 'none';
-                }, 400);
-                actualRound.finished = true;
-                finishRound({
-                  ...references,
-                });
+                defeatEnemy();
               }
             }
             // increase player special bar
@@ -270,24 +257,12 @@ function animate() {
             Number(secondFighterHealthBar.style.width.split('%')[0]) - damageSpec.special
           }%`;
           if (entities[1].life === 0) {
-            setTimeout(() => {
-              secondFighterHealthBar.style.border = 'none';
-            }, 400);
-            actualRound.finished = true;
-            finishRound({
-              ...references,
-            });
+            defeatEnemy();
           }
         } else {
           entities[1].life = 0;
           secondFighterHealthBar.style.width = `${entities[1].life}%`;
-          setTimeout(() => {
-            secondFighterHealthBar.style.border = 'none';
-          }, 400);
-          actualRound.finished = true;
-          finishRound({
-            ...references,
-          });
+          defeatEnemy();
         }
         entities[0].specialBar += 20;
         setTimeout(() => {
@@ -311,10 +286,6 @@ function animate() {
 requestAnimationFrame(animate);
 
 document.addEventListener('keydown', ({ repeat, key }) => {
-  if (repeat && key.toLowerCase() === 'w') {
-    keys.w.pressed = false;
-    return;
-  }
   if (repeat && key.toLowerCase() === ' ') {
     keys.space.pressed = false;
     return;
@@ -325,12 +296,8 @@ document.addEventListener('keydown', ({ repeat, key }) => {
   }
   switch (key.toLowerCase()) {
     case 'w': {
-      if (jumpCooldown.active === true) {
+      if (!actualRound.finished) {
         keys.w.pressed = true;
-        jumpCooldown.active = false;
-        setTimeout(() => {
-          jumpCooldown.active = true;
-        }, jumpCooldown.time);
       }
       break;
     }
@@ -345,18 +312,14 @@ document.addEventListener('keydown', ({ repeat, key }) => {
       break;
     }
     case ' ': {
-      if (attackCooldown.active === true) {
+      if (!actualRound.finished) {
         keys.space.pressed = true;
       }
       break;
     }
     case 'r': {
-      if (specialAttackCooldown.active === true) {
+      if (!actualRound.finished) {
         keys.r.pressed = true;
-        specialAttackCooldown.active = false;
-        setTimeout(() => {
-          specialAttackCooldown.active = true;
-        }, specialAttackCooldown.time);
       }
       break;
     }
@@ -365,6 +328,10 @@ document.addEventListener('keydown', ({ repeat, key }) => {
 
 document.addEventListener('keyup', ({ key }) => {
   switch (key.toLowerCase()) {
+    case 'w': {
+      keys.w.pressed = false;
+      break;
+    }
     case 'a': {
       keys.a.pressed = false;
       if (keys.d.pressed) {
@@ -381,6 +348,10 @@ document.addEventListener('keyup', ({ key }) => {
       } else {
         lastKey = 'd';
       }
+      break;
+    }
+    case ' ': {
+      keys.space.pressed = false;
       break;
     }
   }

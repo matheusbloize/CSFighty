@@ -17,37 +17,41 @@ export class Fighter {
     this.life = 100;
     this.specialBar = 0;
     this.specialBarLimit = 100;
+    this.gravity = 0.45;
+    this.friction = 0.9;
   }
 
   draw(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+    this.attackBox = {
+      ...this.attackBox,
+      x: this.position.x + this.width,
+      y: this.position.y,
+    };
   }
 
   update(ctx) {
     this.draw(ctx);
 
-    if (this.position.y + this.height + this.differenceSpace < ctx.canvas.height) {
-      this.position.y += 10 * 0.5;
+    this.velocity += this.gravity;
+    this.position.y += this.velocity;
+    this.velocity *= this.friction;
+
+    if (this.position.y + this.height + this.differenceSpace > ctx.canvas.height) {
+      this.velocity = 0;
+      this.position.y = ctx.canvas.height - 100 - this.differenceSpace;
     }
   }
 
   attack(ctx) {
     ctx.fillStyle = 'limegreen';
-    this.attackBox = {
-      ...this.attackBox,
-      x: this.position.x + this.width,
-      y: this.position.y,
-      width: 100,
-      height: 30,
-    };
     ctx.fillRect(
       this.attackBox.x,
       this.attackBox.y,
       this.attackBox.width,
       this.attackBox.height
     );
-
-    this.update(ctx);
   }
 }
