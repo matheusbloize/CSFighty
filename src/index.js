@@ -27,7 +27,8 @@ const entities = [
   new Fighter(
     'enemy',
     {
-      x: canvas.width - widthSpace - defaultWidth,
+      // x: canvas.width - widthSpace - defaultWidth,
+      x: canvas.width / 2,
       y: floorPositionY,
     },
     defaultWidth,
@@ -150,6 +151,18 @@ function animate() {
     if (!actualRound.finished) {
       // player loop
       if (entity.name == 'player') {
+        // check/change directions
+        if (
+          entity.position.x + entity.width >
+          entities[1].position.x + entities[1].width
+        ) {
+          entity.changeDirection('left');
+          entities[1].changeDirection('right');
+        } else {
+          entity.changeDirection('right');
+          entities[1].changeDirection('left');
+        }
+
         // move player
         if (keys.w.pressed && entity.position.y == floorPositionY) {
           entity.velocity -= 20;
@@ -176,8 +189,11 @@ function animate() {
           setTimeout(() => (attackCooldown.active = true), attackCooldown.time);
           if (
             isFighterCollidingAttack(
-              entity.attackBox.x + entity.attackBox.width,
-              entities[1].position.x
+              entity.direction,
+              entity.attackBox.x,
+              entity.attackBox.width,
+              entities[1].position.x,
+              entities[1].width
             )
           ) {
             // apply damage

@@ -19,15 +19,25 @@ export class Fighter {
     this.specialBarLimit = 100;
     this.gravity = 0.45;
     this.friction = 0.9;
+    this.direction = 1;
   }
 
   draw(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.fillStyle = 'white';
+    if (this.direction > 0) {
+      ctx.fillRect(this.position.x + this.width - 10, this.position.y, 10, 10);
+    } else {
+      ctx.fillRect(this.position.x, this.position.y, 10, 10);
+    }
 
     this.attackBox = {
       ...this.attackBox,
-      x: this.position.x + this.width,
+      x:
+        this.direction > 0
+          ? this.position.x + this.width
+          : this.position.x - this.attackBox.width,
       y: this.position.y,
     };
   }
@@ -53,5 +63,13 @@ export class Fighter {
       this.attackBox.width,
       this.attackBox.height
     );
+  }
+
+  changeDirection(side) {
+    if (side === 'left') {
+      this.direction = -1;
+    } else {
+      this.direction = 1;
+    }
   }
 }
