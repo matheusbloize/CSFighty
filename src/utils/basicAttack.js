@@ -1,5 +1,6 @@
 import { isFighterCollidingAttack } from './isFighterCollidingAttack.js';
 import { finishRound } from './finishRound.js';
+import { increaseSpecialBar } from './increaseSpecialBar.js';
 
 function defeatOpponent(ui, actualRound, references) {
   setTimeout(() => {
@@ -35,25 +36,10 @@ export function basicAttack(actualFighter, opponent, ui, references) {
     } else {
       if (ui.style.border != 'none') {
         console.log(`${opponent.name} defeated`);
-        defeatOpponent(ui, actualRound, references);
+        defeatOpponent(ui, references.actualRound, references);
       }
     }
-    // increase actual fighter special bar
-    if (
-      actualFighter.specialBar + references.damageSpec.attack <
-      actualFighter.specialBarLimit
-    ) {
-      setTimeout(() => (actualFighter.specialBar += references.damageSpec.attack), 0);
-    } else {
-      const fillSpecialBar = actualFighter.specialBarLimit - actualFighter.specialBar;
-      setTimeout(() => (actualFighter.specialBar += fillSpecialBar), 0);
-    }
-    // increase opponent special bar
-    if (opponent.specialBar + references.damageSpec.attack < opponent.specialBarLimit) {
-      setTimeout(() => (opponent.specialBar += references.damageSpec.attack), 0);
-    } else {
-      const fillSpecialBar = opponent.specialBarLimit - opponent.specialBar;
-      setTimeout(() => (opponent.specialBar += fillSpecialBar), 0);
-    }
+    increaseSpecialBar(actualFighter, 20);
+    increaseSpecialBar(opponent, 20);
   }
 }

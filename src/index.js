@@ -2,9 +2,9 @@ import { Fighter } from './entities/Fighter.js';
 import { SpecialAttack } from './entities/SpecialAttack.js';
 import { basicAttack } from './utils/basicAttack.js';
 import { enemyAction } from './utils/enemyAction.js';
-import { finishRound } from './utils/finishRound.js';
 import { isFighterCollidingBorder } from './utils/isFighterCollidingBorder.js';
 import { manageInterval } from './utils/manageInterval.js';
+import { specialAttack } from './utils/specialAttack.js';
 import { specialAttackHitOpponent } from './utils/specialAttackHitOpponent.js';
 import { specialReset } from './utils/specialReset.js';
 
@@ -135,17 +135,7 @@ manageInterval(
   100
 );
 
-function defeatEnemy() {
-  setTimeout(() => {
-    secondFighterHealthBar.style.border = 'none';
-  }, 400);
-  actualRound.finished = true;
-  finishRound({
-    ...references,
-  });
-}
-
-setInterval(() => !actualRound.finished && enemyAction({ ...references }), 1000);
+setInterval(() => !actualRound.finished && enemyAction(specialAttacks, references), 100);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -222,31 +212,41 @@ function animate() {
     // special attacks loop
     specialAttacks.forEach((special, index) => {
       // special attack gets removed from array when crosses canvas or hit opponent
-      if (special.x + special.width >= canvas.width) {
+      if (special.x + special.width >= canvas.width || special.x < 0) {
         setTimeout(() => {
           specialReset(special, specialAttacks, index);
         }, 0);
       }
 
-      if (specialAttackHitOpponent(special, entities[1])) {
-        if (entities[1].life - damageSpec.special >= 0) {
-          entities[1].life -= damageSpec.special;
-          secondFighterHealthBar.style.width = `${
-            Number(secondFighterHealthBar.style.width.split('%')[0]) - damageSpec.special
-          }%`;
-          if (entities[1].life === 0) {
-            defeatEnemy();
-          }
-        } else {
-          entities[1].life = 0;
-          secondFighterHealthBar.style.width = `${entities[1].life}%`;
-          defeatEnemy();
-        }
-        entities[0].specialBar += 20;
-        setTimeout(() => {
-          specialReset(special, specialAttacks, index);
-        }, 0);
+      if (
+        special.fighter.name === 'player' &&
+        specialAttackHitOpponent(special, entities[1])
+      ) {
+        specialAttack(
+          special,
+          special.fighter,
+          entities[1],
+          secondFighterHealthBar,
+          references,
+          specialAttacks,
+          index
+        );
       }
+      if (
+        special.fighter.name === 'enemy' &&
+        specialAttackHitOpponent(special, entities[0])
+      ) {
+        specialAttack(
+          special,
+          special.fighter,
+          entities[0],
+          firstFighterHealthBar,
+          references,
+          specialAttacks,
+          index
+        );
+      }
+
       special.update(ctx);
     });
   } else {

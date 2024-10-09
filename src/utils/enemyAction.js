@@ -3,9 +3,9 @@ import { basicAttack } from './basicAttack.js';
 
 const actions = ['left', 'right', 'jump', 'attack', 'special'];
 
-export function enemyAction(battleInfo) {
+export function enemyAction(specialAttacks, battleInfo) {
   const action = Math.floor(Math.random() * actions.length);
-  console.log(action);
+
   switch (action) {
     case 0: {
       battleInfo.secondFighter.position.x -= 10;
@@ -28,13 +28,17 @@ export function enemyAction(battleInfo) {
       );
       break;
     }
-    // case 4: {
-    //   if (battleInfo.secondFighter.specialBar === battleInfo.secondFighter.specialBarLimit) {
-    //     battleInfo.specialAttacks.push(new SpecialAttack(battleInfo.secondFighter));
-    //     battleInfo.secondFighter.specialBar = 0;
-    //     battleInfo.secondFighterSpecialBar.parentElement.classList.remove('special-bar_charged');
-    //   }
-    //   break;
-    // }
+    case 4: {
+      if (
+        battleInfo.secondFighter.specialBar === battleInfo.secondFighter.specialBarLimit
+      ) {
+        specialAttacks.push(new SpecialAttack(battleInfo.secondFighter));
+        battleInfo.secondFighter.specialBar = 0;
+        battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
+          'special-bar_charged'
+        );
+      }
+      break;
+    }
   }
 }

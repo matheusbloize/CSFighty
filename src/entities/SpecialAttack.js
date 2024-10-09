@@ -4,8 +4,12 @@ export class SpecialAttack {
     this.velocity = 1;
     this.width = 30;
     this.height = 30;
-    this.x = this.fighter.position.x + this.fighter.width;
+    this.x =
+      this.fighter.direction > 0
+        ? this.fighter.position.x + this.fighter.width
+        : this.fighter.position.x - this.width;
     this.y = this.fighter.position.y + this.height;
+    this.direction = this.fighter.direction;
   }
 
   draw(ctx) {
@@ -16,7 +20,11 @@ export class SpecialAttack {
   update(ctx) {
     this.draw(ctx);
 
-    this.x += this.velocity * 2;
+    if (this.direction > 0) {
+      this.x += this.velocity * 2;
+    } else {
+      this.x -= this.velocity * 2;
+    }
   }
 
   resetPosition() {
