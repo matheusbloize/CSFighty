@@ -1,18 +1,36 @@
 import { SpecialAttack } from '../entities/SpecialAttack.js';
 import { basicAttack } from './basicAttack.js';
+import { isFighterCollidingBorder } from './isFighterCollidingBorder.js';
 
 const actions = ['left', 'right', 'jump', 'attack', 'special'];
+const sideWalk = 10;
 
 export function enemyAction(specialAttacks, battleInfo) {
   const action = Math.floor(Math.random() * actions.length);
 
   switch (action) {
     case 0: {
-      battleInfo.secondFighter.position.x -= 10;
+      if (
+        !isFighterCollidingBorder(
+          battleInfo.secondFighter.position.x - sideWalk,
+          battleInfo.secondFighter.width,
+          battleInfo.ctx.canvas.width
+        )
+      ) {
+        battleInfo.secondFighter.position.x -= sideWalk;
+      }
       break;
     }
     case 1: {
-      battleInfo.secondFighter.position.x += 10;
+      if (
+        !isFighterCollidingBorder(
+          battleInfo.secondFighter.position.x + sideWalk,
+          battleInfo.secondFighter.width,
+          battleInfo.ctx.canvas.width
+        )
+      ) {
+        battleInfo.secondFighter.position.x += sideWalk;
+      }
       break;
     }
     // case 2: {

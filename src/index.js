@@ -28,8 +28,7 @@ const entities = [
   new Fighter(
     'enemy',
     {
-      // x: canvas.width - widthSpace - defaultWidth,
-      x: canvas.width / 2,
+      x: canvas.width - widthSpace - defaultWidth,
       y: floorPositionY,
     },
     defaultWidth,

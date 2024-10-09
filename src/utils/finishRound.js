@@ -67,6 +67,15 @@ export function finishRound(battleInfo) {
       battleReset(battleInfo);
     }, 3000);
   } else {
+    // remove special bar pulse if battle end
+    setTimeout(() => {
+      battleInfo.firstFighterSpecialBar.parentElement.classList.remove(
+        'special-bar_charged'
+      );
+      battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
+        'special-bar_charged'
+      );
+    }, 300);
     console.log('Battle end');
   }
 }
