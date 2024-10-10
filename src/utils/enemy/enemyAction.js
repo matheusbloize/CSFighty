@@ -1,6 +1,6 @@
-import { SpecialAttack } from '../entities/SpecialAttack.js';
-import { basicAttack } from './basicAttack.js';
-import { isFighterCollidingBorder } from './isFighterCollidingBorder.js';
+import { SpecialAttack } from '../../entities/SpecialAttack.js';
+import { basicAttack } from '../attack/basicAttack.js';
+import { isFighterCollidingBorder } from '../collision/isFighterCollidingBorder.js';
 
 const actions = ['left', 'right', 'jump', 'attack', 'special'];
 const sideWalk = 10;

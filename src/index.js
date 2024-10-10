@@ -1,13 +1,13 @@
 import { Fighter } from './entities/Fighter.js';
 import { SpecialAttack } from './entities/SpecialAttack.js';
-import { attackCollision } from './utils/attackCollision.js';
-import { basicAttack } from './utils/basicAttack.js';
-import { enemyAction } from './utils/enemyAction.js';
-import { isFighterCollidingBorder } from './utils/isFighterCollidingBorder.js';
-import { manageInterval } from './utils/manageInterval.js';
-import { specialAttack } from './utils/specialAttack.js';
-import { specialReset } from './utils/specialReset.js';
-import { undoBlock } from './utils/undoBlock.js';
+import { attackCollision } from './utils/collision/attackCollision.js';
+import { basicAttack } from './utils/attack/basicAttack.js';
+import { enemyAction } from './utils/enemy/enemyAction.js';
+import { isFighterCollidingBorder } from './utils/collision/isFighterCollidingBorder.js';
+import { manageInterval } from './utils/round/manageInterval.js';
+import { specialAttack } from './utils/attack/specialAttack.js';
+import { specialReset } from './utils/attack/specialReset.js';
+import { undoBlock } from './utils/block/undoBlock.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');

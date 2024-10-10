@@ -1,6 +1,6 @@
 import { specialReset } from './specialReset.js';
-import { finishRound } from './finishRound.js';
-import { increaseSpecialBar } from './increaseSpecialBar.js';
+import { finishRound } from '../round/finishRound.js';
+import { increaseSpecialBar } from '../round/increaseSpecialBar.js';
 
 function defeatOpponent(ui, actualRound, references) {
   setTimeout(() => {

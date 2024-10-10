@@ -1,7 +1,7 @@
-import { finishRound } from './finishRound.js';
-import { increaseSpecialBar } from './increaseSpecialBar.js';
-import { attackCollision } from './attackCollision.js';
-import { undoBlock } from './undoBlock.js';
+import { finishRound } from '../round/finishRound.js';
+import { increaseSpecialBar } from '../round/increaseSpecialBar.js';
+import { attackCollision } from '../collision/attackCollision.js';
+import { undoBlock } from '../block/undoBlock.js';
 
 function defeatOpponent(ui, actualRound, references) {
   setTimeout(() => {
