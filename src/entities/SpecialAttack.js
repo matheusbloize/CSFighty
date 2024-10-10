@@ -1,7 +1,7 @@
 export class SpecialAttack {
   constructor(fighter) {
     this.fighter = fighter;
-    this.velocity = 1;
+    this.velocity = 2;
     this.width = 30;
     this.height = 30;
     this.x =

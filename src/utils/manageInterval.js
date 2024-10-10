@@ -1,7 +1,8 @@
-import { chargeSpecialBar } from './chargeSpecialBar.js';
+import { chargeBar } from './chargeBar.js';
 import { finishRound } from './finishRound.js';
 
-const intervalTypes = ['countdown', 'specialBar'];
+const intervalTypes = ['countdown', 'bars'];
+const bars = ['specialBar', 'blockBar'];
 
 function content(type, references) {
   switch (type) {
@@ -26,8 +27,10 @@ function content(type, references) {
       }
       break;
     case intervalTypes[1]:
-      chargeSpecialBar(references.firstFighter, references.firstFighterSpecialBar);
-      chargeSpecialBar(references.secondFighter, references.secondFighterSpecialBar);
+      chargeBar(references.firstFighter, bars[0], references.firstFighterSpecialBar);
+      chargeBar(references.secondFighter, bars[0], references.secondFighterSpecialBar);
+      chargeBar(references.firstFighter, bars[1], references.firstFighterBlockBar);
+      chargeBar(references.secondFighter, bars[1], references.secondFighterBlockBar);
       break;
     default:
       break;

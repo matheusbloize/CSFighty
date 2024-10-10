@@ -1,13 +1,12 @@
 export class Fighter {
-  constructor(name, position, width, height, velocity, color, differenceSpace) {
+  constructor(name, position, width, height, color, differenceSpace) {
     this.name = name;
     this.position = { ...position };
     this.width = width;
     this.height = height;
-    this.velocity = velocity;
     this.color = color;
     this.differenceSpace = differenceSpace;
-    this.originPositionY = this.position.y;
+    this.velocity = 1;
     this.attackBox = {
       x: this.position.x + this.width,
       y: this.position.y,
@@ -20,6 +19,9 @@ export class Fighter {
     this.gravity = 0.45;
     this.friction = 0.9;
     this.direction = 1;
+    this.isBlocking = false;
+    this.blockBar = 100;
+    this.blockBarLimit = 100;
   }
 
   draw(ctx) {
@@ -40,6 +42,18 @@ export class Fighter {
           : this.position.x - this.attackBox.width,
       y: this.position.y,
     };
+
+    if (this.isBlocking) {
+      // print block representation
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = '#FFFAFA';
+      ctx.strokeRect(
+        this.position.x - ctx.lineWidth / 2,
+        this.position.y - ctx.lineWidth / 2,
+        this.width + ctx.lineWidth,
+        this.height + ctx.lineWidth
+      );
+    }
   }
 
   update(ctx) {
@@ -70,6 +84,19 @@ export class Fighter {
       this.direction = -1;
     } else {
       this.direction = 1;
+    }
+  }
+
+  addBlock() {
+    if (this.blockBar === this.blockBarLimit) {
+      this.isBlocking = true;
+    }
+  }
+
+  removeBlock() {
+    if (this.isBlocking && this.blockBar === this.blockBarLimit) {
+      this.isBlocking = false;
+      this.blockBar = 0;
     }
   }
 }

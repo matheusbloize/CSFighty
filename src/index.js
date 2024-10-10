@@ -1,12 +1,13 @@
 import { Fighter } from './entities/Fighter.js';
 import { SpecialAttack } from './entities/SpecialAttack.js';
+import { attackCollision } from './utils/attackCollision.js';
 import { basicAttack } from './utils/basicAttack.js';
 import { enemyAction } from './utils/enemyAction.js';
 import { isFighterCollidingBorder } from './utils/isFighterCollidingBorder.js';
 import { manageInterval } from './utils/manageInterval.js';
 import { specialAttack } from './utils/specialAttack.js';
-import { specialAttackHitOpponent } from './utils/specialAttackHitOpponent.js';
 import { specialReset } from './utils/specialReset.js';
+import { undoBlock } from './utils/undoBlock.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -21,7 +22,6 @@ const entities = [
     { x: widthSpace, y: floorPositionY },
     defaultWidth,
     defaultHeight,
-    1,
     'red',
     differenceSpace
   ),
@@ -33,7 +33,6 @@ const entities = [
     },
     defaultWidth,
     defaultHeight,
-    1,
     'blue',
     differenceSpace
   ),
@@ -52,6 +51,9 @@ const keys = {
     pressed: false,
   },
   r: {
+    pressed: false,
+  },
+  s: {
     pressed: false,
   },
 };
@@ -73,11 +75,27 @@ const firstFighterSpecialBar = document.querySelector(
 const secondFighterSpecialBar = document.querySelector(
   '#special-bar .special-bar_fighter-2_content'
 );
+document.querySelector('#hud .hud_fighter-1_name').innerHTML = entities[0].name;
+document.querySelector('#hud .hud_fighter-2_name').innerHTML = entities[1].name;
+const firstFighterBlockBar = document.querySelector(
+  '#hud .hud_fighter-1_block-bar_content'
+);
+const secondFighterBlockBar = document.querySelector(
+  '#hud .hud_fighter-2_block-bar_content'
+);
 
 let lastKey;
 let attackCooldown = {
   active: true,
   time: 200,
+};
+let blockCooldown = {
+  active: true,
+  time: 800,
+};
+let enemyCooldown = {
+  active: true,
+  time: 1000,
 };
 let matchTime = {
   duration: matchTimeDuration - 1,
@@ -107,6 +125,8 @@ const references = {
   secondFighterHealthBar,
   firstFighterSpecialBar,
   secondFighterSpecialBar,
+  firstFighterBlockBar,
+  secondFighterBlockBar,
   intervals,
   winners,
   specialAttacks,
@@ -120,21 +140,7 @@ firstFighterSpecialBar.style.width = '0%';
 secondFighterSpecialBar.style.width = '0%';
 
 manageInterval('set', intervals, 'countdown', references, 1000);
-manageInterval(
-  'set',
-  intervals,
-  'specialBar',
-  {
-    firstFighter: entities[0],
-    secondFighter: entities[1],
-    firstFighterSpecialBar,
-    secondFighterSpecialBar,
-    intervals,
-  },
-  100
-);
-
-setInterval(() => !actualRound.finished && enemyAction(specialAttacks, references), 100);
+manageInterval('set', intervals, 'bars', references, 100);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -195,13 +201,38 @@ function animate() {
           }
         }
         if (keys.r.pressed) {
+          keys.r.pressed = false;
+          if (entity.isBlocking) {
+            undoBlock(entity, firstFighterBlockBar);
+          }
           if (entity.specialBar === entity.specialBarLimit) {
             specialAttacks.push(new SpecialAttack(entity));
             entity.specialBar = 0;
             firstFighterSpecialBar.parentElement.classList.remove('special-bar_charged');
           }
-          setTimeout(() => (keys.r.pressed = false), 0);
         }
+        if (keys.s.pressed && blockCooldown.active) {
+          keys.s.pressed = false;
+          blockCooldown.active = false;
+          setTimeout(() => (blockCooldown.active = true), blockCooldown.time);
+          entity.addBlock();
+          if (entity.isBlocking) {
+            setTimeout(() => {
+              if (entity.isBlocking) {
+                undoBlock(entity, firstFighterBlockBar);
+              }
+            }, 500);
+            firstFighterBlockBar.style.backgroundColor = '#333333';
+            firstFighterBlockBar.parentElement.style.borderColor = '#CCCCCC';
+          }
+        }
+      }
+
+      // enemy loop
+      if (enemyCooldown.active) {
+        enemyAction(specialAttacks, references);
+        enemyCooldown.active = false;
+        setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
       }
     }
     entity.update(ctx);
@@ -217,33 +248,41 @@ function animate() {
         }, 0);
       }
 
-      if (
-        special.fighter.name === 'player' &&
-        specialAttackHitOpponent(special, entities[1])
-      ) {
-        specialAttack(
-          special,
-          special.fighter,
-          entities[1],
-          secondFighterHealthBar,
-          references,
-          specialAttacks,
-          index
-        );
+      if (special.fighter.name === 'player' && attackCollision(special, entities[1])) {
+        // check if opponent is not blocking
+        if (!entities[1].isBlocking) {
+          specialAttack(
+            special,
+            special.fighter,
+            entities[1],
+            secondFighterHealthBar,
+            references,
+            specialAttacks,
+            index
+          );
+        } else {
+          setTimeout(() => {
+            specialReset(special, specialAttacks, index);
+          }, 0);
+        }
       }
-      if (
-        special.fighter.name === 'enemy' &&
-        specialAttackHitOpponent(special, entities[0])
-      ) {
-        specialAttack(
-          special,
-          special.fighter,
-          entities[0],
-          firstFighterHealthBar,
-          references,
-          specialAttacks,
-          index
-        );
+      if (special.fighter.name === 'enemy' && attackCollision(special, entities[0])) {
+        // check if opponent is not blocking
+        if (!entities[0].isBlocking) {
+          specialAttack(
+            special,
+            special.fighter,
+            entities[0],
+            firstFighterHealthBar,
+            references,
+            specialAttacks,
+            index
+          );
+        } else {
+          setTimeout(() => {
+            specialReset(special, specialAttacks, index);
+          }, 0);
+        }
       }
 
       special.update(ctx);
@@ -256,7 +295,7 @@ function animate() {
   ctx.fillText(
     `actual round ${actualRound.number}`,
     canvas.width / 2 - differenceSpace - differenceSpace / 2,
-    canvas.height / 6
+    canvas.height / 4
   );
 }
 
@@ -269,6 +308,10 @@ document.addEventListener('keydown', ({ repeat, key }) => {
   }
   if (repeat && key.toLowerCase() === 'r') {
     keys.r.pressed = false;
+    return;
+  }
+  if (repeat && key.toLowerCase() === 's') {
+    keys.s.pressed = false;
     return;
   }
   switch (key.toLowerCase()) {
@@ -297,6 +340,12 @@ document.addEventListener('keydown', ({ repeat, key }) => {
     case 'r': {
       if (!actualRound.finished) {
         keys.r.pressed = true;
+      }
+      break;
+    }
+    case 's': {
+      if (!actualRound.finished) {
+        keys.s.pressed = true;
       }
       break;
     }
@@ -329,6 +378,11 @@ document.addEventListener('keyup', ({ key }) => {
     }
     case ' ': {
       keys.space.pressed = false;
+      break;
+    }
+    case 's': {
+      keys.s.pressed = false;
+      undoBlock(entities[0], firstFighterBlockBar);
       break;
     }
   }

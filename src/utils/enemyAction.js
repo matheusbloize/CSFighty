@@ -6,7 +6,8 @@ const actions = ['left', 'right', 'jump', 'attack', 'special'];
 const sideWalk = 10;
 
 export function enemyAction(specialAttacks, battleInfo) {
-  const action = Math.floor(Math.random() * actions.length);
+  // const action = Math.floor(Math.random() * actions.length);
+  const action = 4;
 
   switch (action) {
     case 0: {

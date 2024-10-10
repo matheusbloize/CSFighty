@@ -177,6 +177,7 @@ canvas {
 .hud_fighter-1_name,
 .hud_fighter-2_name {
   font-size: 1.2em;
+  text-transform: capitalize;
 }
 
 .hud_fighter-1_name {
@@ -187,6 +188,41 @@ canvas {
 .hud_fighter-2_name {
   text-align: right;
   margin-right: 0.5em;
+}
+
+.hud_fighter-1_block-bar,
+.hud_fighter-2_block-bar {
+  position: absolute;
+  width: 5em;
+  height: 0.75em;
+  bottom: 1.75em;
+  border: 2px solid #333333;
+}
+
+.hud_fighter-1_block-bar {
+  right: 0.3em;
+  transform: skew(10deg);
+}
+
+.hud_fighter-2_block-bar {
+  left: 0.3em;
+  transform: skew(-10deg);
+}
+
+.hud_fighter-1_block-bar_content,
+.hud_fighter-2_block-bar_content {
+  position: absolute;
+  background-color: #cccccc;
+  width: 0%;
+  height: 100%;
+}
+
+.hud_fighter-1_block-bar_content {
+  left: 0;
+}
+
+.hud_fighter-2_block-bar_content {
+  right: 0;
 }
 
 #special-bar {
@@ -257,7 +293,8 @@ canvas {
   background-color: #0b70ba;
 }
 
-.special-bar_charged {
+.special-bar_charged,
+.block-bar_charged {
   animation: glow 0.75s ease infinite;
 }
 

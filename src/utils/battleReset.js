@@ -25,4 +25,8 @@ export function battleReset({ actualRound, firstFighter, secondFighter, ctx }) {
   // health bar fighters
   firstFighter.life = 100;
   secondFighter.life = 100;
+
+  // block bar fighters
+  firstFighter.blockBar = 100;
+  secondFighter.blockBar = 100;
 }

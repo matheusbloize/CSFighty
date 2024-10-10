@@ -6,7 +6,7 @@ export function finishRound(battleInfo) {
   manageInterval('clear', battleInfo.intervals, 'countdown');
   setTimeout(() => {
     // timeout added for last hit before fighter die counts on special bar
-    manageInterval('clear', battleInfo.intervals, 'specialBar');
+    manageInterval('clear', battleInfo.intervals, 'bars');
   }, 300);
 
   // set round winner
@@ -52,18 +52,20 @@ export function finishRound(battleInfo) {
     // restart round time
     battleInfo.matchTime.duration = 99;
 
-    // set countdown interval and fighters health bars style after 2 seconds
+    // set countdown interval and fighters health and block bars style after 2 seconds
     setTimeout(() => {
       manageInterval('set', battleInfo.intervals, 'countdown', battleInfo, 1000);
       battleInfo.firstFighterHealthBar.style.width = '100%';
       battleInfo.secondFighterHealthBar.style.width = '100%';
       battleInfo.firstFighterHealthBar.style.border = '2px solid';
       battleInfo.secondFighterHealthBar.style.border = '2px solid';
+      battleInfo.firstFighterBlockBar.style.width = '100%';
+      battleInfo.secondFighterBlockBar.style.width = '100%';
     }, 2000);
 
     // start round and set special bar interval after 3 seconds
     setTimeout(() => {
-      manageInterval('set', battleInfo.intervals, 'specialBar', battleInfo, 100);
+      manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
       battleReset(battleInfo);
     }, 3000);
   } else {
