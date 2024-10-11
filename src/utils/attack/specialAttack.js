@@ -1,6 +1,7 @@
 import { specialReset } from './specialReset.js';
 import { finishRound } from '../round/finishRound.js';
 import { increaseSpecialBar } from '../round/increaseSpecialBar.js';
+import { fearMeter } from '../../states/enemy.js';
 
 function defeatOpponent(ui, actualRound, references) {
   setTimeout(() => {
@@ -34,6 +35,24 @@ export function specialAttack(
     ui.style.width = `${opponent.life}%`;
     defeatOpponent(ui, references.actualRound, references);
   }
+
+  // change enemy fear meter
+  if (opponent.name === 'enemy') {
+    if (fearMeter.value + 20 <= fearMeter.max) {
+      fearMeter.value += 20;
+    } else {
+      const fillFearMeter = fearMeter.max - fearMeter.value;
+      fearMeter.value += fillFearMeter;
+    }
+  } else {
+    if (fearMeter.value - 20 >= fearMeter.min) {
+      fearMeter.value -= 20;
+    } else {
+      const fillFearMeter = fearMeter.value;
+      fearMeter.value -= fillFearMeter;
+    }
+  }
+
   increaseSpecialBar(actualFighter, 20);
   increaseSpecialBar(opponent, 20);
   setTimeout(() => {

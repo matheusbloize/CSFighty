@@ -2,12 +2,14 @@ import { Fighter } from './entities/Fighter.js';
 import { SpecialAttack } from './entities/SpecialAttack.js';
 import { attackCollision } from './utils/collision/attackCollision.js';
 import { basicAttack } from './utils/attack/basicAttack.js';
-import { enemyAction } from './utils/enemy/enemyAction.js';
+import { enemyMovementAction } from './utils/enemy/enemyMovementAction.js';
 import { isFighterCollidingBorder } from './utils/collision/isFighterCollidingBorder.js';
 import { manageInterval } from './utils/round/manageInterval.js';
 import { specialAttack } from './utils/attack/specialAttack.js';
 import { specialReset } from './utils/attack/specialReset.js';
 import { undoBlock } from './utils/block/undoBlock.js';
+import { movementIntervals } from './states/enemy.js';
+import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -95,7 +97,7 @@ let blockCooldown = {
 };
 let enemyCooldown = {
   active: true,
-  time: 1000,
+  time: 500,
 };
 let matchTime = {
   duration: matchTimeDuration - 1,
@@ -141,6 +143,16 @@ secondFighterSpecialBar.style.width = '0%';
 
 manageInterval('set', intervals, 'countdown', references, 1000);
 manageInterval('set', intervals, 'bars', references, 100);
+
+setInterval(() => {
+  if (!actualRound.finished) {
+    console.log('enemy attack');
+    if (entities[1].isBlocking) {
+      undoBlock(entities[1], secondFighterBlockBar);
+    }
+    basicAttack(entities[1], entities[0], firstFighterHealthBar, references);
+  }
+}, 1000);
 
 function animate() {
   requestAnimationFrame(animate);
@@ -230,7 +242,9 @@ function animate() {
 
       // enemy loop
       if (enemyCooldown.active) {
-        enemyAction(specialAttacks, references);
+        movementActionsIntervals('clear', movementIntervals, 'right');
+        movementActionsIntervals('clear', movementIntervals, 'left');
+        enemyMovementAction(references);
         enemyCooldown.active = false;
         setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
       }
@@ -261,6 +275,7 @@ function animate() {
             index
           );
         } else {
+          undoBlock(entities[1], secondFighterBlockBar);
           setTimeout(() => {
             specialReset(special, specialAttacks, index);
           }, 0);
@@ -279,6 +294,7 @@ function animate() {
             index
           );
         } else {
+          undoBlock(entities[0], firstFighterBlockBar);
           setTimeout(() => {
             specialReset(special, specialAttacks, index);
           }, 0);

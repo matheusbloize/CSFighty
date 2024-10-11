@@ -1,5 +1,7 @@
 import { manageInterval } from './manageInterval.js';
 import { battleReset } from './battleReset.js';
+import { movementActionsIntervals } from '../enemy/movementActionsIntervals.js';
+import { fearMeter, movementIntervals } from '../../states/enemy.js';
 
 export function finishRound(battleInfo) {
   // clear intervals
@@ -8,6 +10,8 @@ export function finishRound(battleInfo) {
     // timeout added for last hit before fighter die counts on special bar
     manageInterval('clear', battleInfo.intervals, 'bars');
   }, 300);
+  movementActionsIntervals('clear', movementIntervals, 'right');
+  movementActionsIntervals('clear', movementIntervals, 'left');
 
   // set round winner
   let winner = null;
@@ -66,6 +70,12 @@ export function finishRound(battleInfo) {
     // start round and set special bar interval after 3 seconds
     setTimeout(() => {
       manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
+      // reset enemy fear meter
+      if (winner === 'enemy') {
+        fearMeter.value = 20;
+      } else {
+        fearMeter.value = 50;
+      }
       battleReset(battleInfo);
     }, 3000);
   } else {
