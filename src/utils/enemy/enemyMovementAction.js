@@ -13,52 +13,65 @@ export function enemyMovementAction(battleInfo) {
   console.log(fearMeter.value);
 
   // check fear meter to change behavior
-  if (fearMeter.value >= 0 && fearMeter.value <= 30) {
+  if (fearMeter.value > 0 && fearMeter.value <= 70) {
     console.log('agressive');
     // agressive movement
     if (
       (oldDirection !== null && oldDirection !== direction) ||
       (movementActions.left[0] === 0 &&
-        movementActions.left[1] !== 10 &&
+        movementActions.left[1] !== 80 &&
         movementActions.left[0] === 0 &&
-        movementActions.left[1] !== 90)
+        movementActions.left[1] !== 20)
     ) {
       if (direction > 0) {
-        movementActions.left = [0, 70];
-        movementActions.right = [70, 100];
+        movementActions.left = [0, 80];
+        movementActions.right = [80, 100];
         oldDirection = direction;
       } else {
-        movementActions.left = [0, 30];
-        movementActions.right = [30, 100];
+        movementActions.left = [0, 20];
+        movementActions.right = [20, 100];
         oldDirection = direction;
       }
     }
-  } else if (fearMeter.value > 30 && fearMeter.value < 70) {
-    // neutral movement
-    console.log('neutral');
-    if (movementActions.left[0] === 0 && movementActions.left[1] !== 50) {
-      console.log('enemy is on neutral movement mode now');
-      movementActions.left = [0, 50];
-      movementActions.right = [50, 100];
-    }
-  } else {
+  } else if (fearMeter.value > 70 && fearMeter.value <= 100) {
     // careful movement
     console.log('careful');
     if (
       (oldDirection !== null && oldDirection !== direction) ||
       (movementActions.left[0] === 0 &&
-        movementActions.left[1] !== 10 &&
+        movementActions.left[1] !== 40 &&
         movementActions.left[0] === 0 &&
-        movementActions.left[1] !== 90)
+        movementActions.left[1] !== 60)
     ) {
       if (direction > 0) {
-        movementActions.left = [0, 30];
-        movementActions.right = [30, 100];
+        movementActions.left = [0, 40];
+        movementActions.right = [40, 100];
         oldDirection = direction;
       } else {
-        movementActions.left = [0, 70];
-        movementActions.right = [70, 100];
+        movementActions.left = [0, 60];
+        movementActions.right = [60, 100];
         oldDirection = direction;
+      }
+    }
+  } else {
+    // fear meter value === 0 -> player doesn't have block bar enable
+    if (fearMeter.value === 0) {
+      if (
+        (oldDirection !== null && oldDirection !== direction) ||
+        (movementActions.left[0] === 0 &&
+          movementActions.left[1] !== 100 &&
+          movementActions.left[0] === 0 &&
+          movementActions.left[1] !== 0)
+      ) {
+        if (direction > 0) {
+          movementActions.left = [0, 100];
+          movementActions.right = [0, 0];
+          oldDirection = direction;
+        } else {
+          movementActions.left = [0, 0];
+          movementActions.right = [0, 100];
+          oldDirection = direction;
+        }
       }
     }
   }

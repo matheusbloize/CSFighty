@@ -71,11 +71,8 @@ export function finishRound(battleInfo) {
     setTimeout(() => {
       manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
       // reset enemy fear meter
-      if (winner === 'enemy') {
-        fearMeter.value = 20;
-      } else {
-        fearMeter.value = 50;
-      }
+      fearMeter.value = 50;
+
       battleReset(battleInfo);
     }, 3000);
   } else {
