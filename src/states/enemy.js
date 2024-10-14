@@ -9,8 +9,7 @@ export const movementActions = {
   distance: 10,
 };
 export const battleActions = {
-  attack: [0, 80],
-  special: [80, 90],
+  attack: [0, 90],
   block: [90, 100],
 };
 export let movementIntervals = {

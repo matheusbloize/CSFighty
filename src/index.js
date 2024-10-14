@@ -10,6 +10,7 @@ import { specialReset } from './utils/attack/specialReset.js';
 import { undoBlock } from './utils/block/undoBlock.js';
 import { movementIntervals } from './states/enemy.js';
 import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals.js';
+import { enemyBattleAction } from './utils/enemy/enemyBattleAction.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -144,16 +145,6 @@ secondFighterSpecialBar.style.width = '0%';
 manageInterval('set', intervals, 'countdown', references, 1000);
 manageInterval('set', intervals, 'bars', references, 100);
 
-setInterval(() => {
-  if (!actualRound.finished) {
-    console.log('enemy attack');
-    if (entities[1].isBlocking) {
-      undoBlock(entities[1], secondFighterBlockBar);
-    }
-    basicAttack(entities[1], entities[0], firstFighterHealthBar, references);
-  }
-}, 1000);
-
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -245,6 +236,7 @@ function animate() {
         movementActionsIntervals('clear', movementIntervals, 'right');
         movementActionsIntervals('clear', movementIntervals, 'left');
         enemyMovementAction(references);
+        enemyBattleAction(specialAttacks, references);
         enemyCooldown.active = false;
         setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
       }
