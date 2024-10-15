@@ -21,6 +21,10 @@ export function basicAttack(actualFighter, opponent, ui, references) {
 
   actualFighter.attack(references.ctx);
   if (attackCollision(actualFighter.attackBox, opponent)) {
+    if (references.matchTime.duration === 98) {
+      // prevent battle action bug
+      return;
+    }
     // check if opponent is blocking
     if (opponent.isBlocking) {
       return opponent.removeBlock();
