@@ -8,7 +8,7 @@ import { manageInterval } from './utils/round/manageInterval.js';
 import { specialAttack } from './utils/attack/specialAttack.js';
 import { specialReset } from './utils/attack/specialReset.js';
 import { undoBlock } from './utils/block/undoBlock.js';
-import { movementIntervals } from './states/enemy.js';
+import { enemyLevel, movementIntervals } from './states/enemy.js';
 import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals.js';
 import { enemyBattleAction } from './utils/enemy/enemyBattleAction.js';
 
@@ -255,8 +255,9 @@ function animate() {
         }, 0);
       }
 
-      // block player special attack
+      // block player special attack if enemy level is max
       if (
+        enemyLevel.actual === 3 &&
         special.fighter.name === 'player' &&
         entities[1].blockBar === 100 &&
         !entities[1].isBlocking

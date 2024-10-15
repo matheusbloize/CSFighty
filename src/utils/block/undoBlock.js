@@ -1,4 +1,4 @@
-import { fearMeter } from '../../states/enemy.js';
+import { enemyLevel, fearMeter } from '../../states/enemy.js';
 
 let playerLife = null;
 export function undoBlock(fighter, ui) {
@@ -10,7 +10,7 @@ export function undoBlock(fighter, ui) {
   // fear meter
   const oldFearMeter = fearMeter.value;
 
-  if (fighter.name === 'player') {
+  if (fighter.name === 'player' && enemyLevel.actual > 1) {
     fearMeter.value = 0;
     playerLife = fighter.life;
   }

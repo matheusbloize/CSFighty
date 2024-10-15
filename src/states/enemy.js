@@ -12,7 +12,10 @@ export const battleActions = {
   attack: [0, 90],
   block: [90, 100],
 };
-export let movementIntervals = {
+export const movementIntervals = {
   left: null,
   right: null,
+};
+export const enemyLevel = {
+  actual: 1,
 };

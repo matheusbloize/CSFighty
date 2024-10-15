@@ -1,7 +1,7 @@
 import { SpecialAttack } from '../../entities/SpecialAttack.js';
 import { basicAttack } from '../attack/basicAttack.js';
 import { undoBlock } from '../block/undoBlock.js';
-import { battleActions, fearMeter } from '../../states/enemy.js';
+import { enemyLevel, battleActions, fearMeter } from '../../states/enemy.js';
 import { attackCollision } from '../collision/attackCollision.js';
 
 export function enemyBattleAction(specialAttacks, battleInfo) {
@@ -12,9 +12,20 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   );
   let battleAction = null;
 
-  if (enemy.specialBar === 100 && (player.blockBar !== 100 || player.life <= 50)) {
-    battleAction = 2;
+  if (enemyLevel.actual === 3) {
+    if (
+      enemy.specialBar === 100 &&
+      player.blockBar !== 100 &&
+      enemy.position.y === player.position.y
+    ) {
+      battleAction = 2;
+    }
+  } else {
+    if (enemy.specialBar === 100) {
+      battleAction = 2;
+    }
   }
+
   if (battleAction === null && attackCollision(enemy.attackBox, player)) {
     if (
       randomBattleValue >= battleActions.attack[0] &&
