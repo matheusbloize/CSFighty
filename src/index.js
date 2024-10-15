@@ -134,6 +134,7 @@ const references = {
   winners,
   specialAttacks,
   damageSpec,
+  floorPositionY,
 };
 
 ctx.font = '16px Verdana';

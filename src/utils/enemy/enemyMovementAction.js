@@ -76,6 +76,9 @@ export function enemyMovementAction(battleInfo) {
     }
   }
 
+  // random jump
+  let randomJumpValue = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+
   // choose action according to movement percentage
   if (
     randomMovementValue >= movementActions.left[0] &&
@@ -95,7 +98,26 @@ export function enemyMovementAction(battleInfo) {
     }
     case 1: {
       console.log('right');
-      movementActionsIntervals('set', movementIntervals, 'right', battleInfo, 10);
+      movementActionsIntervals(
+        'set',
+        movementIntervals,
+        'right',
+        battleInfo,
+        10,
+        randomJumpValue > 8 ? true : false
+      );
+      break;
+    }
+    case 2: {
+      console.log('up');
+      movementActionsIntervals(
+        'set',
+        movementIntervals,
+        'up',
+        battleInfo,
+        10,
+        randomJumpValue > 8 ? true : false
+      );
       break;
     }
   }

@@ -3,7 +3,7 @@ import { movementActions } from '../../states/enemy.js';
 
 const intervalTypes = ['left', 'right'];
 
-function content(type, references) {
+function content(type, references, jump) {
   switch (type) {
     case intervalTypes[0]:
       if (
@@ -14,6 +14,9 @@ function content(type, references) {
         )
       ) {
         references.secondFighter.position.x -= 2;
+        if (jump && references.secondFighter.position.y == references.floorPositionY) {
+          references.secondFighter.velocity -= 20;
+        }
       }
       break;
     case intervalTypes[1]:
@@ -25,6 +28,9 @@ function content(type, references) {
         )
       ) {
         references.secondFighter.position.x += 2;
+        if (jump && references.secondFighter.position.y == references.floorPositionY) {
+          references.secondFighter.velocity -= 20;
+        }
       }
       break;
     default:
@@ -32,9 +38,16 @@ function content(type, references) {
   }
 }
 
-export function movementActionsIntervals(action, variableId, type, references, time) {
+export function movementActionsIntervals(
+  action,
+  variableId,
+  type,
+  references,
+  time,
+  jump
+) {
   if (action === 'set') {
-    variableId[type] = setInterval(() => content(type, references), time);
+    variableId[type] = setInterval(() => content(type, references, jump), time);
   } else {
     clearInterval(variableId[type]);
     variableId[type] = null;
