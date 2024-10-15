@@ -262,6 +262,11 @@ function animate() {
         !entities[1].isBlocking
       ) {
         entities[1].addBlock();
+        setTimeout(() => {
+          if (entities[1].isBlocking) {
+            undoBlock(entities[1], secondFighterBlockBar);
+          }
+        }, 500);
       }
 
       if (special.fighter.name === 'player' && attackCollision(special, entities[1])) {

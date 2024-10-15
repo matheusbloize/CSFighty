@@ -42,6 +42,11 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
     }
     case 1: {
       battleInfo.secondFighter.addBlock();
+      setTimeout(() => {
+        if (battleInfo.secondFighter.isBlocking) {
+          undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
+        }
+      }, 500);
       break;
     }
     case 2: {
