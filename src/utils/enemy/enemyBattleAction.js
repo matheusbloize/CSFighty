@@ -12,31 +12,7 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   );
   let battleAction = null;
 
-  // block player special attack
-  if (specialAttacks.length > 0) {
-    specialAttacks.forEach((special) => {
-      if (special.fighter.name === 'player') {
-        if (
-          attackCollision(
-            {
-              x:
-                player.direction > 0
-                  ? special.x
-                  : special.x - battleInfo.ctx.canvas.width,
-              y: special.y,
-              width: special.width + battleInfo.ctx.canvas.width,
-              height: special.height,
-            },
-            enemy
-          )
-        ) {
-          battleAction = 1;
-        }
-      }
-    });
-  }
-
-  if (enemy.specialBar === 100 && player.blockBar !== 100) {
+  if (enemy.specialBar === 100 && (player.blockBar !== 100 || player.life <= 50)) {
     battleAction = 2;
   }
   if (battleAction === null && attackCollision(enemy.attackBox, player)) {

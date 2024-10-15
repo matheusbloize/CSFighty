@@ -254,6 +254,15 @@ function animate() {
         }, 0);
       }
 
+      // block player special attack
+      if (
+        special.fighter.name === 'player' &&
+        entities[1].blockBar === 100 &&
+        !entities[1].isBlocking
+      ) {
+        entities[1].addBlock();
+      }
+
       if (special.fighter.name === 'player' && attackCollision(special, entities[1])) {
         // check if opponent is not blocking
         if (!entities[1].isBlocking) {
