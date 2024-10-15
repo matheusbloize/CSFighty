@@ -21,7 +21,7 @@ export function basicAttack(actualFighter, opponent, ui, references) {
 
   actualFighter.attack(references.ctx);
   if (attackCollision(actualFighter.attackBox, opponent)) {
-    if (references.matchTime.duration === 98) {
+    if (references.matchInfo.duration === 98) {
       // prevent battle action bug
       return;
     }

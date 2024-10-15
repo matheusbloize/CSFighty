@@ -10,11 +10,9 @@ export function enemyMovementAction(battleInfo) {
   );
   let direction = player.direction;
   let movementAction;
-  console.log(fearMeter.value);
 
   // check fear meter to change behavior
   if (fearMeter.value > 0 && fearMeter.value <= 70) {
-    console.log('agressive');
     // agressive movement
     if (
       (oldDirection !== null && oldDirection !== direction) ||
@@ -35,7 +33,6 @@ export function enemyMovementAction(battleInfo) {
     }
   } else if (fearMeter.value > 70 && fearMeter.value <= 100) {
     // careful movement
-    console.log('careful');
     if (
       (oldDirection !== null && oldDirection !== direction) ||
       (movementActions.left[0] === 0 &&
@@ -92,28 +89,21 @@ export function enemyMovementAction(battleInfo) {
   // perform action
   switch (movementAction) {
     case 0: {
-      console.log('left');
-      movementActionsIntervals('set', movementIntervals, 'left', battleInfo, 10);
-      break;
-    }
-    case 1: {
-      console.log('right');
       movementActionsIntervals(
         'set',
         movementIntervals,
-        'right',
+        'left',
         battleInfo,
         10,
         randomJumpValue > 8 ? true : false
       );
       break;
     }
-    case 2: {
-      console.log('up');
+    case 1: {
       movementActionsIntervals(
         'set',
         movementIntervals,
-        'up',
+        'right',
         battleInfo,
         10,
         randomJumpValue > 8 ? true : false

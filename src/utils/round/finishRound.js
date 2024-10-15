@@ -1,7 +1,60 @@
 import { manageInterval } from './manageInterval.js';
 import { battleReset } from './battleReset.js';
 import { movementActionsIntervals } from '../enemy/movementActionsIntervals.js';
-import { fearMeter, movementIntervals } from '../../states/enemy.js';
+import { enemyLevel, fearMeter, movementIntervals } from '../../states/enemy.js';
+
+function restartRound(battleInfo) {
+  // restart round time
+  battleInfo.matchInfo.duration = 99;
+
+  // set countdown interval and fighters health and block bars style after 2 seconds
+  setTimeout(() => {
+    manageInterval('set', battleInfo.intervals, 'countdown', battleInfo, 1000);
+    battleInfo.firstFighterHealthBar.style.width = '100%';
+    battleInfo.secondFighterHealthBar.style.width = '100%';
+    battleInfo.firstFighterHealthBar.style.border = '2px solid';
+    battleInfo.secondFighterHealthBar.style.border = '2px solid';
+    battleInfo.firstFighterBlockBar.style.width = '100%';
+    battleInfo.secondFighterBlockBar.style.width = '100%';
+  }, 2000);
+
+  // start round and set special bar interval after 3 seconds
+  setTimeout(() => {
+    manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
+    // reset enemy fear meter
+    fearMeter.value = 50;
+
+    battleReset(battleInfo);
+  }, 3000);
+}
+
+function changeMatch(status, battleInfo) {
+  setTimeout(() => {
+    document.querySelector('#hud .hud_fighter-1_round-count_1').style.backgroundColor =
+      'transparent';
+    document.querySelector('#hud .hud_fighter-1_round-count_2').style.backgroundColor =
+      'transparent';
+    document.querySelector('#hud .hud_fighter-2_round-count_1').style.backgroundColor =
+      'transparent';
+    document.querySelector('#hud .hud_fighter-2_round-count_2').style.backgroundColor =
+      'transparent';
+
+    if (status === 'won') {
+      battleInfo.matchInfo.number++;
+      enemyLevel.actual = battleInfo.matchInfo.number;
+    } else {
+      battleInfo.matchInfo.number = 1;
+    }
+    battleInfo.actualRound.number = 0;
+    battleInfo.winners.round1 = null;
+    battleInfo.winners.round2 = null;
+    battleInfo.winners.round3 = null;
+    battleInfo.firstFighter.specialBar = 0;
+    battleInfo.secondFighter.specialBar = 0;
+
+    restartRound(battleInfo);
+  }, 4000);
+}
 
 export function finishRound(battleInfo) {
   // clear intervals
@@ -44,6 +97,8 @@ export function finishRound(battleInfo) {
   );
   setTimeout(() => (fighterRoundHud.style.backgroundColor = '#FFFFFF'), 2000);
 
+  console.log(battleInfo.winners);
+
   if (firstFighterRoundsWon === 2 || secondFighterRoundsWon === 2) {
     hasMatchWinner = true;
   }
@@ -53,28 +108,7 @@ export function finishRound(battleInfo) {
 
   // restart round variables
   if (!hasMatchWinner) {
-    // restart round time
-    battleInfo.matchTime.duration = 99;
-
-    // set countdown interval and fighters health and block bars style after 2 seconds
-    setTimeout(() => {
-      manageInterval('set', battleInfo.intervals, 'countdown', battleInfo, 1000);
-      battleInfo.firstFighterHealthBar.style.width = '100%';
-      battleInfo.secondFighterHealthBar.style.width = '100%';
-      battleInfo.firstFighterHealthBar.style.border = '2px solid';
-      battleInfo.secondFighterHealthBar.style.border = '2px solid';
-      battleInfo.firstFighterBlockBar.style.width = '100%';
-      battleInfo.secondFighterBlockBar.style.width = '100%';
-    }, 2000);
-
-    // start round and set special bar interval after 3 seconds
-    setTimeout(() => {
-      manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
-      // reset enemy fear meter
-      fearMeter.value = 50;
-
-      battleReset(battleInfo);
-    }, 3000);
+    restartRound(battleInfo);
   } else {
     // remove special bar pulse if battle end
     setTimeout(() => {
@@ -86,5 +120,17 @@ export function finishRound(battleInfo) {
       );
     }, 300);
     console.log('Battle end');
+
+    if (firstFighterRoundsWon == 2) {
+      // player won match, go to the next level
+      if (battleInfo.matchInfo.number !== 3) {
+        changeMatch('won', battleInfo);
+      } else {
+        console.log('player defeated boss');
+      }
+    } else {
+      // player lost match, restart from first level
+      changeMatch('lost', battleInfo);
+    }
   }
 }

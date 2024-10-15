@@ -17,5 +17,7 @@ export const movementIntervals = {
   right: null,
 };
 export const enemyLevel = {
+  initial: 1,
   actual: 1,
+  max: 3,
 };

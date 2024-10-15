@@ -100,8 +100,9 @@ let enemyCooldown = {
   active: true,
   time: 500,
 };
-let matchTime = {
+let matchInfo = {
   duration: matchTimeDuration - 1,
+  number: 1,
 };
 let actualRound = {
   number: 1,
@@ -118,7 +119,7 @@ let winners = {
   round3: null,
 };
 const references = {
-  matchTime,
+  matchInfo,
   countdownDOM,
   actualRound,
   firstFighter: entities[0],
@@ -257,17 +258,12 @@ function animate() {
 
       // block player special attack if enemy level is max
       if (
-        enemyLevel.actual === 3 &&
+        enemyLevel.actual === enemyLevel.max &&
         special.fighter.name === 'player' &&
         entities[1].blockBar === 100 &&
         !entities[1].isBlocking
       ) {
         entities[1].addBlock();
-        setTimeout(() => {
-          if (entities[1].isBlocking) {
-            undoBlock(entities[1], secondFighterBlockBar);
-          }
-        }, 500);
       }
 
       if (special.fighter.name === 'player' && attackCollision(special, entities[1])) {
@@ -317,9 +313,21 @@ function animate() {
 
   ctx.fillStyle = 'limegreen';
   ctx.fillText(
+    `actual match ${matchInfo.number}`,
+    canvas.width / 2 - differenceSpace - differenceSpace / 2,
+    canvas.height / 5
+  );
+  ctx.fillText(
     `actual round ${actualRound.number}`,
     canvas.width / 2 - differenceSpace - differenceSpace / 2,
     canvas.height / 4
+  );
+  ctx.fillText(
+    `actual enemy level ${enemyLevel.actual} ${
+      enemyLevel.actual === enemyLevel.max ? 'BOSS' : ''
+    }`,
+    canvas.width / 2 - differenceSpace - differenceSpace / 2,
+    canvas.height / 3.25
   );
 }
 

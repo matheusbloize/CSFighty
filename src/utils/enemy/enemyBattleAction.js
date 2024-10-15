@@ -12,7 +12,7 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   );
   let battleAction = null;
 
-  if (enemyLevel.actual === 3) {
+  if (enemyLevel.actual === enemyLevel.max) {
     if (
       enemy.specialBar === 100 &&
       player.blockBar !== 100 &&
@@ -53,11 +53,13 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
     }
     case 1: {
       battleInfo.secondFighter.addBlock();
-      setTimeout(() => {
-        if (battleInfo.secondFighter.isBlocking) {
-          undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
-        }
-      }, 500);
+      if (enemyLevel.actual < enemyLevel.max) {
+        setTimeout(() => {
+          if (battleInfo.secondFighter.isBlocking) {
+            undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
+          }
+        }, 500);
+      }
       break;
     }
     case 2: {

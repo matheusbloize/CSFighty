@@ -8,7 +8,7 @@ function content(type, references) {
   switch (type) {
     case intervalTypes[0]:
       // end match
-      if (references.matchTime.duration <= 0) {
+      if (references.matchInfo.duration <= 0) {
         references.countdownDOM.innerHTML = 0;
         references.countdownDOM.classList.add('hud_time-pulsing');
         // prevent draw if none fighter hit each other
@@ -23,7 +23,7 @@ function content(type, references) {
         }
       } else {
         // decrease time by 1
-        references.countdownDOM.innerHTML = references.matchTime.duration--;
+        references.countdownDOM.innerHTML = references.matchInfo.duration--;
       }
       break;
     case intervalTypes[1]:
