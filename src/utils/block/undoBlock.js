@@ -10,13 +10,13 @@ export function undoBlock(fighter, ui) {
   // fear meter
   const oldFearMeter = fearMeter.value;
 
-  if (fighter.name === 'player' && enemyLevel.actual > enemyLevel.initial) {
+  if (fighter.getName() === 'player' && enemyLevel.actual > enemyLevel.initial) {
     fearMeter.value = 0;
-    playerLife = fighter.life;
+    playerLife = fighter.getLife();
   }
 
   setTimeout(() => {
-    if (fearMeter.value === 0 && playerLife === fighter.life) {
+    if (fearMeter.value === 0 && playerLife === fighter.getLife()) {
       fearMeter.value = oldFearMeter;
     }
   }, 7000);

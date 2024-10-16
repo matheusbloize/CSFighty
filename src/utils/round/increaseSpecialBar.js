@@ -1,8 +1,8 @@
 export function increaseSpecialBar(fighter, damage) {
-  if (fighter.specialBar + damage < fighter.specialBarLimit) {
-    setTimeout(() => (fighter.specialBar += damage), 0);
+  if (fighter.getSpecialBar() + damage < fighter.getSpecialBarLimit()) {
+    setTimeout(() => fighter.setSpecialBar(fighter.getSpecialBar() + damage), 0);
   } else {
-    const fillSpecialBar = fighter.specialBarLimit - fighter.specialBar;
-    setTimeout(() => (fighter.specialBar += fillSpecialBar), 0);
+    const fillSpecialBar = fighter.getSpecialBarLimit() - fighter.getSpecialBar();
+    setTimeout(() => fighter.setSpecialBar(fighter.getSpecialBar() + fillSpecialBar), 0);
   }
 }

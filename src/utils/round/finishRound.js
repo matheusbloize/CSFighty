@@ -44,13 +44,14 @@ function changeMatch(status, battleInfo) {
       enemyLevel.actual = battleInfo.matchInfo.number;
     } else {
       battleInfo.matchInfo.number = 1;
+      enemyLevel.actual = enemyLevel.initial;
     }
     battleInfo.actualRound.number = 0;
     battleInfo.winners.round1 = null;
     battleInfo.winners.round2 = null;
     battleInfo.winners.round3 = null;
-    battleInfo.firstFighter.specialBar = 0;
-    battleInfo.secondFighter.specialBar = 0;
+    battleInfo.firstFighter.setSpecialBar(0);
+    battleInfo.secondFighter.setSpecialBar(0);
 
     restartRound(battleInfo);
   }, 4000);
@@ -69,9 +70,9 @@ export function finishRound(battleInfo) {
   // set round winner
   let winner = null;
   winner =
-    battleInfo.firstFighter.life < battleInfo.secondFighter.life
-      ? battleInfo.secondFighter.name
-      : battleInfo.firstFighter.name;
+    battleInfo.firstFighter.getLife() < battleInfo.secondFighter.getLife()
+      ? battleInfo.secondFighter.getName()
+      : battleInfo.firstFighter.getName();
 
   if (winner !== null) {
     battleInfo.winners[`round${battleInfo.actualRound.number}`] = winner;
@@ -83,9 +84,9 @@ export function finishRound(battleInfo) {
   let secondFighterRoundsWon = 0;
 
   for (const winner in battleInfo.winners) {
-    battleInfo.winners[winner] === battleInfo.firstFighter.name &&
+    battleInfo.winners[winner] === battleInfo.firstFighter.getName() &&
       firstFighterRoundsWon++;
-    battleInfo.winners[winner] === battleInfo.secondFighter.name &&
+    battleInfo.winners[winner] === battleInfo.secondFighter.getName() &&
       secondFighterRoundsWon++;
   }
 

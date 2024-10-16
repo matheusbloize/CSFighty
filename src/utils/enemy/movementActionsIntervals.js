@@ -8,28 +8,42 @@ function content(type, references, jump) {
     case intervalTypes[0]:
       if (
         !isFighterCollidingBorder(
-          references.secondFighter.position.x - movementActions.distance,
-          references.secondFighter.width,
+          references.secondFighter.getPositionX() - movementActions.distance,
+          references.secondFighter.getWidth(),
           references.ctx.canvas.width
         )
       ) {
-        references.secondFighter.position.x -= 2;
-        if (jump && references.secondFighter.position.y == references.floorPositionY) {
-          references.secondFighter.velocity -= 20;
+        references.secondFighter.setPositionX(
+          references.secondFighter.getPositionX() - 2
+        );
+        if (
+          jump &&
+          references.secondFighter.getPositionY() === references.floorPositionY
+        ) {
+          references.secondFighter.setVelocity(
+            references.secondFighter.getVelocity() - 20
+          );
         }
       }
       break;
     case intervalTypes[1]:
       if (
         !isFighterCollidingBorder(
-          references.secondFighter.position.x + movementActions.distance,
-          references.secondFighter.width,
+          references.secondFighter.getPositionX() + movementActions.distance,
+          references.secondFighter.getWidth(),
           references.ctx.canvas.width
         )
       ) {
-        references.secondFighter.position.x += 2;
-        if (jump && references.secondFighter.position.y == references.floorPositionY) {
-          references.secondFighter.velocity -= 20;
+        references.secondFighter.setPositionX(
+          references.secondFighter.getPositionX() + 2
+        );
+        if (
+          jump &&
+          references.secondFighter.getPositionY() === references.floorPositionY
+        ) {
+          references.secondFighter.setVelocity(
+            references.secondFighter.getVelocity() - 20
+          );
         }
       }
       break;

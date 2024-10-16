@@ -8,7 +8,7 @@ export function enemyMovementAction(battleInfo) {
   const randomMovementValue = Math.floor(
     Math.random() * (fearMeter.max - fearMeter.min + 1) + fearMeter.min
   );
-  let direction = player.direction;
+  let direction = player.getDirection();
   let movementAction;
 
   // check fear meter to change behavior

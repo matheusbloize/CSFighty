@@ -15,42 +15,42 @@ function defeatOpponent(ui, actualRound, references) {
 }
 
 export function basicAttack(actualFighter, opponent, ui, references) {
-  if (actualFighter.isBlocking) {
+  if (actualFighter.isBlocking()) {
     undoBlock(actualFighter, references.firstFighterBlockBar);
   }
 
   actualFighter.attack(references.ctx);
-  if (attackCollision(actualFighter.attackBox, opponent)) {
+  if (attackCollision(actualFighter.getAttackBox(), opponent)) {
     if (references.matchInfo.duration === 98) {
       // prevent battle action bug
       return;
     }
     // check if opponent is blocking
-    if (opponent.isBlocking) {
+    if (opponent.isBlocking()) {
       return opponent.removeBlock();
     }
 
     // apply damage
-    if (opponent.life - references.damageSpec.attack >= 0) {
-      opponent.life -= references.damageSpec.attack;
+    if (opponent.getLife() - references.damageSpec.attack >= 0) {
+      opponent.setLife(opponent.getLife() - references.damageSpec.attack);
       ui.style.width = `${
         Number(ui.style.width.split('%')[0]) - references.damageSpec.attack
       }%`;
-      if (opponent.life == 0) {
-        console.log(`${opponent.name} defeated`);
+      if (opponent.getLife() === 0) {
+        console.log(`${opponent.getName()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     } else {
       if (ui.style.border != 'none') {
-        console.log(`${opponent.name} defeated`);
+        console.log(`${opponent.getName()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     }
 
     // change enemy fear meter
-    if (opponent.name === 'enemy' && fearMeter.value + 10 <= fearMeter.max) {
+    if (opponent.getName() === 'enemy' && fearMeter.value + 10 <= fearMeter.max) {
       fearMeter.value += 10;
-    } else if (opponent.name === 'player' && fearMeter.value - 10 >= fearMeter.min) {
+    } else if (opponent.getName() === 'player' && fearMeter.value - 10 >= fearMeter.min) {
       fearMeter.value -= 10;
     }
 

@@ -22,22 +22,22 @@ export function specialAttack(
   specialAttacks,
   index
 ) {
-  if (opponent.life - references.damageSpec.special >= 0) {
-    opponent.life -= references.damageSpec.special;
+  if (opponent.getLife() - references.damageSpec.special >= 0) {
+    opponent.setLife(opponent.getLife() - references.damageSpec.special);
     ui.style.width = `${
       Number(ui.style.width.split('%')[0]) - references.damageSpec.special
     }%`;
-    if (opponent.life === 0) {
+    if (opponent.getLife() === 0) {
       defeatOpponent(ui, references.actualRound, references);
     }
   } else {
-    opponent.life = 0;
-    ui.style.width = `${opponent.life}%`;
+    opponent.setLife(0);
+    ui.style.width = `${opponent.getLife()}%`;
     defeatOpponent(ui, references.actualRound, references);
   }
 
   // change enemy fear meter
-  if (opponent.name === 'enemy') {
+  if (opponent.getName() === 'enemy') {
     if (fearMeter.value + 20 <= fearMeter.max) {
       fearMeter.value += 20;
     } else {

@@ -78,8 +78,8 @@ const firstFighterSpecialBar = document.querySelector(
 const secondFighterSpecialBar = document.querySelector(
   '#special-bar .special-bar_fighter-2_content'
 );
-document.querySelector('#hud .hud_fighter-1_name').innerHTML = entities[0].name;
-document.querySelector('#hud .hud_fighter-2_name').innerHTML = entities[1].name;
+document.querySelector('#hud .hud_fighter-1_name').innerHTML = entities[0].getName();
+document.querySelector('#hud .hud_fighter-2_name').innerHTML = entities[1].getName();
 const firstFighterBlockBar = document.querySelector(
   '#hud .hud_fighter-1_block-bar_content'
 );
@@ -154,11 +154,11 @@ function animate() {
   for (const entity of entities) {
     if (!actualRound.finished) {
       // player loop
-      if (entity.name == 'player') {
+      if (entity.getName() === 'player') {
         // check/change directions
         if (
-          entity.position.x + entity.width >
-          entities[1].position.x + entities[1].width
+          entity.getPositionX() + entity.getWidth() >
+          entities[1].getPositionX() + entities[1].getWidth()
         ) {
           entity.changeDirection('left');
           entities[1].changeDirection('right');
@@ -168,21 +168,29 @@ function animate() {
         }
 
         // move player
-        if (keys.w.pressed && entity.position.y == floorPositionY) {
-          entity.velocity -= 20;
+        if (keys.w.pressed && entity.getPositionY() == floorPositionY) {
+          entity.setVelocity(entity.getVelocity() - 20);
 
           // move left or right while jumping
           if (keys.a.pressed && lastKey === 'a') {
             if (
-              !isFighterCollidingBorder(entity.position.x - 2, entity.width, canvas.width)
+              !isFighterCollidingBorder(
+                entity.getPositionX() - 2,
+                entity.getWidth(),
+                canvas.width
+              )
             ) {
-              entity.position.x -= 1;
+              entity.setPositionX(entity.getPositionX() - 1);
             }
           } else if (keys.d.pressed && lastKey === 'd') {
             if (
-              !isFighterCollidingBorder(entity.position.x + 2, entity.width, canvas.width)
+              !isFighterCollidingBorder(
+                entity.getPositionX() + 2,
+                entity.getWidth(),
+                canvas.width
+              )
             ) {
-              entity.position.x += 1;
+              entity.setPositionX(entity.getPositionX() + 1);
             }
           }
         }
@@ -194,25 +202,33 @@ function animate() {
         }
         if (keys.a.pressed && lastKey === 'a') {
           if (
-            !isFighterCollidingBorder(entity.position.x - 2, entity.width, canvas.width)
+            !isFighterCollidingBorder(
+              entity.getPositionX() - 2,
+              entity.getWidth(),
+              canvas.width
+            )
           ) {
-            entity.position.x -= 2;
+            entity.setPositionX(entity.getPositionX() - 2);
           }
         } else if (keys.d.pressed && lastKey === 'd') {
           if (
-            !isFighterCollidingBorder(entity.position.x + 2, entity.width, canvas.width)
+            !isFighterCollidingBorder(
+              entity.getPositionX() + 2,
+              entity.getWidth(),
+              canvas.width
+            )
           ) {
-            entity.position.x += 2;
+            entity.setPositionX(entity.getPositionX() + 2);
           }
         }
         if (keys.r.pressed) {
           keys.r.pressed = false;
-          if (entity.isBlocking) {
+          if (entity.isBlocking()) {
             undoBlock(entity, firstFighterBlockBar);
           }
-          if (entity.specialBar === entity.specialBarLimit) {
+          if (entity.getSpecialBar() === entity.getSpecialBarLimit()) {
             specialAttacks.push(new SpecialAttack(entity));
-            entity.specialBar = 0;
+            entity.setSpecialBar(0);
             firstFighterSpecialBar.parentElement.classList.remove('special-bar_charged');
           }
         }
@@ -221,9 +237,9 @@ function animate() {
           blockCooldown.active = false;
           setTimeout(() => (blockCooldown.active = true), blockCooldown.time);
           entity.addBlock();
-          if (entity.isBlocking) {
+          if (entity.isBlocking()) {
             setTimeout(() => {
-              if (entity.isBlocking) {
+              if (entity.isBlocking()) {
                 undoBlock(entity, firstFighterBlockBar);
               }
             }, 500);
@@ -250,7 +266,7 @@ function animate() {
     // special attacks loop
     specialAttacks.forEach((special, index) => {
       // special attack gets removed from array when crosses canvas or hit opponent
-      if (special.x + special.width >= canvas.width || special.x < 0) {
+      if (special.getX() + special.getWidth() >= canvas.width || special.getX() < 0) {
         setTimeout(() => {
           specialReset(special, specialAttacks, index);
         }, 0);
@@ -259,19 +275,22 @@ function animate() {
       // block player special attack if enemy level is max
       if (
         enemyLevel.actual === enemyLevel.max &&
-        special.fighter.name === 'player' &&
-        entities[1].blockBar === 100 &&
-        !entities[1].isBlocking
+        special.getFighter().getName() === 'player' &&
+        entities[1].getBlockBar() === 100 &&
+        !entities[1].isBlocking()
       ) {
         entities[1].addBlock();
       }
 
-      if (special.fighter.name === 'player' && attackCollision(special, entities[1])) {
+      if (
+        special.getFighter().getName() === 'player' &&
+        attackCollision(special, entities[1])
+      ) {
         // check if opponent is not blocking
-        if (!entities[1].isBlocking) {
+        if (!entities[1].isBlocking()) {
           specialAttack(
             special,
-            special.fighter,
+            special.getFighter(),
             entities[1],
             secondFighterHealthBar,
             references,
@@ -285,12 +304,15 @@ function animate() {
           }, 0);
         }
       }
-      if (special.fighter.name === 'enemy' && attackCollision(special, entities[0])) {
+      if (
+        special.getFighter().getName() === 'enemy' &&
+        attackCollision(special, entities[0])
+      ) {
         // check if opponent is not blocking
-        if (!entities[0].isBlocking) {
+        if (!entities[0].isBlocking()) {
           specialAttack(
             special,
-            special.fighter,
+            special.getFighter(),
             entities[0],
             firstFighterHealthBar,
             references,

@@ -9,24 +9,16 @@ export function battleReset({ actualRound, firstFighter, secondFighter, ctx }) {
   actualRound.finished = false;
 
   // fighters position
-  firstFighter.position = {
-    x: widthSpace,
-    y: ctx.canvas.height - defaultHeight - differenceSpace,
-  };
-  firstFighter.width = defaultWidth;
-  firstFighter.height = defaultHeight;
-  secondFighter.position = {
-    x: ctx.canvas.width - widthSpace - defaultWidth,
-    y: ctx.canvas.height - defaultHeight - differenceSpace,
-  };
-  secondFighter.width = defaultWidth;
-  secondFighter.height = defaultHeight;
+  firstFighter.setPositionX(widthSpace);
+  firstFighter.setPositionY(ctx.canvas.height - defaultHeight - differenceSpace);
+  secondFighter.setPositionX(ctx.canvas.width - widthSpace - defaultWidth);
+  secondFighter.setPositionY(ctx.canvas.height - defaultHeight - differenceSpace);
 
   // health bar fighters
-  firstFighter.life = 100;
-  secondFighter.life = 100;
+  firstFighter.setLife(100);
+  secondFighter.setLife(100);
 
   // block bar fighters
-  firstFighter.blockBar = 100;
-  secondFighter.blockBar = 100;
+  firstFighter.setBlockBar(100);
+  secondFighter.setBlockBar(100);
 }

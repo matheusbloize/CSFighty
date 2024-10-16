@@ -14,31 +14,31 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
 
   if (enemyLevel.actual === enemyLevel.max) {
     if (
-      enemy.specialBar === 100 &&
-      (player.blockBar !== 100 ||
+      enemy.getSpecialBar() === 100 &&
+      (player.getBlockBar() !== 100 ||
         attackCollision(
           {
-            x:
-              player.direction > 0
-                ? enemy.attackBox.x - enemy.width * 4
-                : enemy.attackBox.x + enemy.width * 4,
-            y: enemy.attackBox.y,
-            width: enemy.attackBox.width,
-            height: enemy.attackBox.height,
+            getX: () =>
+              player.getDirection() > 0
+                ? enemy.getAttackBox().getX() - enemy.getWidth() * 4
+                : enemy.getAttackBox().getX() + enemy.getWidth() * 4,
+            getY: () => enemy.getAttackBox().getY(),
+            getWidth: () => enemy.getAttackBox().getWidth(),
+            getHeight: () => enemy.getAttackBox().getHeight(),
           },
           player
         )) &&
-      enemy.position.y === player.position.y
+      enemy.getPositionY() === player.getPositionY()
     ) {
       battleAction = 2;
     }
   } else {
-    if (enemy.specialBar === 100) {
+    if (enemy.getSpecialBar() === 100) {
       battleAction = 2;
     }
   }
 
-  if (battleAction === null && attackCollision(enemy.attackBox, player)) {
+  if (battleAction === null && attackCollision(enemy.getAttackBox(), player)) {
     if (
       randomBattleValue >= battleActions.attack[0] &&
       randomBattleValue < battleActions.attack[1]
@@ -52,7 +52,7 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   // perform action
   switch (battleAction) {
     case 0: {
-      if (battleInfo.secondFighter.isBlocking) {
+      if (battleInfo.secondFighter.isBlocking()) {
         undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
       }
       basicAttack(
@@ -67,7 +67,7 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       battleInfo.secondFighter.addBlock();
       if (enemyLevel.actual < enemyLevel.max) {
         setTimeout(() => {
-          if (battleInfo.secondFighter.isBlocking) {
+          if (battleInfo.secondFighter.isBlocking()) {
             undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
           }
         }, 500);
@@ -75,14 +75,15 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       break;
     }
     case 2: {
-      if (battleInfo.secondFighter.isBlocking) {
+      if (battleInfo.secondFighter.isBlocking()) {
         undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
       }
       if (
-        battleInfo.secondFighter.specialBar === battleInfo.secondFighter.specialBarLimit
+        battleInfo.secondFighter.getSpecialBar() ===
+        battleInfo.secondFighter.getSpecialBarLimit()
       ) {
         specialAttacks.push(new SpecialAttack(battleInfo.secondFighter));
-        battleInfo.secondFighter.specialBar = 0;
+        battleInfo.secondFighter.setSpecialBar(0);
         battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
           'special-bar_charged'
         );

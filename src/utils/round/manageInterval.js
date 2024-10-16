@@ -13,8 +13,8 @@ function content(type, references) {
         references.countdownDOM.classList.add('hud_time-pulsing');
         // prevent draw if none fighter hit each other
         if (
-          references.firstFighter.life < references.secondFighter.life ||
-          references.firstFighter.life > references.secondFighter.life
+          references.firstFighter.getLife() < references.secondFighter.getLife() ||
+          references.firstFighter.getLife() > references.secondFighter.getLife()
         ) {
           references.actualRound.finished = true;
           finishRound({
