@@ -74,7 +74,8 @@ export function enemyMovementAction(battleInfo) {
   }
 
   // random jump
-  let randomJumpValue = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+  let randomJumpValue =
+    battleInfo.matchInfo.duration < 98 && Math.floor(Math.random() * (10 - 1 + 1) + 1);
 
   // choose action according to movement percentage
   if (

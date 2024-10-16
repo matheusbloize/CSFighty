@@ -18,7 +18,8 @@ function content(type, references, jump) {
         );
         if (
           jump &&
-          references.secondFighter.getPositionY() === references.floorPositionY
+          references.secondFighter.getPositionY() === references.floorPositionY &&
+          references.secondFighter.getVelocity() === 0
         ) {
           references.secondFighter.setVelocity(
             references.secondFighter.getVelocity() - 20
@@ -39,7 +40,8 @@ function content(type, references, jump) {
         );
         if (
           jump &&
-          references.secondFighter.getPositionY() === references.floorPositionY
+          references.secondFighter.getPositionY() === references.floorPositionY &&
+          references.secondFighter.getVelocity() === 0
         ) {
           references.secondFighter.setVelocity(
             references.secondFighter.getVelocity() - 20
