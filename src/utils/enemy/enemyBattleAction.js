@@ -15,7 +15,19 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   if (enemyLevel.actual === enemyLevel.max) {
     if (
       enemy.specialBar === 100 &&
-      player.blockBar !== 100 &&
+      (player.blockBar !== 100 ||
+        attackCollision(
+          {
+            x:
+              player.direction > 0
+                ? enemy.attackBox.x - enemy.width * 4
+                : enemy.attackBox.x + enemy.width * 4,
+            y: enemy.attackBox.y,
+            width: enemy.attackBox.width,
+            height: enemy.attackBox.height,
+          },
+          player
+        )) &&
       enemy.position.y === player.position.y
     ) {
       battleAction = 2;
