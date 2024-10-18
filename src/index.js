@@ -17,7 +17,7 @@ const ctx = canvas.getContext('2d');
 const defaultWidth = 50;
 const defaultHeight = 100;
 const widthSpace = 40;
-const differenceSpace = 32;
+const differenceSpace = 97;
 const floorPositionY = canvas.height - defaultHeight - differenceSpace;
 const entities = [
   new Fighter(
@@ -86,6 +86,8 @@ const firstFighterBlockBar = document.querySelector(
 const secondFighterBlockBar = document.querySelector(
   '#hud .hud_fighter-2_block-bar_content'
 );
+const stageBackground = new Image();
+stageBackground.src = '../assets/stages/test_stage.png';
 
 let lastKey;
 let attackCooldown = {
@@ -150,6 +152,7 @@ manageInterval('set', intervals, 'bars', references, 100);
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(stageBackground, 0, 0, canvas.width, canvas.height);
 
   for (const entity of entities) {
     if (!actualRound.finished) {
@@ -169,7 +172,7 @@ function animate() {
 
         // move player
         if (keys.w.pressed && entity.getPositionY() == floorPositionY) {
-          entity.setVelocity(entity.getVelocity() - 20);
+          entity.setVelocity(entity.getVelocity() - 25);
 
           // move left or right while jumping
           if (keys.a.pressed && lastKey === 'a') {
@@ -180,7 +183,7 @@ function animate() {
                 canvas.width
               )
             ) {
-              entity.setPositionX(entity.getPositionX() - 1);
+              entity.setPositionX(entity.getPositionX() - 2);
             }
           } else if (keys.d.pressed && lastKey === 'd') {
             if (
@@ -190,7 +193,7 @@ function animate() {
                 canvas.width
               )
             ) {
-              entity.setPositionX(entity.getPositionX() + 1);
+              entity.setPositionX(entity.getPositionX() + 2);
             }
           }
         }
@@ -336,19 +339,19 @@ function animate() {
   ctx.fillStyle = 'limegreen';
   ctx.fillText(
     `actual match ${matchInfo.number}`,
-    canvas.width / 2 - differenceSpace - differenceSpace / 2,
+    canvas.width / 2.25,
     canvas.height / 5
   );
   ctx.fillText(
     `actual round ${actualRound.number}`,
-    canvas.width / 2 - differenceSpace - differenceSpace / 2,
+    canvas.width / 2.25,
     canvas.height / 4
   );
   ctx.fillText(
     `actual enemy level ${enemyLevel.actual} ${
       enemyLevel.actual === enemyLevel.max ? 'BOSS' : ''
     }`,
-    canvas.width / 2 - differenceSpace - differenceSpace / 2,
+    canvas.width / 2.25,
     canvas.height / 3.25
   );
 }
