@@ -87,7 +87,6 @@ const secondFighterBlockBar = document.querySelector(
   '#hud .hud_fighter-2_block-bar_content'
 );
 const stageBackground = new Image();
-stageBackground.src = '../assets/stages/test_stage.png';
 
 let lastKey;
 let attackCooldown = {
@@ -120,6 +119,10 @@ let winners = {
   round2: null,
   round3: null,
 };
+let stage = {
+  actual: 'default',
+  last: '',
+};
 const references = {
   matchInfo,
   countdownDOM,
@@ -138,6 +141,7 @@ const references = {
   specialAttacks,
   damageSpec,
   floorPositionY,
+  stage,
 };
 
 ctx.font = '16px Verdana';
@@ -152,6 +156,9 @@ manageInterval('set', intervals, 'bars', references, 100);
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (stage.last !== stage.actual) {
+    stageBackground.src = `../assets/stages/stage_${stage.actual}.webp`;
+  }
   ctx.drawImage(stageBackground, 0, 0, canvas.width, canvas.height);
 
   for (const entity of entities) {
