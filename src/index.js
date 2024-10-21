@@ -20,25 +20,31 @@ const widthSpace = 40;
 const differenceSpace = 97;
 const floorPositionY = canvas.height - defaultHeight - differenceSpace;
 const entities = [
-  new Fighter(
-    'player',
-    { x: widthSpace, y: floorPositionY },
-    defaultWidth,
-    defaultHeight,
-    'red',
-    differenceSpace
-  ),
-  new Fighter(
-    'enemy',
-    {
+  new Fighter({
+    name: 'player',
+    position: { x: widthSpace, y: floorPositionY },
+    width: defaultWidth,
+    height: defaultHeight,
+    src: '../assets/fighters/medieval/idle.png',
+    scale: 2.5,
+    framesMax: 10,
+    differenceSpace,
+    offset: { x: 145, y: 120 },
+  }),
+  new Fighter({
+    name: 'enemy',
+    position: {
       x: canvas.width - widthSpace - defaultWidth,
       y: floorPositionY,
     },
-    defaultWidth,
-    defaultHeight,
-    'blue',
-    differenceSpace
-  ),
+    width: defaultWidth,
+    height: defaultHeight,
+    src: '../assets/fighters/medieval/idle.png',
+    scale: 2.5,
+    framesMax: 10,
+    differenceSpace,
+    offset: { x: 196, y: 120 },
+  }),
 ];
 const keys = {
   w: {
@@ -178,7 +184,7 @@ function animate() {
         }
 
         // move player
-        if (keys.w.pressed && entity.getPositionY() == floorPositionY) {
+        if (keys.w.pressed && entity.getPositionY() === floorPositionY) {
           entity.setVelocity(entity.getVelocity() - 25);
 
           // move left or right while jumping

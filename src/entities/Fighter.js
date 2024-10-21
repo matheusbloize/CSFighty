@@ -1,9 +1,9 @@
-export class Fighter {
+import { Sprite } from './Sprite.js';
+
+export class Fighter extends Sprite {
   #name;
-  #position;
   #width;
   #height;
-  #color;
   #differenceSpace;
   #velocity = 1;
   #attackBox;
@@ -12,43 +12,67 @@ export class Fighter {
   #specialBarLimit = 100;
   #gravity = 0.45;
   #friction = 0.9;
-  #direction = 1;
   #isBlocking = false;
   #blockBar = 100;
   #blockBarLimit = 100;
 
-  constructor(name, position, width, height, color, differenceSpace) {
+  constructor({
+    name,
+    position,
+    width,
+    height,
+    src,
+    scale,
+    framesMax,
+    framesActual,
+    framesElapsed,
+    framesHold,
+    differenceSpace,
+    offset,
+  }) {
+    super({
+      position,
+      src,
+      scale,
+      framesMax,
+      framesActual,
+      framesElapsed,
+      framesHold,
+      offset,
+      name,
+    });
     this.#name = name;
-    this.#position = { ...position };
     this.#width = width;
     this.#height = height;
-    this.#color = color;
     this.#differenceSpace = differenceSpace;
     this.#attackBox = {
-      x: this.#position.x + this.#width,
-      y: this.#position.y,
+      x: this.getPositionX() + this.#width,
+      y: this.getPositionY(),
       width: 100,
       height: 30,
     };
   }
 
-  draw(ctx) {
-    ctx.fillStyle = this.#color;
-    ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
-    ctx.fillStyle = 'white';
-    if (this.#direction > 0) {
-      ctx.fillRect(this.#position.x + this.#width - 10, this.#position.y, 10, 10);
-    } else {
-      ctx.fillRect(this.#position.x, this.#position.y, 10, 10);
+  update(ctx) {
+    this.draw(ctx);
+    this.animateFrames();
+
+    this.#velocity += this.#gravity;
+    this.setPositionY(this.getPositionY() + this.#velocity);
+    this.#velocity *= this.#friction;
+
+    if (this.getPositionY() + this.#height + this.#differenceSpace > ctx.canvas.height) {
+      this.#velocity = 0;
+      this.setPositionY(ctx.canvas.height - 100 - this.#differenceSpace);
     }
 
     this.#attackBox = {
       ...this.#attackBox,
       x:
-        this.#direction > 0
-          ? this.#position.x + this.#width
-          : this.#position.x - this.#attackBox.width,
-      y: this.#position.y,
+        this.getDirection() > 0
+          ? this.getPositionX() + this.#width
+          : this.getPositionX() - this.#attackBox.width,
+      y: this.getPositionY(),
     };
 
     if (this.#isBlocking) {
@@ -56,24 +80,11 @@ export class Fighter {
       ctx.lineWidth = 5;
       ctx.strokeStyle = '#FFFAFA';
       ctx.strokeRect(
-        this.#position.x - ctx.lineWidth / 2,
-        this.#position.y - ctx.lineWidth / 2,
+        this.getPositionX() - ctx.lineWidth / 2,
+        this.getPositionY() - ctx.lineWidth / 2,
         this.#width + ctx.lineWidth,
         this.#height + ctx.lineWidth
       );
-    }
-  }
-
-  update(ctx) {
-    this.draw(ctx);
-
-    this.#velocity += this.#gravity;
-    this.#position.y += this.#velocity;
-    this.#velocity *= this.#friction;
-
-    if (this.#position.y + this.#height + this.#differenceSpace > ctx.canvas.height) {
-      this.#velocity = 0;
-      this.#position.y = ctx.canvas.height - 100 - this.#differenceSpace;
     }
   }
 
@@ -85,14 +96,6 @@ export class Fighter {
       this.#attackBox.width,
       this.#attackBox.height
     );
-  }
-
-  changeDirection(side) {
-    if (side === 'left') {
-      this.#direction = -1;
-    } else {
-      this.#direction = 1;
-    }
   }
 
   addBlock() {
@@ -110,30 +113,6 @@ export class Fighter {
 
   getName() {
     return this.#name;
-  }
-
-  getPositionX() {
-    return this.#position.x;
-  }
-
-  setPositionX(value) {
-    this.#position.x = value;
-  }
-
-  getPositionY() {
-    return this.#position.y;
-  }
-
-  setPositionY(value) {
-    this.#position.y = value;
-  }
-
-  getWidth() {
-    return this.#width;
-  }
-
-  getHeight() {
-    return this.#height;
   }
 
   getVelocity() {
@@ -172,10 +151,6 @@ export class Fighter {
 
   getSpecialBarLimit() {
     return this.#specialBarLimit;
-  }
-
-  getDirection() {
-    return this.#direction;
   }
 
   isBlocking() {
