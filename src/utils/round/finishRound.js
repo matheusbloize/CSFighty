@@ -25,6 +25,10 @@ function restartRound(battleInfo) {
     fearMeter.value = 50;
 
     battleReset(battleInfo);
+
+    // change to default stage
+    battleInfo.stage.last = '';
+    battleInfo.stage.actual = 'default';
   }, 3000);
 }
 
@@ -41,7 +45,17 @@ function changeMatch(status, battleInfo) {
 
     if (status === 'won') {
       battleInfo.matchInfo.number++;
-      enemyLevel.actual = battleInfo.matchInfo.number;
+      switch (battleInfo.matchInfo.number) {
+        case 2:
+        case 3: {
+          enemyLevel.actual = 2;
+          break;
+        }
+        case 4: {
+          enemyLevel.actual = 3;
+          break;
+        }
+      }
     } else {
       battleInfo.matchInfo.number = 1;
       enemyLevel.actual = enemyLevel.initial;
@@ -124,10 +138,30 @@ export function finishRound(battleInfo) {
 
     if (firstFighterRoundsWon == 2) {
       // player won match, go to the next level
-      if (battleInfo.matchInfo.number !== 3) {
+      if (battleInfo.matchInfo.number !== 4) {
+        // change stage
+        battleInfo.stage.last = battleInfo.stage.actual;
+        switch (battleInfo.matchInfo.number) {
+          case 1: {
+            battleInfo.stage.actual = 'red';
+            break;
+          }
+          case 2: {
+            battleInfo.stage.actual = 'green';
+            break;
+          }
+          case 3: {
+            battleInfo.stage.actual = 'blue';
+            break;
+          }
+        }
+
         changeMatch('won', battleInfo);
       } else {
         console.log('player defeated boss');
+
+        // defeat boss animation
+        battleInfo.stage.actual = 'final';
       }
     } else {
       // player lost match, restart from first level

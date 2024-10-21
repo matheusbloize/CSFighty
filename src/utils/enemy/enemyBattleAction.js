@@ -52,38 +52,33 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   // perform action
   switch (battleAction) {
     case 0: {
-      if (battleInfo.secondFighter.isBlocking()) {
-        undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
+      if (enemy.isBlocking()) {
+        undoBlock(enemy, battleInfo.secondFighterBlockBar);
       }
-      basicAttack(
-        battleInfo.secondFighter,
-        battleInfo.firstFighter,
-        battleInfo.firstFighterHealthBar,
-        battleInfo
-      );
+      basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
       break;
     }
     case 1: {
-      battleInfo.secondFighter.addBlock();
+      enemy.addBlock();
       if (enemyLevel.actual < enemyLevel.max) {
         setTimeout(() => {
-          if (battleInfo.secondFighter.isBlocking()) {
-            undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
+          if (enemy.isBlocking()) {
+            undoBlock(enemy, battleInfo.secondFighterBlockBar);
           }
         }, 500);
       }
       break;
     }
     case 2: {
-      if (battleInfo.secondFighter.isBlocking()) {
-        undoBlock(battleInfo.secondFighter, battleInfo.secondFighterBlockBar);
+      if (enemy.isBlocking()) {
+        undoBlock(enemy, battleInfo.secondFighterBlockBar);
       }
       if (
-        battleInfo.secondFighter.getSpecialBar() ===
-        battleInfo.secondFighter.getSpecialBarLimit()
+        enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
+        enemy.getAttackBox().getY() === enemy.getPositionY()
       ) {
-        specialAttacks.push(new SpecialAttack(battleInfo.secondFighter));
-        battleInfo.secondFighter.setSpecialBar(0);
+        specialAttacks.push(new SpecialAttack(enemy));
+        enemy.setSpecialBar(0);
         battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
           'special-bar_charged'
         );
