@@ -50,40 +50,40 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   }
 
   // perform action
-  switch (battleAction) {
-    case 0: {
-      if (enemy.isBlocking()) {
-        undoBlock(enemy, battleInfo.secondFighterBlockBar);
-      }
-      basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
-      break;
-    }
-    case 1: {
-      enemy.addBlock();
-      if (enemyLevel.actual < enemyLevel.max) {
-        setTimeout(() => {
-          if (enemy.isBlocking()) {
-            undoBlock(enemy, battleInfo.secondFighterBlockBar);
-          }
-        }, 500);
-      }
-      break;
-    }
-    case 2: {
-      if (enemy.isBlocking()) {
-        undoBlock(enemy, battleInfo.secondFighterBlockBar);
-      }
-      if (
-        enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
-        enemy.getAttackBox().getY() === enemy.getPositionY()
-      ) {
-        specialAttacks.push(new SpecialAttack(enemy));
-        enemy.setSpecialBar(0);
-        battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
-          'special-bar_charged'
-        );
-      }
-      break;
-    }
-  }
+  // switch (battleAction) {
+  //   case 0: {
+  //     if (enemy.isBlocking()) {
+  //       undoBlock(enemy, battleInfo.secondFighterBlockBar);
+  //     }
+  //     basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+  //     break;
+  //   }
+  //   case 1: {
+  //     enemy.addBlock();
+  //     if (enemyLevel.actual < enemyLevel.max) {
+  //       setTimeout(() => {
+  //         if (enemy.isBlocking()) {
+  //           undoBlock(enemy, battleInfo.secondFighterBlockBar);
+  //         }
+  //       }, 500);
+  //     }
+  //     break;
+  //   }
+  //   case 2: {
+  //     if (enemy.isBlocking()) {
+  //       undoBlock(enemy, battleInfo.secondFighterBlockBar);
+  //     }
+  //     if (
+  //       enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
+  //       enemy.getAttackBox().getY() === enemy.getPositionY()
+  //     ) {
+  //       specialAttacks.push(new SpecialAttack(enemy));
+  //       enemy.setSpecialBar(0);
+  //       battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
+  //         'special-bar_charged'
+  //       );
+  //     }
+  //     break;
+  //   }
+  // }
 }

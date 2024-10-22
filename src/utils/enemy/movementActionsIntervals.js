@@ -13,18 +13,18 @@ function content(type, references, jump) {
           references.ctx.canvas.width
         )
       ) {
-        references.secondFighter.setPositionX(
-          references.secondFighter.getPositionX() - 2
-        );
-        if (
-          jump &&
-          references.secondFighter.getPositionY() === references.floorPositionY &&
-          references.secondFighter.getVelocity() === 0
-        ) {
-          references.secondFighter.setVelocity(
-            references.secondFighter.getVelocity() - 20
-          );
-        }
+        // references.secondFighter.setPositionX(
+        //   references.secondFighter.getPositionX() - 2
+        // );
+        // if (
+        //   jump &&
+        //   references.secondFighter.getPositionY() === references.floorPositionY &&
+        //   references.secondFighter.getVelocity() === 0
+        // ) {
+        //   references.secondFighter.setVelocity(
+        //     references.secondFighter.getVelocity() - 20
+        //   );
+        // }
       }
       break;
     case intervalTypes[1]:
@@ -35,18 +35,18 @@ function content(type, references, jump) {
           references.ctx.canvas.width
         )
       ) {
-        references.secondFighter.setPositionX(
-          references.secondFighter.getPositionX() + 2
-        );
-        if (
-          jump &&
-          references.secondFighter.getPositionY() === references.floorPositionY &&
-          references.secondFighter.getVelocity() === 0
-        ) {
-          references.secondFighter.setVelocity(
-            references.secondFighter.getVelocity() - 20
-          );
-        }
+        // references.secondFighter.setPositionX(
+        //   references.secondFighter.getPositionX() + 2
+        // );
+        // if (
+        //   jump &&
+        //   references.secondFighter.getPositionY() === references.floorPositionY &&
+        //   references.secondFighter.getVelocity() === 0
+        // ) {
+        //   references.secondFighter.setVelocity(
+        //     references.secondFighter.getVelocity() - 20
+        //   );
+        // }
       }
       break;
     default:

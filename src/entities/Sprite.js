@@ -1,7 +1,9 @@
+import { fighters_frames } from '../constants/fighters_frames.js';
+
 export class Sprite {
   #position;
-  #width = 50;
-  #height = 100;
+  #width;
+  #height;
   #image;
   #scale;
   #framesMax;
@@ -13,6 +15,8 @@ export class Sprite {
 
   constructor({
     position,
+    width,
+    height,
     src,
     scale = 1,
     framesMax = 1,
@@ -23,6 +27,8 @@ export class Sprite {
     name,
   }) {
     this.#position = position;
+    this.#width = width;
+    this.#height = height;
     this.#image = new Image();
     this.#image.src = src;
     this.#scale = scale;
@@ -50,7 +56,7 @@ export class Sprite {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     // rect visualization
-    ctx.fillStyle = '#ff00001f';
+    ctx.fillStyle = this.name === 'player' ? '#ff00001f' : '#0000ff1c';
     ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
 
     ctx.fillStyle = 'white';
@@ -76,6 +82,32 @@ export class Sprite {
   update(ctx) {
     this.draw(ctx);
     this.animateFrames();
+  }
+
+  getActualSprite() {
+    const actualSrc = this.#image.src;
+    const actualSrcSplit = actualSrc.split('/');
+    return actualSrcSplit[actualSrcSplit.length - 1].split('.png')[0];
+  }
+
+  changeSprite(action) {
+    const actualSrc = this.#image.src;
+    const actualSrcSplit = actualSrc.split('/');
+    const fighterName = actualSrcSplit[actualSrcSplit.length - 2];
+
+    actualSrcSplit.splice(actualSrcSplit.length - 1, 1, action + '.png');
+
+    this.#image.src = actualSrcSplit.join('/');
+    this.setFramesMax(fighters_frames[fighterName][action]);
+    this.#framesActual = 0;
+  }
+
+  setFramesActual(qtd) {
+    this.#framesMax = qtd;
+  }
+
+  setFramesMax(qtd) {
+    this.#framesMax = qtd;
   }
 
   changeDirection(side) {

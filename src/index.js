@@ -129,6 +129,27 @@ let stage = {
   actual: 'default',
   last: '',
 };
+let spriteAnimations = {
+  run: {
+    active: false,
+  },
+  jump: {
+    active: false,
+    time: 450,
+  },
+  fall: {
+    active: false,
+    time: 230,
+  },
+  attack_basic: {
+    active: false,
+    time: 100,
+  },
+  attack_special: {
+    active: false,
+    time: 100,
+  },
+};
 const references = {
   matchInfo,
   countdownDOM,
@@ -183,32 +204,39 @@ function animate() {
           entities[1].changeDirection('left');
         }
 
+        // check animations and reset sprite to idle
+        if (
+          !spriteAnimations.run.active &&
+          !spriteAnimations.jump.active &&
+          !spriteAnimations.fall.active &&
+          !spriteAnimations.attack_basic.active &&
+          !spriteAnimations.attack_special.active &&
+          entity.getActualSprite() !== 'idle' &&
+          entity.getPositionY() === floorPositionY
+        ) {
+          console.log('can go idle');
+          entities[0].changeSprite('idle');
+        }
+
         // move player
         if (keys.w.pressed && entity.getPositionY() === floorPositionY) {
           entity.setVelocity(entity.getVelocity() - 25);
-
-          // move left or right while jumping
-          if (keys.a.pressed && lastKey === 'a') {
-            if (
-              !isFighterCollidingBorder(
-                entity.getPositionX() - 2,
-                entity.getWidth(),
-                canvas.width
-              )
-            ) {
-              entity.setPositionX(entity.getPositionX() - 2);
-            }
-          } else if (keys.d.pressed && lastKey === 'd') {
-            if (
-              !isFighterCollidingBorder(
-                entity.getPositionX() + 2,
-                entity.getWidth(),
-                canvas.width
-              )
-            ) {
-              entity.setPositionX(entity.getPositionX() + 2);
-            }
-          }
+          entities[0].changeSprite('jump');
+          spriteAnimations.jump.active = true;
+          setTimeout(
+            () => (spriteAnimations.jump.active = false),
+            spriteAnimations.jump.time
+          );
+          setTimeout(() => {
+            // change to fall sprite when hits jump peak (200 ms)
+            entities[0].changeSprite('fall');
+            spriteAnimations.fall.active = true;
+            setTimeout(() => {
+              // remove sprites on landing
+              spriteAnimations.fall.active = false;
+              spriteAnimations.run.active = false;
+            }, spriteAnimations.fall.time);
+          }, 200);
         }
         if (keys.space.pressed && attackCooldown.active) {
           keys.space.pressed = false;
@@ -225,6 +253,15 @@ function animate() {
             )
           ) {
             entity.setPositionX(entity.getPositionX() - 2);
+            if (
+              entity.getDirection() < 0 &&
+              entity.getActualSprite() !== 'run' &&
+              entity.getActualSprite() !== 'jump' &&
+              entity.getActualSprite() !== 'fall'
+            ) {
+              setTimeout(() => entity.changeSprite('run'), 0);
+              spriteAnimations.run.active = true;
+            }
           }
         } else if (keys.d.pressed && lastKey === 'd') {
           if (
@@ -235,6 +272,15 @@ function animate() {
             )
           ) {
             entity.setPositionX(entity.getPositionX() + 2);
+            if (
+              entity.getDirection() > 0 &&
+              entity.getActualSprite() !== 'run' &&
+              entity.getActualSprite() !== 'jump' &&
+              entity.getActualSprite() !== 'fall'
+            ) {
+              setTimeout(() => entity.changeSprite('run'), 0);
+              spriteAnimations.run.active = true;
+            }
           }
         }
         if (keys.r.pressed) {
@@ -435,6 +481,7 @@ document.addEventListener('keyup', ({ key }) => {
       } else {
         lastKey = 'a';
       }
+      spriteAnimations.run.active = false;
       break;
     }
     case 'd': {
@@ -444,6 +491,7 @@ document.addEventListener('keyup', ({ key }) => {
       } else {
         lastKey = 'd';
       }
+      spriteAnimations.run.active = false;
       break;
     }
     case ' ': {

@@ -32,6 +32,8 @@ export class Fighter extends Sprite {
   }) {
     super({
       position,
+      width,
+      height,
       src,
       scale,
       framesMax,
