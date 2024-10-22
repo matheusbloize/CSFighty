@@ -19,7 +19,6 @@ export function basicAttack(actualFighter, opponent, ui, references) {
     undoBlock(actualFighter, references.firstFighterBlockBar);
   }
 
-  actualFighter.attack(references.ctx);
   if (attackCollision(actualFighter.getAttackBox(), opponent)) {
     if (references.matchInfo.duration === 98) {
       // prevent battle action bug

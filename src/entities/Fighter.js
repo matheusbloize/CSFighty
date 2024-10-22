@@ -50,7 +50,7 @@ export class Fighter extends Sprite {
     this.#attackBox = {
       x: this.getPositionX() + this.#width,
       y: this.getPositionY(),
-      width: 100,
+      width: 115,
       height: 30,
     };
   }
@@ -88,16 +88,6 @@ export class Fighter extends Sprite {
         this.#height + ctx.lineWidth
       );
     }
-  }
-
-  attack(ctx) {
-    ctx.fillStyle = 'limegreen';
-    ctx.fillRect(
-      this.#attackBox.x,
-      this.#attackBox.y,
-      this.#attackBox.width,
-      this.#attackBox.height
-    );
   }
 
   addBlock() {

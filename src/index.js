@@ -97,7 +97,7 @@ const stageBackground = new Image();
 let lastKey;
 let attackCooldown = {
   active: true,
-  time: 200,
+  time: 500,
 };
 let blockCooldown = {
   active: true,
@@ -143,7 +143,7 @@ let spriteAnimations = {
   },
   attack_basic: {
     active: false,
-    time: 100,
+    time: 300,
   },
   attack_special: {
     active: false,
@@ -212,30 +212,52 @@ function animate() {
           !spriteAnimations.attack_basic.active &&
           !spriteAnimations.attack_special.active &&
           entity.getActualSprite() !== 'idle' &&
-          entity.getPositionY() === floorPositionY
+          entity.getPositionY() === floorPositionY &&
+          !keys.d.pressed &&
+          !keys.a.pressed
         ) {
           console.log('can go idle');
-          entities[0].changeSprite('idle');
+          entity.changeSprite('idle');
+        }
+
+        // check for changes when left and right keys are clicked
+        if (entity.getDirection() > 0) {
+          if (keys.d.pressed && lastKey !== 'd' && entity.getActualSprite() !== 'idle') {
+            entity.changeSprite('idle');
+          }
+          if (keys.a.pressed && lastKey !== 'a' && entity.getActualSprite() !== 'run') {
+            entity.changeSprite('run');
+          } else if (
+            keys.a.pressed &&
+            lastKey === 'a' &&
+            entity.getActualSprite() !== 'idle' &&
+            entity.getPositionY() === floorPositionY &&
+            !spriteAnimations.attack_basic.active
+          ) {
+            entity.changeSprite('idle');
+          }
         }
 
         // move player
         if (keys.w.pressed && entity.getPositionY() === floorPositionY) {
           entity.setVelocity(entity.getVelocity() - 25);
-          entities[0].changeSprite('jump');
+          entity.changeSprite('jump');
           spriteAnimations.jump.active = true;
           setTimeout(
             () => (spriteAnimations.jump.active = false),
             spriteAnimations.jump.time
           );
           setTimeout(() => {
-            // change to fall sprite when hits jump peak (200 ms)
-            entities[0].changeSprite('fall');
-            spriteAnimations.fall.active = true;
-            setTimeout(() => {
-              // remove sprites on landing
-              spriteAnimations.fall.active = false;
-              spriteAnimations.run.active = false;
-            }, spriteAnimations.fall.time);
+            if (entity.getActualSprite() !== 'attack_basic') {
+              // change to fall sprite when hits jump peak (200 ms)
+              entity.changeSprite('fall');
+              spriteAnimations.fall.active = true;
+              setTimeout(() => {
+                // remove sprites on landing
+                spriteAnimations.fall.active = false;
+                spriteAnimations.run.active = false;
+              }, spriteAnimations.fall.time);
+            }
           }, 200);
         }
         if (keys.space.pressed && attackCooldown.active) {
@@ -243,6 +265,11 @@ function animate() {
           attackCooldown.active = false;
           setTimeout(() => (attackCooldown.active = true), attackCooldown.time);
           basicAttack(entity, entities[1], secondFighterHealthBar, references);
+          entity.changeSprite('attack_basic');
+          spriteAnimations.attack_basic.active = true;
+          setTimeout(() => {
+            spriteAnimations.attack_basic.active = false;
+          }, spriteAnimations.attack_basic.time);
         }
         if (keys.a.pressed && lastKey === 'a') {
           if (
@@ -252,15 +279,17 @@ function animate() {
               canvas.width
             )
           ) {
-            entity.setPositionX(entity.getPositionX() - 2);
-            if (
-              entity.getDirection() < 0 &&
-              entity.getActualSprite() !== 'run' &&
-              entity.getActualSprite() !== 'jump' &&
-              entity.getActualSprite() !== 'fall'
-            ) {
-              setTimeout(() => entity.changeSprite('run'), 0);
-              spriteAnimations.run.active = true;
+            if (!spriteAnimations.attack_basic.active) {
+              entity.setPositionX(entity.getPositionX() - 2);
+              if (
+                entity.getDirection() < 0 &&
+                entity.getActualSprite() !== 'run' &&
+                entity.getActualSprite() !== 'jump' &&
+                entity.getPositionY() === floorPositionY
+              ) {
+                setTimeout(() => entity.changeSprite('run'), 0);
+                spriteAnimations.run.active = true;
+              }
             }
           }
         } else if (keys.d.pressed && lastKey === 'd') {
@@ -271,15 +300,17 @@ function animate() {
               canvas.width
             )
           ) {
-            entity.setPositionX(entity.getPositionX() + 2);
-            if (
-              entity.getDirection() > 0 &&
-              entity.getActualSprite() !== 'run' &&
-              entity.getActualSprite() !== 'jump' &&
-              entity.getActualSprite() !== 'fall'
-            ) {
-              setTimeout(() => entity.changeSprite('run'), 0);
-              spriteAnimations.run.active = true;
+            if (!spriteAnimations.attack_basic.active) {
+              entity.setPositionX(entity.getPositionX() + 2);
+              if (
+                entity.getDirection() > 0 &&
+                entity.getActualSprite() !== 'run' &&
+                entity.getActualSprite() !== 'jump' &&
+                entity.getPositionY() === floorPositionY
+              ) {
+                setTimeout(() => entity.changeSprite('run'), 0);
+                spriteAnimations.run.active = true;
+              }
             }
           }
         }
