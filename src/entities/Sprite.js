@@ -43,7 +43,7 @@ export class Sprite {
     this.#offset = offset;
     this.#name = name;
     this.#special = special;
-    this.#direction = fighterDirection || 1;
+    this.#direction = fighterDirection;
   }
 
   draw(ctx) {

@@ -29,6 +29,7 @@ export class Fighter extends Sprite {
     differenceSpace,
     offset,
     special,
+    fighterDirection,
   }) {
     super({
       position,
@@ -41,6 +42,7 @@ export class Fighter extends Sprite {
       offset,
       name,
       special,
+      fighterDirection,
     });
     this.#name = name;
     this.#width = width;

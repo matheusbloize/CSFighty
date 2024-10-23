@@ -11,6 +11,7 @@ import { undoBlock } from './utils/block/undoBlock.js';
 import { enemyLevel, movementIntervals } from './states/enemy.js';
 import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals.js';
 import { enemyBattleAction } from './utils/enemy/enemyBattleAction.js';
+import { specials_frames } from './constants/specials.frames.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -31,6 +32,7 @@ const entities = [
     differenceSpace,
     offset: { x: 145, y: 120 },
     special: 'fire',
+    fighterDirection: 1,
   }),
   new Fighter({
     name: 'enemy',
@@ -46,6 +48,7 @@ const entities = [
     differenceSpace,
     offset: { x: 196, y: 120 },
     special: 'fire',
+    fighterDirection: -1,
   }),
 ];
 const keys = {
@@ -333,9 +336,10 @@ function animate() {
                 new SpecialAttack({
                   fighter: entity,
                   src: `../assets/specials/${entity.getSpecial()}/001.png`,
-                  scale: 2, // fire scale
+                  scale: specials_frames[entity.getSpecial()].scale,
                   framesMax: 5,
-                  offset: { x: 60, y: 16 }, // fire offset
+                  offset:
+                    specials_frames[entity.getSpecial()].offset[entity.getDirection()],
                 })
               );
             }, 200);
