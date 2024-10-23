@@ -12,6 +12,7 @@ import { enemyLevel, movementIntervals } from './states/enemy.js';
 import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals.js';
 import { enemyBattleAction } from './utils/enemy/enemyBattleAction.js';
 import { specials_frames } from './constants/specials.frames.js';
+import { spriteAnimations } from './states/sprites.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -102,7 +103,7 @@ const stageBackground = new Image();
 let lastKey;
 let attackCooldown = {
   active: true,
-  time: 500,
+  time: 450,
 };
 let blockCooldown = {
   active: true,
@@ -133,27 +134,6 @@ let winners = {
 let stage = {
   actual: 'default',
   last: '',
-};
-let spriteAnimations = {
-  run: {
-    active: false,
-  },
-  jump: {
-    active: false,
-    time: 450,
-  },
-  fall: {
-    active: false,
-    time: 230,
-  },
-  attack_basic: {
-    active: false,
-    time: 300,
-  },
-  attack_special: {
-    active: false,
-    time: 275,
-  },
 };
 const references = {
   matchInfo,
@@ -241,7 +221,8 @@ function animate() {
             lastKey === 'a' &&
             entity.getActualSprite() !== 'idle' &&
             entity.getPositionY() === floorPositionY &&
-            !spriteAnimations.attack_basic.active
+            !spriteAnimations.attack_basic.active &&
+            !spriteAnimations.attack_special.active
           ) {
             entity.changeSprite('idle');
           }
@@ -286,9 +267,6 @@ function animate() {
           basicAttack(entity, entities[1], secondFighterHealthBar, references);
           entity.changeSprite('attack_basic');
           spriteAnimations.attack_basic.active = true;
-          setTimeout(() => {
-            spriteAnimations.attack_basic.active = false;
-          }, spriteAnimations.attack_basic.time);
         }
         if (keys.a.pressed && lastKey === 'a') {
           if (
@@ -298,7 +276,10 @@ function animate() {
               canvas.width
             )
           ) {
-            if (!spriteAnimations.attack_basic.active) {
+            if (
+              !spriteAnimations.attack_basic.active &&
+              !spriteAnimations.attack_special.active
+            ) {
               entity.setPositionX(entity.getPositionX() - 2);
               if (
                 entity.getDirection() < 0 &&
@@ -319,7 +300,10 @@ function animate() {
               canvas.width
             )
           ) {
-            if (!spriteAnimations.attack_basic.active) {
+            if (
+              !spriteAnimations.attack_basic.active &&
+              !spriteAnimations.attack_special.active
+            ) {
               entity.setPositionX(entity.getPositionX() + 2);
               if (
                 entity.getDirection() > 0 &&
@@ -338,7 +322,10 @@ function animate() {
           if (entity.isBlocking()) {
             undoBlock(entity, firstFighterBlockBar);
           }
-          if (entity.getSpecialBar() === entity.getSpecialBarLimit()) {
+          if (
+            entity.getSpecialBar() === entity.getSpecialBarLimit() &&
+            !spriteAnimations.attack_basic.active
+          ) {
             entity.changeSprite('attack_special');
             spriteAnimations.attack_special.active = true;
             setTimeout(() => {

@@ -1,4 +1,5 @@
 import { fighters_frames } from '../constants/fighters_frames.js';
+import { spriteAnimations } from '../states/sprites.js';
 
 export class Sprite {
   #position;
@@ -14,6 +15,7 @@ export class Sprite {
   #direction = 1;
   #name;
   #special;
+  #fighter;
 
   constructor({
     position,
@@ -29,6 +31,7 @@ export class Sprite {
     name,
     special,
     fighterDirection,
+    fighter = null,
   }) {
     this.#position = position;
     this.#width = width;
@@ -44,6 +47,7 @@ export class Sprite {
     this.#name = name;
     this.#special = special;
     this.#direction = fighterDirection;
+    this.#fighter = fighter;
   }
 
   draw(ctx) {
@@ -95,6 +99,11 @@ export class Sprite {
         if (this.#framesActual < this.#framesMax - 1) {
           this.#framesActual++;
         } else {
+          const actualSpriteSplit = this.#image.src.split('.png')[0].split('/');
+          if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_basic') {
+            spriteAnimations.attack_basic.active = false;
+            this.changeSprite('idle');
+          }
           this.#framesActual = 0;
         }
       } else {
@@ -185,5 +194,13 @@ export class Sprite {
 
   getSpecial() {
     return this.#special;
+  }
+
+  getFighter() {
+    return this.#fighter;
+  }
+
+  getImage() {
+    return this.#image;
   }
 }
