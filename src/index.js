@@ -245,6 +245,16 @@ function animate() {
           ) {
             entity.changeSprite('idle');
           }
+        } else {
+          if (
+            keys.d.pressed &&
+            lastKey === 'd' &&
+            entity.getActualSprite() !== 'idle' &&
+            entity.getPositionY() === floorPositionY &&
+            !spriteAnimations.attack_basic.active
+          ) {
+            entity.changeSprite('idle');
+          }
         }
 
         // move player

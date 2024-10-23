@@ -178,4 +178,12 @@ export class Sprite {
   getHeight() {
     return this.#height;
   }
+
+  getName() {
+    return this.#name;
+  }
+
+  getSpecial() {
+    return this.#special;
+  }
 }

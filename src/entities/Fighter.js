@@ -1,9 +1,6 @@
 import { Sprite } from './Sprite.js';
 
 export class Fighter extends Sprite {
-  #name;
-  #width;
-  #height;
   #differenceSpace;
   #velocity = 1;
   #attackBox;
@@ -15,7 +12,6 @@ export class Fighter extends Sprite {
   #isBlocking = false;
   #blockBar = 100;
   #blockBarLimit = 100;
-  #special;
 
   constructor({
     name,
@@ -44,17 +40,13 @@ export class Fighter extends Sprite {
       special,
       fighterDirection,
     });
-    this.#name = name;
-    this.#width = width;
-    this.#height = height;
     this.#differenceSpace = differenceSpace;
     this.#attackBox = {
-      x: this.getPositionX() + this.#width,
+      x: this.getPositionX() + width,
       y: this.getPositionY(),
       width: 115,
       height: 30,
     };
-    this.#special = special;
   }
 
   update(ctx) {
@@ -65,7 +57,10 @@ export class Fighter extends Sprite {
     this.setPositionY(this.getPositionY() + this.#velocity);
     this.#velocity *= this.#friction;
 
-    if (this.getPositionY() + this.#height + this.#differenceSpace > ctx.canvas.height) {
+    if (
+      this.getPositionY() + this.getHeight() + this.#differenceSpace >
+      ctx.canvas.height
+    ) {
       this.#velocity = 0;
       this.setPositionY(ctx.canvas.height - 100 - this.#differenceSpace);
     }
@@ -74,7 +69,7 @@ export class Fighter extends Sprite {
       ...this.#attackBox,
       x:
         this.getDirection() > 0
-          ? this.getPositionX() + this.#width
+          ? this.getPositionX() + this.getWidth()
           : this.getPositionX() - this.#attackBox.width,
       y: this.getPositionY(),
     };
@@ -86,8 +81,8 @@ export class Fighter extends Sprite {
       ctx.strokeRect(
         this.getPositionX() - ctx.lineWidth / 2,
         this.getPositionY() - ctx.lineWidth / 2,
-        this.#width + ctx.lineWidth,
-        this.#height + ctx.lineWidth
+        this.getWidth() + ctx.lineWidth,
+        this.getHeight() + ctx.lineWidth
       );
     }
   }
@@ -103,10 +98,6 @@ export class Fighter extends Sprite {
       this.#isBlocking = false;
       this.#blockBar = 0;
     }
-  }
-
-  getName() {
-    return this.#name;
   }
 
   getVelocity() {
@@ -161,9 +152,5 @@ export class Fighter extends Sprite {
 
   getBlockBarLimit() {
     return this.#blockBarLimit;
-  }
-
-  getSpecial() {
-    return this.#special;
   }
 }
