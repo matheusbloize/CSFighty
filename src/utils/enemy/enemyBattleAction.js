@@ -18,11 +18,11 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       (player.getBlockBar() !== 100 ||
         attackCollision(
           {
-            getX: () =>
+            getPositionX: () =>
               player.getDirection() > 0
-                ? enemy.getAttackBox().getX() - enemy.getWidth() * 4
-                : enemy.getAttackBox().getX() + enemy.getWidth() * 4,
-            getY: () => enemy.getAttackBox().getY(),
+                ? enemy.getAttackBox().getPositionX() - enemy.getWidth() * 4
+                : enemy.getAttackBox().getPositionX() + enemy.getWidth() * 4,
+            getPositionY: () => enemy.getAttackBox().getPositionY(),
             getWidth: () => enemy.getAttackBox().getWidth(),
             getHeight: () => enemy.getAttackBox().getHeight(),
           },

@@ -12,6 +12,8 @@ export class Sprite {
   #framesHold;
   #offset;
   #direction = 1;
+  #name;
+  #special;
 
   constructor({
     position,
@@ -25,6 +27,8 @@ export class Sprite {
     framesHold = 10,
     offset = { x: 0, y: 0 },
     name,
+    special,
+    fighterDirection,
   }) {
     this.#position = position;
     this.#width = width;
@@ -37,26 +41,42 @@ export class Sprite {
     this.#framesElapsed = framesElapsed;
     this.#framesHold = framesHold;
     this.#offset = offset;
-    this.name = name;
+    this.#name = name;
+    this.#special = special;
+    this.#direction = fighterDirection || 1;
   }
 
   draw(ctx) {
     ctx.scale(this.#direction, 1);
-    ctx.drawImage(
-      this.#image,
-      this.#framesActual * (this.#image.width / this.#framesMax),
-      0,
-      this.#image.width / this.#framesMax,
-      this.#image.height,
-      Math.floor(this.#position.x * this.#direction) - this.#offset.x,
-      this.#position.y - this.#offset.y,
-      (this.#image.width / this.#framesMax) * this.#scale,
-      this.#image.height * this.#scale
-    );
+    if (this.#name !== 'special') {
+      ctx.drawImage(
+        this.#image,
+        this.#framesActual * (this.#image.width / this.#framesMax),
+        0,
+        this.#image.width / this.#framesMax,
+        this.#image.height,
+        Math.floor(this.#position.x * this.#direction) - this.#offset.x,
+        this.#position.y - this.#offset.y,
+        (this.#image.width / this.#framesMax) * this.#scale,
+        this.#image.height * this.#scale
+      );
+    } else {
+      ctx.drawImage(
+        this.#image,
+        (this.#image.width / this.#framesMax) * 0,
+        0,
+        this.#image.width,
+        this.#image.height,
+        Math.floor(this.#position.x * this.#direction) - this.#offset.x,
+        this.#position.y - this.#offset.y,
+        this.#width * this.#scale,
+        this.#height * this.#scale
+      );
+    }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     // rect visualization
-    ctx.fillStyle = this.name === 'player' ? '#ff00001f' : '#0000ff1c';
+    ctx.fillStyle = this.#name === 'player' ? '#ff0000b2' : '#0000ffb2';
     ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
 
     ctx.fillStyle = 'white';
@@ -71,10 +91,21 @@ export class Sprite {
     this.#framesElapsed++;
 
     if (this.#framesElapsed % this.#framesHold === 0) {
-      if (this.#framesActual < this.#framesMax - 1) {
-        this.#framesActual++;
+      if (this.#name !== 'special') {
+        if (this.#framesActual < this.#framesMax - 1) {
+          this.#framesActual++;
+        } else {
+          this.#framesActual = 0;
+        }
       } else {
-        this.#framesActual = 0;
+        if (this.#framesActual < this.#framesMax) {
+          this.#framesActual++;
+          this.#image.src = `../assets/specials/${this.#special}/0${
+            this.#framesActual < 10 ? '0' + this.#framesActual : this.#framesActual
+          }.png`;
+        } else {
+          this.#framesActual = 0;
+        }
       }
     }
   }

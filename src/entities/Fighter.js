@@ -15,6 +15,7 @@ export class Fighter extends Sprite {
   #isBlocking = false;
   #blockBar = 100;
   #blockBarLimit = 100;
+  #special;
 
   constructor({
     name,
@@ -25,10 +26,9 @@ export class Fighter extends Sprite {
     scale,
     framesMax,
     framesActual,
-    framesElapsed,
-    framesHold,
     differenceSpace,
     offset,
+    special,
   }) {
     super({
       position,
@@ -38,10 +38,9 @@ export class Fighter extends Sprite {
       scale,
       framesMax,
       framesActual,
-      framesElapsed,
-      framesHold,
       offset,
       name,
+      special,
     });
     this.#name = name;
     this.#width = width;
@@ -53,6 +52,7 @@ export class Fighter extends Sprite {
       width: 115,
       height: 30,
     };
+    this.#special = special;
   }
 
   update(ctx) {
@@ -117,8 +117,8 @@ export class Fighter extends Sprite {
 
   getAttackBox() {
     const attackBox = {
-      getX: () => this.#attackBox.x,
-      getY: () => this.#attackBox.y,
+      getPositionX: () => this.#attackBox.x,
+      getPositionY: () => this.#attackBox.y,
       getWidth: () => this.#attackBox.width,
       getHeight: () => this.#attackBox.height,
     };
@@ -159,5 +159,9 @@ export class Fighter extends Sprite {
 
   getBlockBarLimit() {
     return this.#blockBarLimit;
+  }
+
+  getSpecial() {
+    return this.#special;
   }
 }

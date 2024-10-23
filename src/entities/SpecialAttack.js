@@ -1,39 +1,49 @@
-export class SpecialAttack {
+import { Sprite } from './Sprite.js';
+
+export class SpecialAttack extends Sprite {
   #fighter;
   #velocity = 2;
   #width = 30;
   #height = 30;
-  #x;
-  #y;
   #direction;
 
-  constructor(fighter) {
+  constructor({ fighter, src, scale, framesMax, framesActual, offset }) {
+    super({
+      width: 30,
+      height: 30,
+      position: {
+        x:
+          fighter.getDirection() > 0
+            ? fighter.getPositionX() + fighter.getWidth() + 20
+            : fighter.getPositionX() - fighter.getWidth(),
+        y: fighter.getPositionY() + 30,
+      },
+      src,
+      scale,
+      framesMax,
+      framesActual,
+      offset,
+      name: 'special',
+      special: fighter.getSpecial(),
+      fighterDirection: fighter.getDirection(),
+    });
     this.#fighter = fighter;
-    this.#x =
-      this.#fighter.getDirection() > 0
-        ? this.#fighter.getPositionX() + this.#fighter.getWidth()
-        : this.#fighter.getPositionX() - this.#width;
-    this.#y = this.#fighter.getPositionY() + this.#height;
     this.#direction = this.#fighter.getDirection();
-  }
-
-  draw(ctx) {
-    ctx.fillStyle = 'gold';
-    ctx.fillRect(this.#x, this.#y, this.#width, this.#height);
   }
 
   update(ctx) {
     this.draw(ctx);
+    this.animateFrames();
 
     if (this.#direction > 0) {
-      this.#x += this.#velocity * 2;
+      this.setPositionX(this.getPositionX() + this.#velocity * 2);
     } else {
-      this.#x -= this.#velocity * 2;
+      this.setPositionX(this.getPositionX() - this.#velocity * 2);
     }
   }
 
   resetPosition() {
-    this.#x = this.#fighter.getPositionX();
+    this.setPositionX(this.#fighter.getPositionX());
   }
 
   getFighter() {
@@ -46,13 +56,5 @@ export class SpecialAttack {
 
   getHeight() {
     return this.#height;
-  }
-
-  getX() {
-    return this.#x;
-  }
-
-  getY() {
-    return this.#y;
   }
 }

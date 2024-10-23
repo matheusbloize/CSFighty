@@ -30,6 +30,7 @@ const entities = [
     framesMax: 10,
     differenceSpace,
     offset: { x: 145, y: 120 },
+    special: 'fire',
   }),
   new Fighter({
     name: 'enemy',
@@ -44,6 +45,7 @@ const entities = [
     framesMax: 10,
     differenceSpace,
     offset: { x: 196, y: 120 },
+    special: 'fire',
   }),
 ];
 const keys = {
@@ -147,7 +149,7 @@ let spriteAnimations = {
   },
   attack_special: {
     active: false,
-    time: 100,
+    time: 275,
   },
 };
 const references = {
@@ -197,11 +199,15 @@ function animate() {
           entity.getPositionX() + entity.getWidth() >
           entities[1].getPositionX() + entities[1].getWidth()
         ) {
-          entity.changeDirection('left');
-          entities[1].changeDirection('right');
+          if (entity.getDirection() == 1) {
+            entity.changeDirection('left');
+            entities[1].changeDirection('right');
+          }
         } else {
-          entity.changeDirection('right');
-          entities[1].changeDirection('left');
+          if (entity.getDirection() !== 1) {
+            entity.changeDirection('right');
+            entities[1].changeDirection('left');
+          }
         }
 
         // check animations and reset sprite to idle
@@ -320,7 +326,22 @@ function animate() {
             undoBlock(entity, firstFighterBlockBar);
           }
           if (entity.getSpecialBar() === entity.getSpecialBarLimit()) {
-            specialAttacks.push(new SpecialAttack(entity));
+            entity.changeSprite('attack_special');
+            spriteAnimations.attack_special.active = true;
+            setTimeout(() => {
+              specialAttacks.push(
+                new SpecialAttack({
+                  fighter: entity,
+                  src: `../assets/specials/${entity.getSpecial()}/001.png`,
+                  scale: 2, // fire scale
+                  framesMax: 5,
+                  offset: { x: 60, y: 16 }, // fire offset
+                })
+              );
+            }, 200);
+            setTimeout(() => {
+              spriteAnimations.attack_special.active = false;
+            }, spriteAnimations.attack_special.time);
             entity.setSpecialBar(0);
             firstFighterSpecialBar.parentElement.classList.remove('special-bar_charged');
           }
@@ -359,7 +380,10 @@ function animate() {
     // special attacks loop
     specialAttacks.forEach((special, index) => {
       // special attack gets removed from array when crosses canvas or hit opponent
-      if (special.getX() + special.getWidth() >= canvas.width || special.getX() < 0) {
+      if (
+        special.getPositionX() + special.getWidth() >= canvas.width ||
+        special.getPositionX() < 0
+      ) {
         setTimeout(() => {
           specialReset(special, specialAttacks, index);
         }, 0);
