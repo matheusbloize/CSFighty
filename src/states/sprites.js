@@ -12,6 +12,7 @@ export let spriteAnimations = {
   },
   attack_basic: {
     active: false,
+    time: 275,
   },
   attack_special: {
     active: false,

@@ -211,11 +211,16 @@ function animate() {
 
         // check for changes when left and right keys are clicked
         if (entity.getDirection() > 0) {
-          if (keys.d.pressed && lastKey !== 'd' && entity.getActualSprite() !== 'idle') {
+          if (
+            keys.d.pressed &&
+            lastKey !== 'd' &&
+            entity.getActualSprite() !== 'idle' &&
+            entity.getActualSprite() !== 'jump' &&
+            entity.getActualSprite() !== 'fall' &&
+            !spriteAnimations.attack_basic.active &&
+            !spriteAnimations.attack_special.active
+          ) {
             entity.changeSprite('idle');
-          }
-          if (keys.a.pressed && lastKey !== 'a' && entity.getActualSprite() !== 'run') {
-            entity.changeSprite('run');
           } else if (
             keys.a.pressed &&
             lastKey === 'a' &&
@@ -228,18 +233,34 @@ function animate() {
           }
         } else {
           if (
+            keys.a.pressed &&
+            lastKey !== 'a' &&
+            entity.getActualSprite() !== 'idle' &&
+            entity.getActualSprite() !== 'jump' &&
+            entity.getActualSprite() !== 'fall' &&
+            !spriteAnimations.attack_basic.active &&
+            !spriteAnimations.attack_special.active
+          ) {
+            entity.changeSprite('idle');
+          } else if (
             keys.d.pressed &&
             lastKey === 'd' &&
             entity.getActualSprite() !== 'idle' &&
             entity.getPositionY() === floorPositionY &&
-            !spriteAnimations.attack_basic.active
+            !spriteAnimations.attack_basic.active &&
+            !spriteAnimations.attack_special.active
           ) {
             entity.changeSprite('idle');
           }
         }
 
         // move player
-        if (keys.w.pressed && entity.getPositionY() === floorPositionY) {
+        if (
+          keys.w.pressed &&
+          entity.getPositionY() === floorPositionY &&
+          !spriteAnimations.attack_basic.active &&
+          !spriteAnimations.attack_special.active
+        ) {
           entity.setVelocity(entity.getVelocity() - 25);
           entity.changeSprite('jump');
           spriteAnimations.jump.active = true;
@@ -248,7 +269,10 @@ function animate() {
             spriteAnimations.jump.time
           );
           setTimeout(() => {
-            if (entity.getActualSprite() !== 'attack_basic') {
+            if (
+              entity.getActualSprite() !== 'attack_basic' &&
+              !spriteAnimations.attack_special.active
+            ) {
               // change to fall sprite when hits jump peak (200 ms)
               entity.changeSprite('fall');
               spriteAnimations.fall.active = true;
@@ -267,6 +291,9 @@ function animate() {
           basicAttack(entity, entities[1], secondFighterHealthBar, references);
           entity.changeSprite('attack_basic');
           spriteAnimations.attack_basic.active = true;
+          setTimeout(() => {
+            spriteAnimations.attack_basic.active = false;
+          }, spriteAnimations.attack_basic.time);
         }
         if (keys.a.pressed && lastKey === 'a') {
           if (

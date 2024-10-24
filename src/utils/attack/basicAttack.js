@@ -1,18 +1,8 @@
-import { finishRound } from '../round/finishRound.js';
 import { increaseSpecialBar } from '../round/increaseSpecialBar.js';
 import { attackCollision } from '../collision/attackCollision.js';
 import { undoBlock } from '../block/undoBlock.js';
 import { fearMeter } from '../../states/enemy.js';
-
-function defeatOpponent(ui, actualRound, references) {
-  setTimeout(() => {
-    ui.style.border = 'none';
-  }, 400);
-  actualRound.finished = true;
-  finishRound({
-    ...references,
-  });
-}
+import { defeatOpponent } from './defeatOpponent.js';
 
 export function basicAttack(actualFighter, opponent, ui, references) {
   if (actualFighter.isBlocking()) {
@@ -28,6 +18,9 @@ export function basicAttack(actualFighter, opponent, ui, references) {
     if (opponent.isBlocking()) {
       return opponent.removeBlock();
     }
+
+    // change opponent sprite when get hit
+    opponent.changeSprite('hit');
 
     // apply damage
     if (opponent.getLife() - references.damageSpec.attack >= 0) {

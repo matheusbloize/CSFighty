@@ -79,16 +79,16 @@ export class Sprite {
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // rect visualization
-    ctx.fillStyle = this.#name === 'player' ? '#ff0000b2' : '#0000ffb2';
-    ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
+    // // rect visualization
+    // ctx.fillStyle = this.#name === 'player' ? '#ff0000b2' : '#0000ffb2';
+    // ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
 
-    ctx.fillStyle = 'white';
-    if (this.#direction > 0) {
-      ctx.fillRect(this.#position.x + this.#width - 10, this.#position.y, 10, 10);
-    } else {
-      ctx.fillRect(this.#position.x, this.#position.y, 10, 10);
-    }
+    // ctx.fillStyle = 'white';
+    // if (this.#direction > 0) {
+    //   ctx.fillRect(this.#position.x + this.#width - 10, this.#position.y, 10, 10);
+    // } else {
+    //   ctx.fillRect(this.#position.x, this.#position.y, 10, 10);
+    // }
   }
 
   animateFrames() {
@@ -103,6 +103,15 @@ export class Sprite {
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_basic') {
             spriteAnimations.attack_basic.active = false;
             this.changeSprite('idle');
+          }
+          if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_special') {
+            this.changeSprite('fall');
+          }
+          if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'hit') {
+            this.changeSprite('idle');
+          }
+          if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'death') {
+            // finish death sprite animation, try to fix death frame (3, for test) until round restarts
           }
           this.#framesActual = 0;
         }
@@ -202,5 +211,9 @@ export class Sprite {
 
   getImage() {
     return this.#image;
+  }
+
+  setFramesHold(value) {
+    this.#framesHold = value;
   }
 }

@@ -1,17 +1,7 @@
 import { specialReset } from './specialReset.js';
-import { finishRound } from '../round/finishRound.js';
 import { increaseSpecialBar } from '../round/increaseSpecialBar.js';
 import { fearMeter } from '../../states/enemy.js';
-
-function defeatOpponent(ui, actualRound, references) {
-  setTimeout(() => {
-    ui.style.border = 'none';
-  }, 400);
-  actualRound.finished = true;
-  finishRound({
-    ...references,
-  });
-}
+import { defeatOpponent } from './defeatOpponent.js';
 
 export function specialAttack(
   special,
@@ -22,6 +12,9 @@ export function specialAttack(
   specialAttacks,
   index
 ) {
+  // change opponent sprite when get hit
+  opponent.changeSprite('hit');
+
   if (opponent.getLife() - references.damageSpec.special >= 0) {
     opponent.setLife(opponent.getLife() - references.damageSpec.special);
     ui.style.width = `${

@@ -14,6 +14,12 @@ export function battleReset({ actualRound, firstFighter, secondFighter, ctx }) {
   secondFighter.setPositionX(ctx.canvas.width - widthSpace - defaultWidth);
   secondFighter.setPositionY(ctx.canvas.height - defaultHeight - differenceSpace);
 
+  // restart sprites
+  firstFighter.changeSprite('idle');
+  secondFighter.changeSprite('idle');
+  firstFighter.setFramesHold(10);
+  secondFighter.setFramesHold(10);
+
   // health bar fighters
   firstFighter.setLife(100);
   secondFighter.setLife(100);
