@@ -74,7 +74,7 @@ const keys = {
 };
 const damageSpec = {
   attack: 10,
-  special: 110,
+  special: 30,
 };
 const matchTimeDuration = 99;
 const countdownDOM = document.querySelector('#hud .hud_time');
@@ -207,7 +207,8 @@ function animate() {
           entity.getActualSprite() !== 'idle' &&
           entity.getPositionY() === floorPositionY &&
           !keys.d.pressed &&
-          !keys.a.pressed
+          !keys.a.pressed &&
+          entity.getActualSprite() !== 'hit'
         ) {
           console.log('can go idle');
           entity.changeSprite('idle');
@@ -355,7 +356,7 @@ function animate() {
             undoBlock(entity, firstFighterBlockBar);
           }
           if (
-            entity.getSpecialBar() === entity.getSpecialBarLimit() &&
+            entity.getSpecialBar() >= entity.getSpecialBarLimit() &&
             !spriteAnimations.attack_basic.active
           ) {
             entity.changeSprite('attack_special');

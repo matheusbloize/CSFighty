@@ -3,6 +3,7 @@ import { basicAttack } from '../attack/basicAttack.js';
 import { undoBlock } from '../block/undoBlock.js';
 import { enemyLevel, battleActions, fearMeter } from '../../states/enemy.js';
 import { attackCollision } from '../collision/attackCollision.js';
+import { specials_frames } from '../../constants/specials.frames.js';
 
 export function enemyBattleAction(specialAttacks, battleInfo) {
   const player = battleInfo.firstFighter;
@@ -50,40 +51,52 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
   }
 
   // perform action
-  // switch (battleAction) {
-  //   case 0: {
-  //     if (enemy.isBlocking()) {
-  //       undoBlock(enemy, battleInfo.secondFighterBlockBar);
-  //     }
-  //     basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
-  //     break;
-  //   }
-  //   case 1: {
-  //     enemy.addBlock();
-  //     if (enemyLevel.actual < enemyLevel.max) {
-  //       setTimeout(() => {
-  //         if (enemy.isBlocking()) {
-  //           undoBlock(enemy, battleInfo.secondFighterBlockBar);
-  //         }
-  //       }, 500);
-  //     }
-  //     break;
-  //   }
-  //   case 2: {
-  //     if (enemy.isBlocking()) {
-  //       undoBlock(enemy, battleInfo.secondFighterBlockBar);
-  //     }
-  //     if (
-  //       enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
-  //       enemy.getAttackBox().getY() === enemy.getPositionY()
-  //     ) {
-  //       specialAttacks.push(new SpecialAttack(enemy));
-  //       enemy.setSpecialBar(0);
-  //       battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
-  //         'special-bar_charged'
-  //       );
-  //     }
-  //     break;
-  //   }
-  // }
+  switch (battleAction) {
+    case 0: {
+      if (enemy.isBlocking()) {
+        undoBlock(enemy, battleInfo.secondFighterBlockBar);
+      }
+      basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+      enemy.changeSprite('attack_basic');
+      break;
+    }
+    case 1: {
+      enemy.addBlock();
+      if (enemyLevel.actual < enemyLevel.max) {
+        setTimeout(() => {
+          if (enemy.isBlocking()) {
+            undoBlock(enemy, battleInfo.secondFighterBlockBar);
+          }
+        }, 500);
+      }
+      break;
+    }
+    case 2: {
+      if (enemy.isBlocking()) {
+        undoBlock(enemy, battleInfo.secondFighterBlockBar);
+      }
+      if (
+        enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
+        enemy.getAttackBox().getPositionY() === enemy.getPositionY()
+      ) {
+        enemy.changeSprite('attack_special');
+        setTimeout(() => {
+          specialAttacks.push(
+            new SpecialAttack({
+              fighter: enemy,
+              src: `../assets/specials/${enemy.getSpecial()}/001.png`,
+              scale: specials_frames[enemy.getSpecial()].scale,
+              framesMax: 5,
+              offset: specials_frames[enemy.getSpecial()].offset[enemy.getDirection()],
+            })
+          );
+        }, 200);
+        enemy.setSpecialBar(0);
+        battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
+          'special-bar_charged'
+        );
+      }
+      break;
+    }
+  }
 }

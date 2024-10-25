@@ -30,7 +30,7 @@ export class SpecialAttack extends Sprite {
     this.draw(ctx);
     this.animateFrames();
 
-    if (this.getFighter().getDirection() > 0) {
+    if (this.getDirection() > 0) {
       this.setPositionX(this.getPositionX() + this.#velocity * 2);
     } else {
       this.setPositionX(this.getPositionX() - this.#velocity * 2);

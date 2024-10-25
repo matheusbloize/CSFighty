@@ -101,11 +101,17 @@ export class Sprite {
         } else {
           const actualSpriteSplit = this.#image.src.split('.png')[0].split('/');
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_basic') {
-            spriteAnimations.attack_basic.active = false;
+            if (this.#name === 'player') {
+              spriteAnimations.attack_basic.active = false;
+            }
             this.changeSprite('idle');
           }
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_special') {
-            this.changeSprite('fall');
+            if (this.#name === 'enemy') {
+              this.changeSprite('idle');
+            } else {
+              this.changeSprite('fall');
+            }
           }
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'hit') {
             this.changeSprite('idle');

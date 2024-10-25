@@ -1,9 +1,17 @@
 import { finishRound } from '../round/finishRound.js';
+import { getRoundWinner } from '../round/getRoundWinner.js';
 
 export function defeatOpponent(ui, actualRound, references) {
   // change opponent sprite to death
-  references.secondFighter.changeSprite('death');
-  references.secondFighter.setFramesHold(55);
+  const winner = getRoundWinner(references);
+
+  if (winner === 'player') {
+    references.secondFighter.changeSprite('death');
+    references.secondFighter.setFramesHold(55);
+  } else {
+    references.firstFighter.changeSprite('death');
+    references.firstFighter.setFramesHold(55);
+  }
 
   ui.style.width = 0;
   setTimeout(() => {
