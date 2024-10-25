@@ -74,7 +74,7 @@ const keys = {
 };
 const damageSpec = {
   attack: 10,
-  special: 30,
+  special: 110,
 };
 const matchTimeDuration = 99;
 const countdownDOM = document.querySelector('#hud .hud_time');
@@ -275,7 +275,8 @@ function animate() {
           setTimeout(() => {
             if (
               entity.getActualSprite() !== 'attack_basic' &&
-              !spriteAnimations.attack_special.active
+              !spriteAnimations.attack_special.active &&
+              !actualRound.finished
             ) {
               // change to fall sprite when hits jump peak (200 ms)
               entity.changeSprite('fall');

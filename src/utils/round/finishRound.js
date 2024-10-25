@@ -84,6 +84,10 @@ export function finishRound(battleInfo) {
 
   const winner = getRoundWinner(battleInfo);
 
+  winner === 'player'
+    ? battleInfo.firstFighter.changeSprite('idle')
+    : battleInfo.secondFighterFighter.changeSprite('idle');
+
   // check if match ended
   let hasMatchWinner = false;
   let firstFighterRoundsWon = 0;

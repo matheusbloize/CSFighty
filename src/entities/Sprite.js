@@ -110,9 +110,6 @@ export class Sprite {
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'hit') {
             this.changeSprite('idle');
           }
-          if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'death') {
-            // finish death sprite animation, try to fix death frame (3, for test) until round restarts
-          }
           this.#framesActual = 0;
         }
       } else {
