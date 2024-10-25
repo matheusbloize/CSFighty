@@ -1,5 +1,6 @@
+import { defeatOpponent } from '../attack/defeatOpponent.js';
 import { chargeBar } from './chargeBar.js';
-import { finishRound } from './finishRound.js';
+import { getRoundWinner } from './getRoundWinner.js';
 
 const intervalTypes = ['countdown', 'bars'];
 const bars = ['specialBar', 'blockBar'];
@@ -16,10 +17,12 @@ function content(type, references) {
           references.firstFighter.getLife() < references.secondFighter.getLife() ||
           references.firstFighter.getLife() > references.secondFighter.getLife()
         ) {
-          references.actualRound.finished = true;
-          finishRound({
-            ...references,
-          });
+          const winner = getRoundWinner(references);
+          const ui =
+            winner === 'player'
+              ? references.secondFighterHealthBar
+              : references.firstFighterHealthBar;
+          defeatOpponent(ui, references.actualRound, references);
         }
       } else {
         // decrease time by 1

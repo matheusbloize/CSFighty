@@ -2,6 +2,7 @@ import { manageInterval } from './manageInterval.js';
 import { battleReset } from './battleReset.js';
 import { movementActionsIntervals } from '../enemy/movementActionsIntervals.js';
 import { enemyLevel, fearMeter, movementIntervals } from '../../states/enemy.js';
+import { getRoundWinner } from './getRoundWinner.js';
 
 function restartRound(battleInfo) {
   // restart round time
@@ -81,16 +82,7 @@ export function finishRound(battleInfo) {
   movementActionsIntervals('clear', movementIntervals, 'right');
   movementActionsIntervals('clear', movementIntervals, 'left');
 
-  // set round winner
-  let winner = null;
-  winner =
-    battleInfo.firstFighter.getLife() < battleInfo.secondFighter.getLife()
-      ? battleInfo.secondFighter.getName()
-      : battleInfo.firstFighter.getName();
-
-  if (winner !== null) {
-    battleInfo.winners[`round${battleInfo.actualRound.number}`] = winner;
-  }
+  const winner = getRoundWinner(battleInfo);
 
   // check if match ended
   let hasMatchWinner = false;

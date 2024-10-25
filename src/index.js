@@ -154,6 +154,10 @@ const references = {
   damageSpec,
   floorPositionY,
   stage,
+  defaultWidth,
+  defaultHeight,
+  widthSpace,
+  differenceSpace,
 };
 
 ctx.font = '16px Verdana';

@@ -1,9 +1,13 @@
-export function battleReset({ actualRound, firstFighter, secondFighter, ctx }) {
-  const defaultWidth = 50;
-  const defaultHeight = 100;
-  const widthSpace = 40;
-  const differenceSpace = 32;
-
+export function battleReset({
+  actualRound,
+  firstFighter,
+  secondFighter,
+  ctx,
+  defaultWidth,
+  defaultHeight,
+  widthSpace,
+  differenceSpace,
+}) {
   // increment round number
   actualRound.number++;
   actualRound.finished = false;

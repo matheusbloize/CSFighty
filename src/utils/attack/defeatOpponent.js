@@ -5,6 +5,7 @@ export function defeatOpponent(ui, actualRound, references) {
   references.secondFighter.changeSprite('death');
   references.secondFighter.setFramesHold(50);
 
+  ui.style.width = 0;
   setTimeout(() => {
     ui.style.border = 'none';
   }, 400);
