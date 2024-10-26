@@ -77,7 +77,7 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       }
       if (
         enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
-        enemy.getAttackBox().getPositionY() === enemy.getPositionY()
+        enemy.getAttackBox().getPositionY() === enemy.getPositionY() + 30
       ) {
         enemy.changeSprite('attack_special');
         setTimeout(() => {

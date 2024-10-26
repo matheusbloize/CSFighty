@@ -14,31 +14,27 @@ export class Fighter extends Sprite {
   #blockBarLimit = 100;
 
   constructor({
-    name,
     position,
     width,
     height,
-    src,
-    scale,
-    framesMax,
-    framesActual,
     differenceSpace,
-    offset,
     special,
     fighterDirection,
+    role,
+    spriteInfo,
   }) {
     super({
       position,
       width,
       height,
-      src,
-      scale,
-      framesMax,
-      framesActual,
-      offset,
-      name,
+      src: spriteInfo.src,
+      scale: spriteInfo.scale,
+      framesMax: spriteInfo.framesMax,
+      offset: fighterDirection > 0 ? spriteInfo.offset[-1] : spriteInfo.offset[1],
+      name: spriteInfo.name,
       special,
       fighterDirection,
+      role,
     });
     this.#differenceSpace = differenceSpace;
     this.#attackBox = {
@@ -71,7 +67,7 @@ export class Fighter extends Sprite {
         this.getDirection() > 0
           ? this.getPositionX() + this.getWidth()
           : this.getPositionX() - this.#attackBox.width,
-      y: this.getPositionY(),
+      y: this.getPositionY() + 30,
     };
 
     if (this.#isBlocking) {
@@ -84,6 +80,19 @@ export class Fighter extends Sprite {
         this.getWidth() + ctx.lineWidth,
         this.getHeight() + ctx.lineWidth
       );
+    }
+
+    // reduce ninja idle sprite speed
+    if (this.getName() === 'ninja') {
+      if (this.getActualSprite() === 'idle') {
+        if (this.getFramesHold() !== 20) {
+          this.setFramesHold(20);
+        }
+      } else {
+        if (this.getFramesHold() !== 10 && this.getActualSprite() !== 'death') {
+          this.setFramesHold(10);
+        }
+      }
     }
   }
 

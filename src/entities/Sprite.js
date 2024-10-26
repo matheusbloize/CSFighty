@@ -16,6 +16,7 @@ export class Sprite {
   #name;
   #special;
   #fighter;
+  #role;
 
   constructor({
     position,
@@ -32,6 +33,7 @@ export class Sprite {
     special,
     fighterDirection,
     fighter = null,
+    role,
   }) {
     this.#position = position;
     this.#width = width;
@@ -48,11 +50,12 @@ export class Sprite {
     this.#special = special;
     this.#direction = fighterDirection;
     this.#fighter = fighter;
+    this.#role = role;
   }
 
   draw(ctx) {
     ctx.scale(this.#direction, 1);
-    if (this.#name !== 'special') {
+    if (this.#role !== 'special') {
       ctx.drawImage(
         this.#image,
         this.#framesActual * (this.#image.width / this.#framesMax),
@@ -80,7 +83,7 @@ export class Sprite {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     // // rect visualization
-    // ctx.fillStyle = this.#name === 'player' ? '#ff0000b2' : '#0000ffb2';
+    // ctx.fillStyle = this.#role === 'player' ? '#ff000045' : '#0000ffb2';
     // ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
 
     // ctx.fillStyle = 'white';
@@ -95,19 +98,19 @@ export class Sprite {
     this.#framesElapsed++;
 
     if (this.#framesElapsed % this.#framesHold === 0) {
-      if (this.#name !== 'special') {
+      if (this.#role !== 'special') {
         if (this.#framesActual < this.#framesMax - 1) {
           this.#framesActual++;
         } else {
           const actualSpriteSplit = this.#image.src.split('.png')[0].split('/');
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_basic') {
-            if (this.#name === 'player') {
+            if (this.#role === 'player') {
               spriteAnimations.attack_basic.active = false;
             }
             this.changeSprite('idle');
           }
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_special') {
-            if (this.#name === 'enemy') {
+            if (this.#role === 'enemy') {
               this.changeSprite('idle');
             } else {
               this.changeSprite('fall');
@@ -129,11 +132,6 @@ export class Sprite {
         }
       }
     }
-  }
-
-  update(ctx) {
-    this.draw(ctx);
-    this.animateFrames();
   }
 
   getActualSprite() {
@@ -165,10 +163,10 @@ export class Sprite {
   changeDirection(side) {
     if (side === 'left') {
       this.#direction = -1;
-      this.#offset = { x: 196, y: 120 };
+      this.#offset = fighters_frames[this.#name].offset[1];
     } else {
       this.#direction = 1;
-      this.#offset = { x: 145, y: 120 };
+      this.#offset = fighters_frames[this.#name].offset[-1];
     }
   }
 
@@ -216,7 +214,23 @@ export class Sprite {
     return this.#image;
   }
 
+  getFramesHold() {
+    return this.#framesHold;
+  }
+
   setFramesHold(value) {
     this.#framesHold = value;
+  }
+
+  getOffset() {
+    return this.#offset;
+  }
+
+  setOffset(value) {
+    this.#offset = value;
+  }
+
+  getRole() {
+    return this.#role;
   }
 }

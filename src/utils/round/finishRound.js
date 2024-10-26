@@ -94,9 +94,9 @@ export function finishRound(battleInfo) {
   let secondFighterRoundsWon = 0;
 
   for (const winner in battleInfo.winners) {
-    battleInfo.winners[winner] === battleInfo.firstFighter.getName() &&
+    battleInfo.winners[winner] === battleInfo.firstFighter.getRole() &&
       firstFighterRoundsWon++;
-    battleInfo.winners[winner] === battleInfo.secondFighter.getName() &&
+    battleInfo.winners[winner] === battleInfo.secondFighter.getRole() &&
       secondFighterRoundsWon++;
   }
 

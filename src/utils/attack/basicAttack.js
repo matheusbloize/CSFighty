@@ -29,20 +29,20 @@ export function basicAttack(actualFighter, opponent, ui, references) {
         Number(ui.style.width.split('%')[0]) - references.damageSpec.attack
       }%`;
       if (opponent.getLife() === 0) {
-        console.log(`${opponent.getName()} defeated`);
+        console.log(`${opponent.getRole()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     } else {
       if (ui.style.border != 'none') {
-        console.log(`${opponent.getName()} defeated`);
+        console.log(`${opponent.getRole()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     }
 
     // change enemy fear meter
-    if (opponent.getName() === 'enemy' && fearMeter.value + 10 <= fearMeter.max) {
+    if (opponent.getRole() === 'enemy' && fearMeter.value + 10 <= fearMeter.max) {
       fearMeter.value += 10;
-    } else if (opponent.getName() === 'player' && fearMeter.value - 10 >= fearMeter.min) {
+    } else if (opponent.getRole() === 'player' && fearMeter.value - 10 >= fearMeter.min) {
       fearMeter.value -= 10;
     }
 

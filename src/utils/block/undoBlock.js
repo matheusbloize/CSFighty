@@ -10,7 +10,7 @@ export function undoBlock(fighter, ui) {
   // fear meter
   const oldFearMeter = fearMeter.value;
 
-  if (fighter.getName() === 'player' && enemyLevel.actual > enemyLevel.initial) {
+  if (fighter.getRole() === 'player' && enemyLevel.actual > enemyLevel.initial) {
     fearMeter.value = 0;
     playerLife = fighter.getLife();
   }

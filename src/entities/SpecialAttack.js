@@ -3,7 +3,7 @@ import { Sprite } from './Sprite.js';
 export class SpecialAttack extends Sprite {
   #velocity = 2;
 
-  constructor({ fighter, src, scale, framesMax, framesActual, offset }) {
+  constructor({ fighter, src, scale, framesMax, offset }) {
     super({
       width: 30,
       height: 30,
@@ -17,9 +17,8 @@ export class SpecialAttack extends Sprite {
       src,
       scale,
       framesMax,
-      framesActual,
       offset,
-      name: 'special',
+      role: 'special',
       special: fighter.getSpecial(),
       fighterDirection: fighter.getDirection(),
       fighter,

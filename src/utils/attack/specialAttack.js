@@ -30,7 +30,7 @@ export function specialAttack(
   }
 
   // change enemy fear meter
-  if (opponent.getName() === 'enemy') {
+  if (opponent.getRole() === 'enemy') {
     if (fearMeter.value + 20 <= fearMeter.max) {
       fearMeter.value += 20;
     } else {

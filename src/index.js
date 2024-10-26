@@ -13,6 +13,7 @@ import { movementActionsIntervals } from './utils/enemy/movementActionsIntervals
 import { enemyBattleAction } from './utils/enemy/enemyBattleAction.js';
 import { specials_frames } from './constants/specials.frames.js';
 import { spriteAnimations } from './states/sprites.js';
+import { fighters_frames } from './constants/fighters_frames.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -23,33 +24,27 @@ const differenceSpace = 97;
 const floorPositionY = canvas.height - defaultHeight - differenceSpace;
 const entities = [
   new Fighter({
-    name: 'player',
+    spriteInfo: fighters_frames.warrior,
     position: { x: widthSpace, y: floorPositionY },
     width: defaultWidth,
     height: defaultHeight,
-    src: '../assets/fighters/medieval/idle.png',
-    scale: 2.5,
-    framesMax: 10,
     differenceSpace,
-    offset: { x: 145, y: 120 },
     special: 'fire',
     fighterDirection: 1,
+    role: 'player',
   }),
   new Fighter({
-    name: 'enemy',
+    spriteInfo: fighters_frames.samurai,
     position: {
       x: canvas.width - widthSpace - defaultWidth,
       y: floorPositionY,
     },
     width: defaultWidth,
     height: defaultHeight,
-    src: '../assets/fighters/medieval/idle.png',
-    scale: 2.5,
-    framesMax: 10,
     differenceSpace,
-    offset: { x: 196, y: 120 },
     special: 'fire',
     fighterDirection: -1,
+    role: 'enemy',
   }),
 ];
 const keys = {
@@ -180,7 +175,7 @@ function animate() {
   for (const entity of entities) {
     if (!actualRound.finished) {
       // player loop
-      if (entity.getName() === 'player') {
+      if (entity.getRole() === 'player') {
         // check/change directions
         if (
           entity.getPositionX() + entity.getWidth() >
@@ -426,7 +421,7 @@ function animate() {
       // block player special attack if enemy level is max
       if (
         enemyLevel.actual === enemyLevel.max &&
-        special.getFighter().getName() === 'player' &&
+        special.getFighter().getRole() === 'player' &&
         entities[1].getBlockBar() === 100 &&
         !entities[1].isBlocking()
       ) {
@@ -434,7 +429,7 @@ function animate() {
       }
 
       if (
-        special.getFighter().getName() === 'player' &&
+        special.getFighter().getRole() === 'player' &&
         attackCollision(special, entities[1])
       ) {
         // check if opponent is not blocking
@@ -456,7 +451,7 @@ function animate() {
         }
       }
       if (
-        special.getFighter().getName() === 'enemy' &&
+        special.getFighter().getRole() === 'enemy' &&
         attackCollision(special, entities[0])
       ) {
         // check if opponent is not blocking
