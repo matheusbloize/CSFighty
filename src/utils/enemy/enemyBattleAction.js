@@ -4,6 +4,7 @@ import { undoBlock } from '../block/undoBlock.js';
 import { enemyLevel, battleActions, fearMeter } from '../../states/enemy.js';
 import { attackCollision } from '../collision/attackCollision.js';
 import { specials_frames } from '../../constants/specials.frames.js';
+import { spriteAnimations } from '../../states/sprites.js';
 
 export function enemyBattleAction(specialAttacks, battleInfo) {
   const player = battleInfo.firstFighter;
@@ -44,7 +45,9 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       randomBattleValue >= battleActions.attack[0] &&
       randomBattleValue < battleActions.attack[1]
     ) {
-      battleAction = 0;
+      if (!spriteAnimations.boss_attack_basic.active) {
+        battleAction = 0;
+      }
     } else {
       battleAction = 1;
     }
@@ -56,8 +59,20 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
       if (enemy.isBlocking()) {
         undoBlock(enemy, battleInfo.secondFighterBlockBar);
       }
-      basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+      const isEnemyBoss = enemy.getName() === 'nightborne';
       enemy.changeSprite('attack_basic');
+      if (isEnemyBoss) {
+        spriteAnimations.boss_attack_basic.active = true;
+        setTimeout(
+          () => basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo),
+          600
+        );
+        setTimeout(() => {
+          spriteAnimations.boss_attack_basic.active = false;
+        }, spriteAnimations.boss_attack_basic.time);
+      } else {
+        basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+      }
       break;
     }
     case 1: {
@@ -80,17 +95,18 @@ export function enemyBattleAction(specialAttacks, battleInfo) {
         enemy.getAttackBox().getPositionY() === enemy.getPositionY() + 30
       ) {
         enemy.changeSprite('attack_special');
+        const timeoutTime = enemy.getName() === 'nightborne' ? 700 : 200;
         setTimeout(() => {
           specialAttacks.push(
             new SpecialAttack({
               fighter: enemy,
               src: `../assets/specials/${enemy.getSpecial()}/001.png`,
               scale: specials_frames[enemy.getSpecial()].scale,
-              framesMax: 5,
+              framesMax: 10,
               offset: specials_frames[enemy.getSpecial()].offset[enemy.getDirection()],
             })
           );
-        }, 200);
+        }, timeoutTime);
         enemy.setSpecialBar(0);
         battleInfo.secondFighterSpecialBar.parentElement.classList.remove(
           'special-bar_charged'

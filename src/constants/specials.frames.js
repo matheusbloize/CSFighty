@@ -27,4 +27,11 @@ export const specials_frames = {
       1: { x: 48, y: 27 },
     },
   },
+  void: {
+    scale: 2,
+    offset: {
+      '-1': { x: 45, y: 15 },
+      1: { x: 15, y: 15 },
+    },
+  },
 };

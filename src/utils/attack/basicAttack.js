@@ -22,12 +22,14 @@ export function basicAttack(actualFighter, opponent, ui, references) {
     // change opponent sprite when get hit
     opponent.changeSprite('hit');
 
+    // get basic attack damage
+    const damage =
+      actualFighter.getName() !== 'nightborne' ? references.damageSpec.attack : 30;
+
     // apply damage
-    if (opponent.getLife() - references.damageSpec.attack >= 0) {
-      opponent.setLife(opponent.getLife() - references.damageSpec.attack);
-      ui.style.width = `${
-        Number(ui.style.width.split('%')[0]) - references.damageSpec.attack
-      }%`;
+    if (opponent.getLife() - damage >= 0) {
+      opponent.setLife(opponent.getLife() - damage);
+      ui.style.width = `${Number(ui.style.width.split('%')[0]) - damage}%`;
       if (opponent.getLife() === 0) {
         console.log(`${opponent.getRole()} defeated`);
         defeatOpponent(ui, references.actualRound, references);

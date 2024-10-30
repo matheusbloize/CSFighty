@@ -18,4 +18,8 @@ export let spriteAnimations = {
     active: false,
     time: 275,
   },
+  boss_attack_basic: {
+    active: false,
+    time: 1000,
+  },
 };

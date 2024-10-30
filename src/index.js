@@ -362,7 +362,7 @@ function animate() {
                   fighter: entity,
                   src: `../assets/specials/${entity.getSpecial()}/001.png`,
                   scale: specials_frames[entity.getSpecial()].scale,
-                  framesMax: 5,
+                  framesMax: 10,
                   offset:
                     specials_frames[entity.getSpecial()].offset[entity.getDirection()],
                 })

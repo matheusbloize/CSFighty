@@ -71,4 +71,22 @@ export const fighters_frames = {
     scale: 2.15,
     src: '../assets/fighters/samurai/idle.png',
   },
+  nightborne: {
+    idle: 9,
+    run: 6,
+    jump: 9,
+    fall: 9,
+    attack_basic: 12,
+    attack_special: 12,
+    hit: 5,
+    death: 23,
+    offset: {
+      '-1': { x: 135, y: 120 },
+      1: { x: 185, y: 120 },
+    },
+    framesMax: 9,
+    name: 'nightborne',
+    scale: 1.15,
+    src: '../assets/fighters/nightborne/idle.png',
+  },
 };

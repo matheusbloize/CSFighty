@@ -83,7 +83,7 @@ export class Sprite {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     // // rect visualization
-    // ctx.fillStyle = this.#role === 'player' ? '#ff000045' : '#0000ffb2';
+    // ctx.fillStyle = this.#role === 'player' ? '#ff000045' : '#0000ff45';
     // ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
 
     // ctx.fillStyle = 'white';
