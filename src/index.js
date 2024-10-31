@@ -94,6 +94,9 @@ const secondFighterBlockBar = document.querySelector(
   '#hud .hud_fighter-2_block-bar_content'
 );
 const stageBackground = new Image();
+const soundtrack = {
+  actual: document.querySelector('#soundtrack_home')
+}
 
 let lastKey;
 let attackCooldown = {
@@ -502,6 +505,18 @@ function animate() {
 requestAnimationFrame(animate);
 
 document.addEventListener('keydown', ({ repeat, key }) => {
+  // check if current soundtrack is playing
+  const isPlaying =
+    soundtrack.actual.currentTime > 0 &&
+    !soundtrack.actual.paused &&
+    !soundtrack.actual.ended &&
+    soundtrack.actual.readyState > soundtrack.actual.HAVE_CURRENT_DATA;
+
+  if (!isPlaying) {
+    soundtrack.actual.play();
+  }
+
+  // set keys to move player
   if (repeat && key.toLowerCase() === ' ') {
     keys.space.pressed = false;
     return;
