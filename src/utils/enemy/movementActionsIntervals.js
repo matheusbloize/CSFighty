@@ -12,12 +12,15 @@ function enemyJump(enemy, references) {
       enemy.getActualSprite() !== 'attack_basic' &&
       enemy.getActualSprite() !== 'attack_special' &&
       enemy.getActualSprite() !== 'hit' &&
+      enemy.getActualSprite() !== 'death' &&
       !references.actualRound.finished
     ) {
       // change to fall sprite when hits jump peak (200 ms)
       enemy.changeSprite('fall');
       setTimeout(() => {
-        enemy.changeSprite('idle');
+        if (enemy.getActualSprite() !== 'death') {
+          enemy.changeSprite('idle');
+        }
       }, spriteAnimations.fall.time);
     }
   }, 200);
@@ -35,7 +38,8 @@ function content(type, references, jump) {
         ) &&
         enemy.getActualSprite() !== 'attack_basic' &&
         enemy.getActualSprite() !== 'attack_special' &&
-        enemy.getActualSprite() !== 'hit'
+        enemy.getActualSprite() !== 'hit' &&
+        enemy.getActualSprite() !== 'death'
       ) {
         enemy.setPositionX(enemy.getPositionX() - 2);
         if (
@@ -43,14 +47,19 @@ function content(type, references, jump) {
           enemy.getPositionY() === references.floorPositionY
         ) {
           if (enemy.getActualSprite() !== 'run') {
-            setTimeout(() => enemy.changeSprite('run'), 0);
+            setTimeout(() => {
+              if (enemy.getActualSprite() !== 'death') {
+                enemy.changeSprite('run');
+              }
+            }, 0);
           }
         } else {
           if (
             enemy.getActualSprite() !== 'idle' &&
             enemy.getActualSprite() !== 'jump' &&
             enemy.getActualSprite() !== 'fall' &&
-            enemy.getActualSprite() !== 'hit'
+            enemy.getActualSprite() !== 'hit' &&
+            enemy.getActualSprite() !== 'death'
           ) {
             enemy.changeSprite('idle');
           }
@@ -73,7 +82,8 @@ function content(type, references, jump) {
         ) &&
         enemy.getActualSprite() !== 'attack_basic' &&
         enemy.getActualSprite() !== 'attack_special' &&
-        enemy.getActualSprite() !== 'hit'
+        enemy.getActualSprite() !== 'hit' &&
+        enemy.getActualSprite() !== 'death'
       ) {
         enemy.setPositionX(enemy.getPositionX() + 2);
         if (
@@ -81,14 +91,19 @@ function content(type, references, jump) {
           enemy.getPositionY() === references.floorPositionY
         ) {
           if (enemy.getActualSprite() !== 'run') {
-            setTimeout(() => enemy.changeSprite('run'), 0);
+            setTimeout(() => {
+              if (enemy.getActualSprite() !== 'death') {
+                enemy.changeSprite('run');
+              }
+            }, 0);
           }
         } else {
           if (
             enemy.getActualSprite() !== 'idle' &&
             enemy.getActualSprite() !== 'jump' &&
             enemy.getActualSprite() !== 'fall' &&
-            enemy.getActualSprite() !== 'hit'
+            enemy.getActualSprite() !== 'hit' &&
+            enemy.getActualSprite() !== 'death'
           ) {
             enemy.changeSprite('idle');
           }

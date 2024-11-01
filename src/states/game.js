@@ -1,3 +1,3 @@
 export const gameInterfaces = {
-  actual: 'game',
+  actual: 'home',
 };
