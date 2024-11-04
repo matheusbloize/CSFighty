@@ -2,6 +2,8 @@ import { fighters_frames } from '../../constants/fighters_frames.js';
 import { manageInterval } from '../round/manageInterval.js';
 import { Fighter } from '../../entities/Fighter.js';
 import { matchInfo, actualRound, specialAttacks, stage } from './objects.js';
+import { getNewEnemy } from '../round/getNewEnemy.js';
+import { getNewSpecial } from '../round/getNewSpecial.js';
 
 export let references;
 export let entities;
@@ -11,6 +13,8 @@ export function startGame(ctx, fighter, special) {
   const widthSpace = 40;
   const differenceSpace = 97;
   const floorPositionY = ctx.canvas.height - defaultHeight - differenceSpace;
+  const enemy = getNewEnemy(fighter);
+  const enemySpecial = getNewSpecial(enemy);
   entities = [
     new Fighter({
       spriteInfo: fighters_frames[fighter],
@@ -23,7 +27,7 @@ export function startGame(ctx, fighter, special) {
       role: 'player',
     }),
     new Fighter({
-      spriteInfo: fighters_frames.samurai,
+      spriteInfo: fighters_frames[enemy],
       position: {
         x: ctx.canvas.width - widthSpace - defaultWidth,
         y: floorPositionY,
@@ -31,7 +35,7 @@ export function startGame(ctx, fighter, special) {
       width: defaultWidth,
       height: defaultHeight,
       differenceSpace,
-      special: 'fire',
+      special: enemySpecial,
       fighterDirection: -1,
       role: 'enemy',
     }),

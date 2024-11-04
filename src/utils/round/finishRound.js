@@ -3,8 +3,15 @@ import { battleReset } from './battleReset.js';
 import { movementActionsIntervals } from '../enemy/movementActionsIntervals.js';
 import { enemyLevel, fearMeter, movementIntervals } from '../../states/enemy.js';
 import { getRoundWinner } from './getRoundWinner.js';
+import { getNewEnemy } from './getNewEnemy.js';
+import { getNewSpecial } from './getNewSpecial.js';
+import { entities, references } from '../game/startGame.js';
+import { Fighter } from '../../entities/Fighter.js';
+import { fighters_frames } from '../../constants/fighters_frames.js';
+import { soundtrack } from '../../utils/game/objects.js';
+import { isPlaying } from '../soundtrack/isPlaying.js';
 
-function restartRound(battleInfo) {
+function restartRound(battleInfo, status) {
   // restart round time
   battleInfo.matchInfo.duration = 99;
 
@@ -26,6 +33,51 @@ function restartRound(battleInfo) {
     fearMeter.value = 50;
 
     battleReset(battleInfo);
+
+    if (status) {
+      // change enemy fighter
+      const enemy =
+        status === 'won'
+          ? getNewEnemy(battleInfo.secondFighter.getName())
+          : getNewEnemy(battleInfo.firstFighter.getName(), true);
+      const special = getNewSpecial(enemy);
+      entities[1] = new Fighter({
+        spriteInfo: fighters_frames[enemy],
+        position: {
+          x:
+            battleInfo.ctx.canvas.width - battleInfo.widthSpace - battleInfo.defaultWidth,
+          y: battleInfo.floorPositionY,
+        },
+        width: battleInfo.defaultWidth,
+        height: battleInfo.defaultHeight,
+        differenceSpace: battleInfo.differenceSpace,
+        special,
+        fighterDirection: -1,
+        role: 'enemy',
+      });
+      references.secondFighter = entities[1];
+      document.querySelector('#hud .hud_fighter-2_name').innerHTML =
+        entities[1].getName();
+
+      soundtrack.actual.pause();
+      switch (battleInfo.matchInfo.number) {
+        case 2: {
+          soundtrack.actual = document.querySelector('#soundtrack_second_enemy');
+          break;
+        }
+        case 3: {
+          soundtrack.actual = document.querySelector('#soundtrack_third_enemy');
+          break;
+        }
+        case 4: {
+          soundtrack.actual = document.querySelector('#soundtrack_boss');
+          break;
+        }
+      }
+      if (!isPlaying()) {
+        soundtrack.actual.play();
+      }
+    }
 
     // change to default stage
     battleInfo.stage.last = '';
@@ -68,7 +120,7 @@ function changeMatch(status, battleInfo) {
     battleInfo.firstFighter.setSpecialBar(0);
     battleInfo.secondFighter.setSpecialBar(0);
 
-    restartRound(battleInfo);
+    restartRound(battleInfo, status);
   }, 4000);
 }
 
@@ -157,6 +209,11 @@ export function finishRound(battleInfo) {
         changeMatch('won', battleInfo);
       } else {
         console.log('player defeated boss');
+        soundtrack.actual.pause();
+        soundtrack.actual = document.querySelector('#soundtrack_credits');
+        if (!isPlaying()) {
+          soundtrack.actual.play();
+        }
 
         // defeat boss animation
         battleInfo.stage.actual = 'final';

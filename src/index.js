@@ -17,6 +17,7 @@ import { startGame, references, entities } from './utils/game/startGame.js';
 import { matchInfo, actualRound, stage, soundtrack } from './utils/game/objects.js';
 import { select_fighters } from './utils/select/fighters.js';
 import { select_specials } from './utils/select/specials.js';
+import { isPlaying } from './utils/soundtrack/isPlaying.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -77,6 +78,11 @@ function animate() {
     if (!gameStarted) {
       contentElement.innerHTML = gameHTML;
       startGame(ctx, selectedFighter, selectedSpecial);
+      soundtrack.actual.pause();
+      soundtrack.actual = document.querySelector('#soundtrack_first_enemy');
+      if (!isPlaying()) {
+        soundtrack.actual.play();
+      }
       gameStarted = true;
     }
     if (stage.last !== stage.actual) {
@@ -418,6 +424,10 @@ function animate() {
   } else if (gameInterfaces.actual === 'select') {
     if (!selectStarted) {
       contentElement.innerHTML = '';
+      soundtrack.actual = document.querySelector('#soundtrack_select');
+      if (!isPlaying()) {
+        soundtrack.actual.play();
+      }
       selectStarted = true;
     }
 
@@ -518,6 +528,7 @@ function animate() {
       userPressHomePage = false;
       setTimeout(() => {
         contentElement.querySelector('#hud').style.animation = 'none';
+        soundtrack.actual.pause();
         gameInterfaces.actual = 'select';
       }, 3000);
     }
@@ -527,14 +538,8 @@ function animate() {
 requestAnimationFrame(animate);
 
 document.addEventListener('keydown', ({ repeat, key }) => {
-  // check if current soundtrack is playing
-  const isPlaying =
-    soundtrack.actual.currentTime > 0 &&
-    !soundtrack.actual.paused &&
-    !soundtrack.actual.ended &&
-    soundtrack.actual.readyState > soundtrack.actual.HAVE_CURRENT_DATA;
-
-  if (!isPlaying) {
+  // check if current soundtrack is playinG
+  if (!isPlaying()) {
     soundtrack.actual.play();
   }
 
@@ -627,6 +632,7 @@ document.addEventListener('keydown', ({ repeat, key }) => {
           isFighterSelected = true;
         } else if (!isSpecialSelected && selectedSpecial !== null) {
           isSpecialSelected = true;
+          // go to loading to block backspace and get bug
           setTimeout(() => (gameInterfaces.actual = 'game'), 3000);
         }
         break;
