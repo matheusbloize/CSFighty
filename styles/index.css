@@ -35,6 +35,8 @@ canvas {
   color: #ffffff;
 }
 
+/* GAME PAGE START */
+
 .hud_time {
   width: 15%;
   display: flex;
@@ -298,6 +300,83 @@ canvas {
   animation: glow 0.75s ease infinite;
 }
 
+/* GAME PAGE END */
+
+#hud.home_container,
+#hud.select_container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 36em;
+  margin: 1em;
+  text-transform: uppercase;
+  background-image: url('../assets/pages/background.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+/* #hud.select_container {
+  height: 24em;
+} */
+
+.home_container_title,
+.select_container_title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  margin-bottom: 5em;
+}
+
+.select_container_title {
+  position: relative;
+}
+
+.home_container_title h1,
+.select_container_title h1 {
+  font-size: 6em;
+  text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000;
+}
+
+.home_container_title h2,
+.select_container_title h2 {
+  font-size: 3em;
+  text-shadow: -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 2px 2px 0px #000;
+}
+
+.home_container_info,
+.select_container_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2em;
+  position: absolute;
+  bottom: 1em;
+  width: 100%;
+  text-shadow: -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 2px 2px 0px #000;
+}
+
+.select_container_info {
+  flex-direction: row;
+  position: relative;
+  gap: 0.5em;
+}
+
+.select_container_info div {
+  border: 1px solid #fff;
+  padding: 2em;
+}
+
+.home_container_info span {
+  position: absolute;
+  bottom: 3em;
+  animation: pulse 1.5s ease infinite;
+}
+
+.home_container_info h3 {
+  font-size: 1em;
+}
+
 /* animations */
 
 @keyframes glow {
@@ -319,5 +398,16 @@ canvas {
 
   50% {
     opacity: 0.5;
+  }
+}
+
+@keyframes invert {
+  0%,
+  100% {
+    filter: invert(0);
+  }
+
+  50% {
+    filter: invert(1);
   }
 }

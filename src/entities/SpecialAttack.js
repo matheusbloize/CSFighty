@@ -3,11 +3,11 @@ import { Sprite } from './Sprite.js';
 export class SpecialAttack extends Sprite {
   #velocity = 2;
 
-  constructor({ fighter, src, scale, framesMax, offset }) {
+  constructor({ fighter, src, scale, framesMax, offset, isSelect = false, position }) {
     super({
       width: 30,
       height: 30,
-      position: {
+      position: position || {
         x:
           fighter.getDirection() > 0
             ? fighter.getPositionX() + fighter.getWidth() + 20
@@ -23,16 +23,19 @@ export class SpecialAttack extends Sprite {
       fighterDirection: fighter.getDirection(),
       fighter,
     });
+    this.isSelect = isSelect;
   }
 
   update(ctx) {
     this.draw(ctx);
     this.animateFrames();
 
-    if (this.getDirection() > 0) {
-      this.setPositionX(this.getPositionX() + this.#velocity * 2);
-    } else {
-      this.setPositionX(this.getPositionX() - this.#velocity * 2);
+    if (!this.isSelect) {
+      if (this.getDirection() > 0) {
+        this.setPositionX(this.getPositionX() + this.#velocity * 2);
+      } else {
+        this.setPositionX(this.getPositionX() - this.#velocity * 2);
+      }
     }
   }
 

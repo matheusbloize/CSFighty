@@ -15,6 +15,8 @@ import { gameInterfaces } from './states/game.js';
 import { gameHTML } from './pages/game.js';
 import { startGame, references, entities } from './utils/game/startGame.js';
 import { matchInfo, actualRound, stage, soundtrack } from './utils/game/objects.js';
+import { select_fighters } from './utils/select/fighters.js';
+import { select_specials } from './utils/select/specials.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -40,6 +42,9 @@ const keys = {
   },
 };
 const stageBackground = new Image();
+const selectBackground = new Image();
+selectBackground.src = '../assets/pages/background.webp';
+const selectBoxPixel = 128;
 
 let lastKey;
 let attackCooldown = {
@@ -55,10 +60,14 @@ let enemyCooldown = {
   time: 500,
 };
 let gameStarted = false;
+let selectStarted = false;
+let isFighterSelected = false;
+let isSpecialSelected = false;
+let selectedFighter = null;
+let selectedSpecial = null;
+let userPressHomePage = false;
 
-ctx.font = '16px Verdana';
-
-setTimeout(() => (gameInterfaces.actual = 'game'), 1500);
+ctx.font = '16px Pixelify Sans';
 
 function animate() {
   requestAnimationFrame(animate);
@@ -67,7 +76,7 @@ function animate() {
   if (gameInterfaces.actual === 'game') {
     if (!gameStarted) {
       contentElement.innerHTML = gameHTML;
-      startGame(ctx);
+      startGame(ctx, selectedFighter, selectedSpecial);
       gameStarted = true;
     }
     if (stage.last !== stage.actual) {
@@ -108,7 +117,6 @@ function animate() {
             !keys.a.pressed &&
             entity.getActualSprite() !== 'hit'
           ) {
-            console.log('can go idle');
             entity.changeSprite('idle');
           }
 
@@ -408,11 +416,111 @@ function animate() {
       canvas.height / 3.25
     );
   } else if (gameInterfaces.actual === 'select') {
-    ctx.fillStyle = 'limegreen';
-    ctx.fillText(`select`, canvas.width / 2.25, canvas.height / 5);
+    if (!selectStarted) {
+      contentElement.innerHTML = '';
+      selectStarted = true;
+    }
+
+    // background
+    ctx.drawImage(selectBackground, 0, 0, canvas.width, canvas.height);
+    ctx.font = '48px Pixelify Sans';
+
+    // title
+    ctx.fillStyle = 'white';
+    // ctx.fillText(`SELECT YOUR CHARACTER`, canvas.width / 4.3, canvas.height / 2.5);
+    ctx.fillText('SELECT YOUR CHARACTER', canvas.width / 4.3, 100);
+
+    // select box numbers
+    ctx.font = '24px Pixelify Sans';
+    if (!isFighterSelected) {
+      ctx.fillText(
+        'PRESS THE NUMBER TO CHOOSE FIGHTER AND HIT SPACE TO CONFIRM',
+        canvas.width / 7,
+        canvas.height / 4
+      );
+    } else {
+      ctx.fillText(
+        'PRESS THE NUMBER TO CHOOSE SPECIAL AND HIT SPACE TO CONFIRM',
+        canvas.width / 7,
+        canvas.height / 4
+      );
+      ctx.fillText(
+        'OR HIT BACKSPACE TO CHANGE FIGHTER',
+        canvas.width / 3.4,
+        canvas.height / 3.4
+      );
+    }
+    ctx.font = '48px Pixelify Sans';
+    ctx.fillText('1', 310, canvas.height / 2.5);
+    ctx.fillText('2', 440, canvas.height / 2.5);
+    ctx.fillText('3', 560, canvas.height / 2.5);
+    ctx.fillText('4', 690, canvas.height / 2.5);
+
+    // select box fighters
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedFighter === 'warrior') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 2.03, 250, 120, selectBoxPixel);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedFighter === 'rogue') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 3.03, 250, 120, selectBoxPixel);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedFighter === 'ninja') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 4.03, 250, 120, selectBoxPixel);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedFighter === 'samurai') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 5.03, 250, 120, selectBoxPixel);
+
+    // select box specials
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedSpecial === 'fire') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 2.03, 390, 120, 80);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedSpecial === 'water') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 3.03, 390, 120, 80);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedSpecial === 'earth') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 4.03, 390, 120, 80);
+    ctx.strokeStyle = '#FFFAFA';
+    if (selectedSpecial === 'air') {
+      ctx.strokeStyle = '#d61561';
+    }
+    ctx.strokeRect(selectBoxPixel * 5.03, 390, 120, 80);
+
+    // characters
+    select_fighters[0].update(ctx);
+    select_fighters[1].update(ctx);
+    select_fighters[2].update(ctx);
+    select_fighters[3].update(ctx);
+
+    // specials
+    select_specials[0].update(ctx);
+    select_specials[1].update(ctx);
+    select_specials[2].update(ctx);
+    select_specials[3].update(ctx);
   } else if (gameInterfaces.actual === 'home') {
-    ctx.fillStyle = 'limegreen';
-    ctx.fillText(`home`, canvas.width / 2.25, canvas.height / 5);
+    if (userPressHomePage) {
+      contentElement.querySelector('#hud').style.animation = 'invert 1s ease infinite';
+      userPressHomePage = false;
+      setTimeout(() => {
+        contentElement.querySelector('#hud').style.animation = 'none';
+        gameInterfaces.actual = 'select';
+      }, 3000);
+    }
   }
 }
 
@@ -480,6 +588,61 @@ document.addEventListener('keydown', ({ repeat, key }) => {
         break;
       }
     }
+  } else if (gameInterfaces.actual === 'select') {
+    switch (key.toLowerCase()) {
+      case '1': {
+        if (!isFighterSelected) {
+          selectedFighter = 'warrior';
+        } else {
+          selectedSpecial = 'fire';
+        }
+        break;
+      }
+      case '2': {
+        if (!isFighterSelected) {
+          selectedFighter = 'rogue';
+        } else {
+          selectedSpecial = 'water';
+        }
+        break;
+      }
+      case '3': {
+        if (!isFighterSelected) {
+          selectedFighter = 'ninja';
+        } else {
+          selectedSpecial = 'earth';
+        }
+        break;
+      }
+      case '4': {
+        if (!isFighterSelected) {
+          selectedFighter = 'samurai';
+        } else {
+          selectedSpecial = 'air';
+        }
+        break;
+      }
+      case ' ': {
+        if (!isFighterSelected && selectedFighter !== null) {
+          isFighterSelected = true;
+        } else if (!isSpecialSelected && selectedSpecial !== null) {
+          isSpecialSelected = true;
+          setTimeout(() => (gameInterfaces.actual = 'game'), 3000);
+        }
+        break;
+      }
+      case 'backspace': {
+        if (isFighterSelected && selectedFighter !== null) {
+          selectedFighter = null;
+          isFighterSelected = false;
+          selectedSpecial = null;
+          isSpecialSelected = false;
+        }
+        break;
+      }
+    }
+  } else if (gameInterfaces.actual === 'home') {
+    userPressHomePage = true;
   }
 });
 

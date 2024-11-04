@@ -5,7 +5,7 @@ import { matchInfo, actualRound, specialAttacks, stage } from './objects.js';
 
 export let references;
 export let entities;
-export function startGame(ctx) {
+export function startGame(ctx, fighter, special) {
   const defaultWidth = 50;
   const defaultHeight = 100;
   const widthSpace = 40;
@@ -13,12 +13,12 @@ export function startGame(ctx) {
   const floorPositionY = ctx.canvas.height - defaultHeight - differenceSpace;
   entities = [
     new Fighter({
-      spriteInfo: fighters_frames.warrior,
+      spriteInfo: fighters_frames[fighter],
       position: { x: widthSpace, y: floorPositionY },
       width: defaultWidth,
       height: defaultHeight,
       differenceSpace,
-      special: 'fire',
+      special,
       fighterDirection: 1,
       role: 'player',
     }),
