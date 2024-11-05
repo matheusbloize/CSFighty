@@ -17,7 +17,7 @@ function restartRound(battleInfo, status) {
 
   // set countdown interval and fighters health and block bars style after 2 seconds
   setTimeout(() => {
-    manageInterval('set', battleInfo.intervals, 'countdown', battleInfo, 1000);
+    manageInterval('set', battleInfo.intervals, 'countdown', 1000);
     battleInfo.firstFighterHealthBar.style.width = '100%';
     battleInfo.secondFighterHealthBar.style.width = '100%';
     battleInfo.firstFighterHealthBar.style.border = '2px solid';
@@ -28,7 +28,7 @@ function restartRound(battleInfo, status) {
 
   // start round and set special bar interval after 3 seconds
   setTimeout(() => {
-    manageInterval('set', battleInfo.intervals, 'bars', battleInfo, 100);
+    manageInterval('set', battleInfo.intervals, 'bars', 100);
     // reset enemy fear meter
     fearMeter.value = 50;
 

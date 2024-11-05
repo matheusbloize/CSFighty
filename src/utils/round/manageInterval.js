@@ -1,11 +1,12 @@
 import { defeatOpponent } from '../attack/defeatOpponent.js';
 import { chargeBar } from './chargeBar.js';
 import { getRoundWinner } from './getRoundWinner.js';
+import { references } from '../game/startGame.js';
 
 const intervalTypes = ['countdown', 'bars'];
 const bars = ['specialBar', 'blockBar'];
 
-function content(type, references) {
+function content(type) {
   switch (type) {
     case intervalTypes[0]:
       // end match
@@ -40,9 +41,9 @@ function content(type, references) {
   }
 }
 
-export function manageInterval(action, variableId, type, references, time) {
+export function manageInterval(action, variableId, type, time) {
   if (action === 'set') {
-    variableId[type] = setInterval(() => content(type, references), time);
+    variableId[type] = setInterval(() => content(type), time);
   } else {
     clearInterval(variableId[type]);
     variableId[type] = null;

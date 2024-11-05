@@ -101,8 +101,8 @@ export function startGame(ctx, fighter, special) {
     widthSpace,
     differenceSpace,
   };
-  manageInterval('set', intervals, 'countdown', references, 1000);
-  manageInterval('set', intervals, 'bars', references, 100);
+  manageInterval('set', intervals, 'countdown', 1000);
+  manageInterval('set', intervals, 'bars', 100);
 
   firstFighterHealthBar.style.width = '100%';
   secondFighterHealthBar.style.width = '100%';

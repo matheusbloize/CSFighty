@@ -1,9 +1,10 @@
 import { fearMeter, movementActions, movementIntervals } from '../../states/enemy.js';
 import { movementActionsIntervals } from './movementActionsIntervals.js';
+import { references as battleInfo } from '../game/startGame.js';
 
 let oldDirection = null;
 
-export function enemyMovementAction(battleInfo) {
+export function enemyMovementAction() {
   const player = battleInfo.firstFighter;
   const randomMovementValue = Math.floor(
     Math.random() * (fearMeter.max - fearMeter.min + 1) + fearMeter.min

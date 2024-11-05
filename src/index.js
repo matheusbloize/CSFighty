@@ -320,8 +320,8 @@ function animate() {
         if (enemyCooldown.active) {
           movementActionsIntervals('clear', movementIntervals, 'right');
           movementActionsIntervals('clear', movementIntervals, 'left');
-          enemyMovementAction(references);
-          enemyBattleAction(references.specialAttacks, references);
+          enemyMovementAction();
+          enemyBattleAction(references.specialAttacks);
           enemyCooldown.active = false;
           setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
         }

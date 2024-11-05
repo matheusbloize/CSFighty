@@ -5,8 +5,9 @@ import { enemyLevel, battleActions, fearMeter } from '../../states/enemy.js';
 import { attackCollision } from '../collision/attackCollision.js';
 import { specials_frames } from '../../constants/specials.frames.js';
 import { spriteAnimations } from '../../states/sprites.js';
+import { references as battleInfo } from '../game/startGame.js';
 
-export function enemyBattleAction(specialAttacks, battleInfo) {
+export function enemyBattleAction(specialAttacks) {
   const player = battleInfo.firstFighter;
   const enemy = battleInfo.secondFighter;
   const randomBattleValue = Math.floor(
