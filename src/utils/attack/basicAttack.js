@@ -3,11 +3,19 @@ import { attackCollision } from '../collision/attackCollision.js';
 import { undoBlock } from '../block/undoBlock.js';
 import { fearMeter } from '../../states/enemy.js';
 import { defeatOpponent } from './defeatOpponent.js';
+import { isSfxPlaying } from '../sfx/isSfxPlaying.js';
 
 export function basicAttack(actualFighter, opponent, ui, references) {
   if (actualFighter.isBlocking()) {
     undoBlock(actualFighter, references.firstFighterBlockBar);
   }
+
+  // add sword sfx
+  const swordSfx = document.querySelector('#sfx_slash');
+  if (isSfxPlaying(swordSfx)) {
+    swordSfx.currentTime = 0;
+  }
+  swordSfx.play();
 
   if (attackCollision(actualFighter.getAttackBox(), opponent)) {
     if (references.matchInfo.duration === 98) {
@@ -31,12 +39,10 @@ export function basicAttack(actualFighter, opponent, ui, references) {
       opponent.setLife(opponent.getLife() - damage);
       ui.style.width = `${Number(ui.style.width.split('%')[0]) - damage}%`;
       if (opponent.getLife() === 0) {
-        console.log(`${opponent.getRole()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     } else {
       if (ui.style.border != 'none') {
-        console.log(`${opponent.getRole()} defeated`);
         defeatOpponent(ui, references.actualRound, references);
       }
     }

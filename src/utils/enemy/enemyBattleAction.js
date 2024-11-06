@@ -6,6 +6,7 @@ import { attackCollision } from '../collision/attackCollision.js';
 import { specials_frames } from '../../constants/specials.frames.js';
 import { spriteAnimations } from '../../states/sprites.js';
 import { references as battleInfo } from '../game/startGame.js';
+import { isSfxPlaying } from '../sfx/isSfxPlaying.js';
 
 export function enemyBattleAction(specialAttacks) {
   const player = battleInfo.firstFighter;
@@ -97,6 +98,12 @@ export function enemyBattleAction(specialAttacks) {
       ) {
         enemy.changeSprite('attack_special');
         const timeoutTime = enemy.getName() === 'nightborne' ? 700 : 200;
+        // add special sfx
+        const specialSfx = document.querySelector(`#sfx_${enemy.getSpecial()}`);
+        if (isSfxPlaying(specialSfx)) {
+          specialSfx.currentTime = 0;
+        }
+        specialSfx.play();
         setTimeout(() => {
           specialAttacks.push(
             new SpecialAttack({

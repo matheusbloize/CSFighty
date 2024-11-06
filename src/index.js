@@ -18,6 +18,7 @@ import { matchInfo, actualRound, stage, soundtrack } from './utils/game/objects.
 import { select_fighters } from './utils/select/fighters.js';
 import { select_specials } from './utils/select/specials.js';
 import { isPlaying } from './utils/soundtrack/isPlaying.js';
+import { isSfxPlaying } from './utils/sfx/isSfxPlaying.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -67,6 +68,7 @@ let isSpecialSelected = false;
 let selectedFighter = null;
 let selectedSpecial = null;
 let userPressHomePage = false;
+let homePagePressed = false;
 
 ctx.font = '16px Pixelify Sans';
 
@@ -118,6 +120,7 @@ function animate() {
             !spriteAnimations.attack_basic.active &&
             !spriteAnimations.attack_special.active &&
             entity.getActualSprite() !== 'idle' &&
+            // entity.getActualSprite() !== 'pose' &&
             entity.getPositionY() === references.floorPositionY &&
             !keys.d.pressed &&
             !keys.a.pressed &&
@@ -215,6 +218,7 @@ function animate() {
             entity.changeSprite('attack_basic');
             spriteAnimations.attack_basic.active = true;
             setTimeout(() => {
+              entity.changeSprite('pose');
               spriteAnimations.attack_basic.active = false;
             }, spriteAnimations.attack_basic.time);
           }
@@ -278,6 +282,12 @@ function animate() {
             ) {
               entity.changeSprite('attack_special');
               spriteAnimations.attack_special.active = true;
+              // add special sfx
+              const specialSfx = document.querySelector(`#sfx_${entity.getSpecial()}`);
+              if (isSfxPlaying(specialSfx)) {
+                specialSfx.currentTime = 0;
+              }
+              specialSfx.play();
               setTimeout(() => {
                 references.specialAttacks.push(
                   new SpecialAttack({
@@ -437,7 +447,6 @@ function animate() {
 
     // title
     ctx.fillStyle = 'white';
-    // ctx.fillText(`SELECT YOUR CHARACTER`, canvas.width / 4.3, canvas.height / 2.5);
     ctx.fillText('SELECT YOUR CHARACTER', canvas.width / 4.3, 100);
 
     // select box numbers
@@ -523,9 +532,9 @@ function animate() {
     select_specials[2].update(ctx);
     select_specials[3].update(ctx);
   } else if (gameInterfaces.actual === 'home') {
-    if (userPressHomePage) {
+    if (userPressHomePage && !homePagePressed) {
+      homePagePressed = true;
       contentElement.querySelector('#hud').style.animation = 'invert 1s ease infinite';
-      userPressHomePage = false;
       setTimeout(() => {
         contentElement.querySelector('#hud').style.animation = 'none';
         soundtrack.actual.pause();
@@ -538,7 +547,7 @@ function animate() {
 requestAnimationFrame(animate);
 
 document.addEventListener('keydown', ({ repeat, key }) => {
-  // check if current soundtrack is playinG
+  // check if current soundtrack is playing
   if (!isPlaying()) {
     soundtrack.actual.play();
   }
@@ -648,7 +657,9 @@ document.addEventListener('keydown', ({ repeat, key }) => {
       }
     }
   } else if (gameInterfaces.actual === 'home') {
-    userPressHomePage = true;
+    if (!userPressHomePage) {
+      userPressHomePage = true;
+    }
   }
 });
 

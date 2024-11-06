@@ -137,9 +137,9 @@ export function finishRound(battleInfo) {
   const winner = getRoundWinner(battleInfo);
 
   if (winner === 'player') {
-    battleInfo.firstFighter.changeSprite('idle');
+    references.firstFighter.changeSprite('pose');
   } else {
-    battleInfo.secondFighter.changeSprite('idle');
+    references.secondFighter.changeSprite('pose');
   }
 
   // check if match ended
@@ -147,12 +147,7 @@ export function finishRound(battleInfo) {
   let firstFighterRoundsWon = 0;
   let secondFighterRoundsWon = 0;
 
-  for (const winner in battleInfo.winners) {
-    battleInfo.winners[winner] === battleInfo.firstFighter.getRole() &&
-      firstFighterRoundsWon++;
-    battleInfo.winners[winner] === battleInfo.secondFighter.getRole() &&
-      secondFighterRoundsWon++;
-  }
+  actualMatchInfo(hasMatchWinner, firstFighterRoundsWon, secondFighterRoundsWon);
 
   // add winner hud
   const fighterRoundHud = document.querySelector(
@@ -161,12 +156,6 @@ export function finishRound(battleInfo) {
     }`
   );
   setTimeout(() => (fighterRoundHud.style.backgroundColor = '#FFFFFF'), 2000);
-
-  console.log(battleInfo.winners);
-
-  if (firstFighterRoundsWon === 2 || secondFighterRoundsWon === 2) {
-    hasMatchWinner = true;
-  }
 
   // remove time pulsing
   battleInfo.countdownDOM.classList.remove('hud_time-pulsing');
@@ -184,7 +173,6 @@ export function finishRound(battleInfo) {
         'special-bar_charged'
       );
     }, 300);
-    console.log('Battle end');
 
     if (firstFighterRoundsWon == 2) {
       // player won match, go to the next level
@@ -208,7 +196,6 @@ export function finishRound(battleInfo) {
 
         changeMatch('won', battleInfo);
       } else {
-        console.log('player defeated boss');
         soundtrack.actual.pause();
         soundtrack.actual = document.querySelector('#soundtrack_credits');
         if (!isPlaying()) {

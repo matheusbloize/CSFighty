@@ -1,5 +1,6 @@
 import { fighters_frames } from '../constants/fighters_frames.js';
 import { spriteAnimations } from '../states/sprites.js';
+import { actualRound } from '../utils/game/objects.js';
 
 export class Sprite {
   #position;
@@ -81,17 +82,6 @@ export class Sprite {
       );
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-    // // rect visualization
-    // ctx.fillStyle = this.#role === 'player' ? '#ff000045' : '#0000ff45';
-    // ctx.fillRect(this.#position.x, this.#position.y, this.#width, this.#height);
-
-    // ctx.fillStyle = 'white';
-    // if (this.#direction > 0) {
-    //   ctx.fillRect(this.#position.x + this.#width - 10, this.#position.y, 10, 10);
-    // } else {
-    //   ctx.fillRect(this.#position.x, this.#position.y, 10, 10);
-    // }
   }
 
   animateFrames() {
@@ -103,6 +93,12 @@ export class Sprite {
           this.#framesActual++;
         } else {
           const actualSpriteSplit = this.#image.src.split('.png')[0].split('/');
+          if (this.getActualSprite() === 'first_death') {
+            this.changeSprite('first_dead');
+          }
+          if (this.getActualSprite() === 'death') {
+            this.changeSprite('dead');
+          }
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'attack_basic') {
             if (this.#role === 'player') {
               spriteAnimations.attack_basic.active = false;
@@ -113,7 +109,9 @@ export class Sprite {
             if (this.#role === 'enemy') {
               this.changeSprite('idle');
             } else {
-              this.changeSprite('fall');
+              if (!actualRound.finished) {
+                this.changeSprite('fall');
+              }
             }
           }
           if (actualSpriteSplit[actualSpriteSplit.length - 1] === 'hit') {

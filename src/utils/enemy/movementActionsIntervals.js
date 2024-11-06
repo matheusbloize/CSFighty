@@ -1,6 +1,7 @@
 import { isFighterCollidingBorder } from '../collision/isFighterCollidingBorder.js';
 import { movementActions } from '../../states/enemy.js';
 import { spriteAnimations } from '../../states/sprites.js';
+import { actualRound } from '../game/objects.js';
 
 const intervalTypes = ['left', 'right'];
 
@@ -13,6 +14,7 @@ function enemyJump(enemy, references) {
       enemy.getActualSprite() !== 'attack_special' &&
       enemy.getActualSprite() !== 'hit' &&
       enemy.getActualSprite() !== 'death' &&
+      enemy.getActualSprite() !== 'pose' &&
       !references.actualRound.finished
     ) {
       // change to fall sprite when hits jump peak (200 ms)
@@ -46,7 +48,7 @@ function content(type, references, jump) {
           enemy.getDirection() < 0 &&
           enemy.getPositionY() === references.floorPositionY
         ) {
-          if (enemy.getActualSprite() !== 'run') {
+          if (enemy.getActualSprite() !== 'run' && !actualRound.finished) {
             setTimeout(() => {
               if (enemy.getActualSprite() !== 'death') {
                 enemy.changeSprite('run');
@@ -59,7 +61,8 @@ function content(type, references, jump) {
             enemy.getActualSprite() !== 'jump' &&
             enemy.getActualSprite() !== 'fall' &&
             enemy.getActualSprite() !== 'hit' &&
-            enemy.getActualSprite() !== 'death'
+            enemy.getActualSprite() !== 'death' &&
+            enemy.getActualSprite() !== 'pose'
           ) {
             enemy.changeSprite('idle');
           }
@@ -90,7 +93,7 @@ function content(type, references, jump) {
           enemy.getDirection() > 0 &&
           enemy.getPositionY() === references.floorPositionY
         ) {
-          if (enemy.getActualSprite() !== 'run') {
+          if (enemy.getActualSprite() !== 'run' && !actualRound.finished) {
             setTimeout(() => {
               if (enemy.getActualSprite() !== 'death') {
                 enemy.changeSprite('run');
@@ -103,7 +106,8 @@ function content(type, references, jump) {
             enemy.getActualSprite() !== 'jump' &&
             enemy.getActualSprite() !== 'fall' &&
             enemy.getActualSprite() !== 'hit' &&
-            enemy.getActualSprite() !== 'death'
+            enemy.getActualSprite() !== 'death' &&
+            enemy.getActualSprite() !== 'pose'
           ) {
             enemy.changeSprite('idle');
           }

@@ -8,6 +8,8 @@ export const fighters_frames = {
     attack_special: 5,
     hit: 3,
     death: 9,
+    pose: 1,
+    dead: 1,
     offset: {
       '-1': { x: 145, y: 120 },
       1: { x: 195, y: 120 },
@@ -26,6 +28,8 @@ export const fighters_frames = {
     attack_special: 4,
     hit: 4,
     death: 6,
+    pose: 1,
+    dead: 1,
     offset: {
       '-1': { x: 150, y: 127 },
       1: { x: 200, y: 127 },
@@ -44,6 +48,8 @@ export const fighters_frames = {
     attack_special: 4,
     hit: 3,
     death: 7,
+    pose: 1,
+    dead: 1,
     offset: {
       '-1': { x: 170, y: 145 },
       1: { x: 220, y: 145 },
@@ -62,6 +68,8 @@ export const fighters_frames = {
     attack_special: 4,
     hit: 4,
     death: 6,
+    pose: 1,
+    dead: 1,
     offset: {
       '-1': { x: 190, y: 165 },
       1: { x: 240, y: 165 },
@@ -80,6 +88,10 @@ export const fighters_frames = {
     attack_special: 12,
     hit: 5,
     death: 23,
+    pose: 1,
+    dead: 1,
+    first_death: 5,
+    first_dead: 1,
     offset: {
       '-1': { x: 135, y: 120 },
       1: { x: 185, y: 120 },

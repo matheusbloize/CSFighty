@@ -1,3 +1,4 @@
+import { isSfxPlaying } from '../utils/sfx/isSfxPlaying.js';
 import { Sprite } from './Sprite.js';
 
 export class Fighter extends Sprite {
@@ -99,6 +100,12 @@ export class Fighter extends Sprite {
   addBlock() {
     if (this.#blockBar === this.#blockBarLimit) {
       this.#isBlocking = true;
+      // add block sfx
+      const blockSfx = document.querySelector('#sfx_block');
+      if (isSfxPlaying(blockSfx)) {
+        blockSfx.currentTime = 0;
+      }
+      blockSfx.play();
     }
   }
 
