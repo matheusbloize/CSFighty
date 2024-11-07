@@ -47,6 +47,14 @@ const stageBackground = new Image();
 const selectBackground = new Image();
 selectBackground.src = '../assets/pages/background.webp';
 const selectBoxPixel = 128;
+const loadingRect = {
+  x: 200,
+  y: 300,
+  w: 218,
+  h: 36,
+  velocityX: 1,
+  velocityY: 1,
+};
 
 let lastKey;
 let attackCooldown = {
@@ -69,6 +77,7 @@ let selectedFighter = null;
 let selectedSpecial = null;
 let userPressHomePage = false;
 let homePagePressed = false;
+let activateLoading = false;
 
 ctx.font = '16px Pixelify Sans';
 
@@ -539,7 +548,34 @@ function animate() {
         contentElement.querySelector('#hud').style.animation = 'none';
         soundtrack.actual.pause();
         gameInterfaces.actual = 'select';
+        setTimeout(() => {
+          activateLoading = true;
+        }, 5000);
       }, 3000);
+    }
+  } else if (gameInterfaces.actual === 'loading') {
+    ctx.font = '48px Pixelify Sans';
+
+    ctx.fillText('LOADING...', loadingRect.x, loadingRect.y + 32);
+
+    if (loadingRect.x + loadingRect.w >= ctx.canvas.width || loadingRect.x <= 0) {
+      loadingRect.velocityX = -loadingRect.velocityX;
+    }
+    if (loadingRect.y + loadingRect.h >= ctx.canvas.height || loadingRect.y <= 0) {
+      loadingRect.velocityY = -loadingRect.velocityY;
+    }
+
+    loadingRect.x += loadingRect.velocityX;
+    loadingRect.y += loadingRect.velocityY;
+
+    if (activateLoading) {
+      ctx.font = '16px Pixelify Sans';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(
+        'PRESS SPACE TO FIGHT',
+        ctx.canvas.width / 2 - 82,
+        ctx.canvas.height - 50
+      );
     }
   }
 }
@@ -643,7 +679,8 @@ document.addEventListener('keydown', ({ repeat, key }) => {
         } else if (!isSpecialSelected && selectedSpecial !== null) {
           isSpecialSelected = true;
           // go to loading to block backspace and get bug
-          setTimeout(() => (gameInterfaces.actual = 'game'), 3000);
+          gameInterfaces.actual = 'loading';
+          // setTimeout(() => (gameInterfaces.actual = 'game'), 3000);
         }
         break;
       }
@@ -660,6 +697,11 @@ document.addEventListener('keydown', ({ repeat, key }) => {
   } else if (gameInterfaces.actual === 'home') {
     if (!userPressHomePage) {
       userPressHomePage = true;
+    }
+  } else if (gameInterfaces.actual === 'loading') {
+    if (activateLoading && key === ' ') {
+      soundtrack.actual.pause();
+      gameInterfaces.actual = 'game';
     }
   }
 });
