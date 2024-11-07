@@ -548,9 +548,6 @@ function animate() {
         contentElement.querySelector('#hud').style.animation = 'none';
         soundtrack.actual.pause();
         gameInterfaces.actual = 'select';
-        setTimeout(() => {
-          activateLoading = true;
-        }, 5000);
       }, 3000);
     }
   } else if (gameInterfaces.actual === 'loading') {
@@ -678,9 +675,13 @@ document.addEventListener('keydown', ({ repeat, key }) => {
           isFighterSelected = true;
         } else if (!isSpecialSelected && selectedSpecial !== null) {
           isSpecialSelected = true;
-          // go to loading to block backspace and get bug
           gameInterfaces.actual = 'loading';
-          // setTimeout(() => (gameInterfaces.actual = 'game'), 3000);
+          setTimeout(() => {
+            activateLoading = true;
+            // remove select instances
+            select_fighters.length = 0;
+            select_specials.length = 0;
+          }, 5000);
         }
         break;
       }
