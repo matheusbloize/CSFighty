@@ -548,6 +548,7 @@ requestAnimationFrame(animate);
 
 document.addEventListener('keydown', ({ repeat, key }) => {
   // check if current soundtrack is playing
+  if (key === 'Control' || key === 'Shift') return;
   if (!isPlaying()) {
     soundtrack.actual.play();
   }

@@ -9,5 +9,6 @@ export function isPlaying() {
   ) {
     return true;
   }
+  soundtrack.actual.muted = false;
   return false;
 }

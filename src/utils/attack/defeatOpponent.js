@@ -1,4 +1,3 @@
-import { actualMatchInfo } from '../round/actualMatchInfo.js';
 import { finishRound } from '../round/finishRound.js';
 import { getRoundWinner } from '../round/getRoundWinner.js';
 
@@ -11,7 +10,17 @@ export function defeatOpponent(ui, actualRound, references) {
     let firstFighterRoundsWon = 0;
     let secondFighterRoundsWon = 0;
 
-    actualMatchInfo(hasMatchWinner, firstFighterRoundsWon, secondFighterRoundsWon);
+    for (const winner in references.winners) {
+      references.winners[winner] === references.firstFighter.getRole() &&
+        firstFighterRoundsWon++;
+      references.winners[winner] === references.secondFighter.getRole() &&
+        secondFighterRoundsWon++;
+    }
+
+    if (firstFighterRoundsWon === 2 || secondFighterRoundsWon === 2) {
+      hasMatchWinner = true;
+    }
+
     if (references.matchInfo.number === 4 && hasMatchWinner) {
       references.secondFighter.changeSprite('death');
     } else {

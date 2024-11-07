@@ -1,6 +1,64 @@
 import { isSfxPlaying } from '../utils/sfx/isSfxPlaying.js';
 import { Sprite } from './Sprite.js';
 
+function drawShield(ctx, obj) {
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#FFFAFA';
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0),
+    obj.getPositionY() + 5,
+    1,
+    obj.getHeight() - 10
+  );
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0) +
+      2 * obj.getDirection(),
+    obj.getPositionY() + 10,
+    1,
+    obj.getHeight() - 20
+  );
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0) +
+      4 * obj.getDirection(),
+    obj.getPositionY() + 15,
+    1,
+    obj.getHeight() - 30
+  );
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0) +
+      6 * obj.getDirection(),
+    obj.getPositionY() + 20,
+    1,
+    obj.getHeight() - 40
+  );
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0) +
+      8 * obj.getDirection(),
+    obj.getPositionY() + 25,
+    1,
+    obj.getHeight() - 50
+  );
+  ctx.strokeRect(
+    obj.getPositionX() +
+      15 * obj.getDirection() +
+      (obj.getDirection() > 0 ? obj.getWidth() * obj.getDirection() : 0) +
+      10 * obj.getDirection(),
+    obj.getPositionY() + 30,
+    1,
+    obj.getHeight() - 60
+  );
+}
+
 export class Fighter extends Sprite {
   #differenceSpace;
   #velocity = 1;
@@ -73,14 +131,7 @@ export class Fighter extends Sprite {
 
     if (this.#isBlocking) {
       // print block representation
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = '#FFFAFA';
-      ctx.strokeRect(
-        this.getPositionX() - ctx.lineWidth / 2,
-        this.getPositionY() - ctx.lineWidth / 2,
-        this.getWidth() + ctx.lineWidth,
-        this.getHeight() + ctx.lineWidth
-      );
+      drawShield(ctx, this);
     }
 
     // reduce ninja idle sprite speed

@@ -103,7 +103,11 @@ export function enemyBattleAction(specialAttacks) {
         if (isSfxPlaying(specialSfx)) {
           specialSfx.currentTime = 0;
         }
-        specialSfx.play();
+        if (enemy.getName() === 'nightborne') {
+          setTimeout(() => specialSfx.play(), timeoutTime / 2);
+        } else {
+          specialSfx.play();
+        }
         setTimeout(() => {
           specialAttacks.push(
             new SpecialAttack({

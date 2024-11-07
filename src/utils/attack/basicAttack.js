@@ -11,7 +11,10 @@ export function basicAttack(actualFighter, opponent, ui, references) {
   }
 
   // add sword sfx
-  const swordSfx = document.querySelector('#sfx_slash');
+  const swordSfx =
+    actualFighter.getName() !== 'nightborne'
+      ? document.querySelector('#sfx_slash')
+      : document.querySelector('#sfx_slash_boss');
   if (isSfxPlaying(swordSfx)) {
     swordSfx.currentTime = 0;
   }
