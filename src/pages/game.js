@@ -1,5 +1,5 @@
 export const gameHTML = `
-<section id="hud">
+  <section id="hud">
     <div class="hud_fighter-1">
       <div class="hud_fighter-1_round-count">
         <div class="hud_fighter-1_round-count_1"></div>

@@ -19,6 +19,8 @@ import { select_fighters } from './utils/select/fighters.js';
 import { select_specials } from './utils/select/specials.js';
 import { isPlaying } from './utils/soundtrack/isPlaying.js';
 import { isSfxPlaying } from './utils/sfx/isSfxPlaying.js';
+import { homeHTML } from './pages/home.js';
+import { dialogue_characters, getSelectedFighter } from './utils/dialogue/characters.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -77,7 +79,11 @@ let selectedFighter = null;
 let selectedSpecial = null;
 let userPressHomePage = false;
 let homePagePressed = false;
+let userPressIntroPage = false;
+let introPagePressed = false;
 let activateLoading = false;
+let firstDialogueIteration = false;
+let secondDialogueIteration = false;
 
 ctx.font = '16px Pixelify Sans';
 
@@ -455,7 +461,7 @@ function animate() {
     ctx.font = '48px Pixelify Sans';
 
     // title
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillText('SELECT YOUR CHARACTER', canvas.width / 4.3, 100);
 
     // select box numbers
@@ -540,6 +546,12 @@ function animate() {
     select_specials[1].update(ctx);
     select_specials[2].update(ctx);
     select_specials[3].update(ctx);
+  } else if (gameInterfaces.actual === 'intro') {
+    if (userPressIntroPage && !introPagePressed) {
+      introPagePressed = true;
+      gameInterfaces.actual = 'home';
+      contentElement.innerHTML = homeHTML;
+    }
   } else if (gameInterfaces.actual === 'home') {
     if (userPressHomePage && !homePagePressed) {
       homePagePressed = true;
@@ -555,7 +567,7 @@ function animate() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = '48px Pixelify Sans';
 
-    ctx.fillStyle = '#FFF';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillText('LOADING...', loadingRect.x, loadingRect.y + 32);
 
     if (loadingRect.x + loadingRect.w >= ctx.canvas.width || loadingRect.x <= 0) {
@@ -577,6 +589,50 @@ function animate() {
         ctx.canvas.height - 50
       );
     }
+  } else if (gameInterfaces.actual === 'dialogue') {
+    ctx.fillStyle = '#222222';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '48px Pixelify Sans';
+    ctx.fillStyle = '#FFFFFF';
+
+    if (!secondDialogueIteration) {
+      ctx.fillText('WHAT HAPPENED...', canvas.width / 3.2, 100);
+
+      ctx.font = '32px Pixelify Sans';
+      ctx.fillText(
+        'THE NIGHTBORNE IS MANIPULATING THREE OF THE FOUR PROTECTORS ',
+        22,
+        canvas.height / 3.5
+      );
+      ctx.fillText('BY THEIR MINDS!', canvas.width / 2.6, canvas.height / 2.9);
+    } else {
+      ctx.font = '32px Pixelify Sans';
+      ctx.fillText("DON'T WORRY MY FRIENDS,", 22, canvas.height - 320);
+      ctx.fillText("I'LL DEFEAT THE NIGHTBORNE,", 22, canvas.height - 280);
+      ctx.fillText('TO SAVE YOU AND THE KINGDOM!', 22, canvas.height - 240);
+    }
+
+    if (!firstDialogueIteration) {
+      firstDialogueIteration = true;
+      getSelectedFighter(selectedFighter);
+      setTimeout(() => {
+        secondDialogueIteration = true;
+        setTimeout(() => {
+          gameInterfaces.actual = 'loading';
+          setTimeout(() => {
+            activateLoading = true;
+            // remove dialogue instances
+            dialogue_characters.length = 0;
+          }, 5000);
+        }, 5000);
+      }, 8000);
+    }
+
+    dialogue_characters[0].update(ctx);
+    dialogue_characters[1].update(ctx);
+    dialogue_characters[2].update(ctx);
+    dialogue_characters[3].update(ctx);
+    dialogue_characters[4].update(ctx);
   }
 }
 
@@ -678,13 +734,10 @@ document.addEventListener('keydown', ({ repeat, key }) => {
           isFighterSelected = true;
         } else if (!isSpecialSelected && selectedSpecial !== null) {
           isSpecialSelected = true;
-          gameInterfaces.actual = 'loading';
-          setTimeout(() => {
-            activateLoading = true;
-            // remove select instances
-            select_fighters.length = 0;
-            select_specials.length = 0;
-          }, 5000);
+          gameInterfaces.actual = 'dialogue';
+          // remove select instances
+          select_fighters.length = 0;
+          select_specials.length = 0;
         }
         break;
       }
@@ -697,6 +750,10 @@ document.addEventListener('keydown', ({ repeat, key }) => {
         }
         break;
       }
+    }
+  } else if (gameInterfaces.actual === 'intro') {
+    if (!userPressIntroPage) {
+      userPressIntroPage = true;
     }
   } else if (gameInterfaces.actual === 'home') {
     if (!userPressHomePage) {
