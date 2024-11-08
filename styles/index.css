@@ -10,10 +10,21 @@ body {
   height: 100%;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  background-color: #222222;
+}
+
 canvas {
   background-color: #000000;
-  margin: 1em;
+  margin: 0.9em;
   image-rendering: pixelated;
+  border-radius: 1.2em;
 }
 
 .pixel {
@@ -33,6 +44,34 @@ canvas {
   align-items: baseline;
   height: 6em;
   color: #ffffff;
+  border-radius: 1.2em;
+  z-index: 2;
+}
+
+#content {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  display: none;
+  position: relative;
+}
+
+.arcade_machine {
+  display: none;
+  width: 1053px;
+  height: 605px;
+  background-color: #ffffff;
+  z-index: 1;
+  border-radius: 2em;
+  background-color: #000;
+}
+
+.observation {
+  display: block;
+  color: #ffffff;
+  font-size: 5vw;
+  font-weight: bold;
+  margin: 1em;
 }
 
 /* GAME PAGE START */
@@ -124,9 +163,9 @@ canvas {
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: #333;
+  background-color: #333333;
   overflow: hidden;
-  border: 4px solid #333;
+  border: 4px solid #333333;
 }
 
 .hud_fighter-1_health-bar {
@@ -235,6 +274,7 @@ canvas {
   width: 100%;
   display: flex;
   top: 34em;
+  z-index: 2;
 }
 
 .special-bar_fighter-1,
@@ -244,7 +284,7 @@ canvas {
   position: absolute;
   background-color: #33333333;
   overflow: hidden;
-  border: 4px solid #333;
+  border: 4px solid #333333;
   bottom: 0;
 }
 
@@ -308,16 +348,13 @@ canvas {
   align-items: center;
   justify-content: center;
   height: 36em;
-  margin: 1em;
+  margin: 0.9em;
   text-transform: uppercase;
   background-image: url('../assets/pages/background.webp');
   background-size: cover;
   background-position: center;
+  z-index: 2;
 }
-
-/* #hud.select_container {
-  height: 24em;
-} */
 
 .home_container_title,
 .select_container_title {
@@ -409,5 +446,18 @@ canvas {
 
   50% {
     filter: invert(1);
+  }
+}
+
+/* media queries */
+
+@media screen and (min-width: 1024px) {
+  .observation {
+    display: none;
+  }
+
+  #content,
+  .arcade_machine {
+    display: flex;
   }
 }

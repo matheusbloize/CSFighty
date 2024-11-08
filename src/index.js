@@ -48,8 +48,8 @@ const selectBackground = new Image();
 selectBackground.src = '../assets/pages/background.webp';
 const selectBoxPixel = 128;
 const loadingRect = {
-  x: 200,
-  y: 300,
+  x: Math.floor(Math.random() * (500 - 100 + 1) + 100),
+  y: Math.floor(Math.random() * (400 - 100 + 1) + 100),
   w: 218,
   h: 36,
   velocityX: 1,
@@ -551,8 +551,11 @@ function animate() {
       }, 3000);
     }
   } else if (gameInterfaces.actual === 'loading') {
+    ctx.fillStyle = '#222222';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = '48px Pixelify Sans';
 
+    ctx.fillStyle = '#FFF';
     ctx.fillText('LOADING...', loadingRect.x, loadingRect.y + 32);
 
     if (loadingRect.x + loadingRect.w >= ctx.canvas.width || loadingRect.x <= 0) {
