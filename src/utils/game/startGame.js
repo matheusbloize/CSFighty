@@ -100,6 +100,7 @@ export function startGame(ctx, fighter, special) {
     defaultHeight,
     widthSpace,
     differenceSpace,
+    dialogue: { active: false, winner: '' },
   };
   manageInterval('set', intervals, 'countdown', 1000);
   manageInterval('set', intervals, 'bars', 100);

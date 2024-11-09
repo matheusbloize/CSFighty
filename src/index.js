@@ -135,7 +135,7 @@ function animate() {
             !spriteAnimations.attack_basic.active &&
             !spriteAnimations.attack_special.active &&
             entity.getActualSprite() !== 'idle' &&
-            // entity.getActualSprite() !== 'pose' &&
+            entity.getActualSprite() !== 'dead' &&
             entity.getPositionY() === references.floorPositionY &&
             !keys.d.pressed &&
             !keys.a.pressed &&
@@ -349,6 +349,41 @@ function animate() {
           enemyBattleAction(references.specialAttacks);
           enemyCooldown.active = false;
           setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
+        }
+      } else {
+        if (references.dialogue.active) {
+          ctx.font = '32px Pixelify Sans';
+          ctx.fillStyle = '#FFFFFF';
+          if (references.dialogue.winner === 'player') {
+            if (references.matchInfo.number === 1) {
+              ctx.fillText('THE RED COLOR WAS RESTORED', 291, ctx.canvas.height / 3);
+              ctx.fillText(`"HANG IN THERE FRIEND"`, 50, ctx.canvas.height / 1.7);
+            } else if (references.matchInfo.number === 2) {
+              ctx.fillText('THE GREEN COLOR WAS RESTORED', 273, ctx.canvas.height / 3);
+              ctx.fillText(`"BE STRONG FRIEND"`, 50, ctx.canvas.height / 1.7);
+            } else if (references.matchInfo.number === 3) {
+              ctx.fillText('THE BLUE COLOR WAS RESTORED', 282, ctx.canvas.height / 3);
+              ctx.fillText(`"I'M ALMOST THERE FRIEND"`, 50, ctx.canvas.height / 1.7);
+            } else {
+              ctx.fillStyle = '#000000';
+              ctx.fillText(
+                'ALL COLORS WERE RESTORED, THE WORLD IS IN PEACE AGAIN...',
+                69,
+                ctx.canvas.height / 3
+              );
+              ctx.fillText(
+                'THE PROTECTORS WILL CONTINUE FIGHTING TO KEEP THE KINGDOM SAFE',
+                0,
+                ctx.canvas.height / 1.7
+              );
+            }
+          } else {
+            ctx.fillText(
+              'THE KINGDOM WILL BE DESTROYED, RISE UP AND FIGHT',
+              125,
+              ctx.canvas.height / 1.7
+            );
+          }
         }
       }
       entity.update(ctx);

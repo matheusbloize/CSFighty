@@ -20,7 +20,10 @@ function enemyJump(enemy, references) {
       // change to fall sprite when hits jump peak (200 ms)
       enemy.changeSprite('fall');
       setTimeout(() => {
-        if (enemy.getActualSprite() !== 'death') {
+        if (
+          enemy.getActualSprite() !== 'death' &&
+          enemy.getActualSprite() !== 'first_death'
+        ) {
           enemy.changeSprite('idle');
         }
       }, spriteAnimations.fall.time);
@@ -50,7 +53,10 @@ function content(type, references, jump) {
         ) {
           if (enemy.getActualSprite() !== 'run' && !actualRound.finished) {
             setTimeout(() => {
-              if (enemy.getActualSprite() !== 'death') {
+              if (
+                enemy.getActualSprite() !== 'death' &&
+                enemy.getActualSprite() !== 'first_death'
+              ) {
                 enemy.changeSprite('run');
               }
             }, 0);
@@ -95,7 +101,10 @@ function content(type, references, jump) {
         ) {
           if (enemy.getActualSprite() !== 'run' && !actualRound.finished) {
             setTimeout(() => {
-              if (enemy.getActualSprite() !== 'death') {
+              if (
+                enemy.getActualSprite() !== 'death' &&
+                enemy.getActualSprite() !== 'first_death'
+              ) {
                 enemy.changeSprite('run');
               }
             }, 0);

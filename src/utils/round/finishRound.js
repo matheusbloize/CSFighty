@@ -15,6 +15,10 @@ function restartRound(battleInfo, status) {
   // restart round time
   battleInfo.matchInfo.duration = 99;
 
+  references.dialogue = {
+    active: false,
+  };
+
   // set countdown interval and fighters health and block bars style after 2 seconds
   setTimeout(() => {
     manageInterval('set', battleInfo.intervals, 'countdown', 1000);
@@ -182,6 +186,11 @@ export function finishRound(battleInfo) {
         'special-bar_charged'
       );
     }, 300);
+
+    references.dialogue = {
+      active: true,
+      winner,
+    };
 
     if (firstFighterRoundsWon == 2) {
       // player won match, go to the next level

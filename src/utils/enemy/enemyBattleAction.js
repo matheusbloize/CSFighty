@@ -5,7 +5,7 @@ import { enemyLevel, battleActions, fearMeter } from '../../states/enemy.js';
 import { attackCollision } from '../collision/attackCollision.js';
 import { specials_frames } from '../../constants/specials.frames.js';
 import { spriteAnimations } from '../../states/sprites.js';
-import { references as battleInfo } from '../game/startGame.js';
+import { references as battleInfo, references } from '../game/startGame.js';
 import { isSfxPlaying } from '../sfx/isSfxPlaying.js';
 
 export function enemyBattleAction(specialAttacks) {
@@ -65,10 +65,11 @@ export function enemyBattleAction(specialAttacks) {
       enemy.changeSprite('attack_basic');
       if (isEnemyBoss) {
         spriteAnimations.boss_attack_basic.active = true;
-        setTimeout(
-          () => basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo),
-          600
-        );
+        setTimeout(() => {
+          if (!references.actualRound.finished) {
+            basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+          }
+        }, 600);
         setTimeout(() => {
           spriteAnimations.boss_attack_basic.active = false;
         }, spriteAnimations.boss_attack_basic.time);
@@ -94,7 +95,8 @@ export function enemyBattleAction(specialAttacks) {
       }
       if (
         enemy.getSpecialBar() === enemy.getSpecialBarLimit() &&
-        enemy.getAttackBox().getPositionY() === enemy.getPositionY() + 30
+        enemy.getAttackBox().getPositionY() === enemy.getPositionY() + 30 &&
+        !spriteAnimations.boss_attack_basic.active
       ) {
         enemy.changeSprite('attack_special');
         const timeoutTime = enemy.getName() === 'nightborne' ? 700 : 200;

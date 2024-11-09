@@ -14,7 +14,6 @@ export function getSelectedFighter(fighter) {
     special: 'fire',
   });
   const enemies = getEnemies(fighter);
-  console.log(enemies);
   dialogue_characters[1] = new Fighter({
     spriteInfo: fighters_frames[enemies[0]],
     position: { x: 580, y: 400 },

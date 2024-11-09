@@ -4,6 +4,7 @@ import { undoBlock } from '../block/undoBlock.js';
 import { fearMeter } from '../../states/enemy.js';
 import { defeatOpponent } from './defeatOpponent.js';
 import { isSfxPlaying } from '../sfx/isSfxPlaying.js';
+import { spriteAnimations } from '../../states/sprites.js';
 
 export function basicAttack(actualFighter, opponent, ui, references) {
   if (actualFighter.isBlocking()) {
@@ -30,8 +31,17 @@ export function basicAttack(actualFighter, opponent, ui, references) {
       return opponent.removeBlock();
     }
 
+    let canShowHitted = true;
+
+    if (
+      opponent.getName() === 'nightborne' &&
+      spriteAnimations.boss_attack_basic.active
+    ) {
+      canShowHitted = false;
+    }
+
     // change opponent sprite when get hit
-    opponent.changeSprite('hit');
+    canShowHitted && opponent.changeSprite('hit');
 
     // get basic attack damage
     const damage =
