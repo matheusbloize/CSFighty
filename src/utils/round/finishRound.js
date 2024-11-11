@@ -86,11 +86,18 @@ function restartRound(battleInfo, status) {
     // change to default stage
     battleInfo.stage.last = '';
     battleInfo.stage.actual = 'default';
+
+    if (references.isInBetweenFights) {
+      references.isInBetweenFights = false;
+      document.querySelector('#hud').style.display = 'flex';
+      document.querySelector('#special-bar').style.display = 'flex';
+    }
   }, 3000);
 }
 
 function changeMatch(status, battleInfo) {
   setTimeout(() => {
+    references.isInBetweenFights = true;
     document.querySelector('#hud .hud_fighter-1_round-count_1').style.backgroundColor =
       'transparent';
     document.querySelector('#hud .hud_fighter-1_round-count_2').style.backgroundColor =
@@ -99,23 +106,34 @@ function changeMatch(status, battleInfo) {
       'transparent';
     document.querySelector('#hud .hud_fighter-2_round-count_2').style.backgroundColor =
       'transparent';
+    document.querySelector('#hud').style.display = 'none';
+    document.querySelector('#special-bar').style.display = 'none';
 
     if (status === 'won') {
       battleInfo.matchInfo.number++;
-      switch (battleInfo.matchInfo.number) {
-        case 2:
-        case 3: {
-          enemyLevel.actual = 2;
-          break;
-        }
-        case 4: {
-          enemyLevel.actual = 3;
-          break;
-        }
-      }
     } else {
       battleInfo.matchInfo.number = 1;
       enemyLevel.actual = enemyLevel.initial;
+    }
+    switch (battleInfo.matchInfo.number) {
+      case 2: {
+        references.matchInfo.name = 'SECOND';
+        if (status === 'won') enemyLevel.actual = 2;
+        break;
+      }
+      case 3: {
+        references.matchInfo.name = 'THIRD';
+        if (status === 'won') enemyLevel.actual = 2;
+        break;
+      }
+      case 4: {
+        references.matchInfo.name = 'FINAL';
+        if (status === 'won') enemyLevel.actual = 3;
+        break;
+      }
+      default: {
+        battleInfo.matchInfo.name = 'FIRST';
+      }
     }
     battleInfo.actualRound.number = 0;
     battleInfo.winners.round1 = null;
@@ -222,6 +240,10 @@ export function finishRound(battleInfo) {
 
         // defeat boss animation
         battleInfo.stage.actual = 'final';
+
+        // remove screen fight elements
+        document.querySelector('#hud').style.display = 'none';
+        document.querySelector('#special-bar').style.display = 'none';
       }
     } else {
       // player lost match, restart from first level

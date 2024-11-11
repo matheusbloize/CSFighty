@@ -84,6 +84,7 @@ let introPagePressed = false;
 let activateLoading = false;
 let firstDialogueIteration = false;
 let secondDialogueIteration = false;
+let actualMatch = null;
 
 ctx.font = '16px Pixelify Sans';
 
@@ -233,7 +234,12 @@ function animate() {
             entity.changeSprite('attack_basic');
             spriteAnimations.attack_basic.active = true;
             setTimeout(() => {
-              entity.changeSprite('pose');
+              if (
+                entity.getActualSprite() !== 'dead' ||
+                entity.getActualSprite() !== 'death'
+              ) {
+                entity.changeSprite('pose');
+              }
               spriteAnimations.attack_basic.active = false;
             }, spriteAnimations.attack_basic.time);
           }
@@ -351,9 +357,9 @@ function animate() {
           setTimeout(() => (enemyCooldown.active = true), enemyCooldown.time);
         }
       } else {
+        ctx.font = '32px Pixelify Sans';
+        ctx.fillStyle = '#FFFFFF';
         if (references.dialogue.active) {
-          ctx.font = '32px Pixelify Sans';
-          ctx.fillStyle = '#FFFFFF';
           if (references.dialogue.winner === 'player') {
             if (references.matchInfo.number === 1) {
               ctx.fillText('THE RED COLOR WAS RESTORED', 291, ctx.canvas.height / 3);
@@ -387,6 +393,25 @@ function animate() {
         }
       }
       entity.update(ctx);
+    }
+
+    if (references.isInBetweenFights) {
+      ctx.fillStyle = '#222222';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#FFFFFF';
+      let drawWidth = 418;
+
+      if (references.matchInfo.number === 2) {
+        drawWidth = 404;
+      } else if (references.matchInfo.number === 3) {
+        drawWidth = 417;
+      }
+
+      ctx.fillText(
+        `${references.matchInfo.name} MATCH`,
+        drawWidth,
+        ctx.canvas.height / 3
+      );
     }
 
     if (!actualRound.finished) {
@@ -603,7 +628,9 @@ function animate() {
     ctx.font = '48px Pixelify Sans';
 
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('LOADING...', loadingRect.x, loadingRect.y + 32);
+    if (!activateLoading) {
+      ctx.fillText('LOADING...', loadingRect.x, loadingRect.y + 32);
+    }
 
     if (loadingRect.x + loadingRect.w >= ctx.canvas.width || loadingRect.x <= 0) {
       loadingRect.velocityX = -loadingRect.velocityX;
@@ -623,6 +650,8 @@ function animate() {
         ctx.canvas.width / 2 - 82,
         ctx.canvas.height - 50
       );
+      ctx.font = '32px Pixelify Sans';
+      ctx.fillText(`FIRST MATCH`, 420, ctx.canvas.height / 3);
     }
   } else if (gameInterfaces.actual === 'dialogue') {
     ctx.fillStyle = '#222222';
@@ -660,7 +689,7 @@ function animate() {
             dialogue_characters.length = 0;
           }, 5000);
         }, 5000);
-      }, 8000);
+      }, 5000);
     }
 
     dialogue_characters[0].update(ctx);

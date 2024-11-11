@@ -3,6 +3,7 @@ const matchTimeDuration = 99;
 export const matchInfo = {
   duration: matchTimeDuration - 1,
   number: 1,
+  name: 'FIRST',
 };
 
 export const actualRound = {

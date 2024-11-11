@@ -62,7 +62,7 @@ export function getSelectedFighter(fighter) {
     dialogue_characters[2].setPositionX(780);
     dialogue_characters[3].setPositionX(880);
     dialogue_characters[4].setPositionX(2000);
-  }, 8000);
+  }, 5000);
 }
 
 export const dialogue_characters = [];
