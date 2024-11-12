@@ -14,7 +14,7 @@ import { spriteAnimations } from './states/sprites.js';
 import { gameInterfaces } from './states/game.js';
 import { gameHTML } from './pages/game.js';
 import { startGame, references, entities } from './utils/game/startGame.js';
-import { matchInfo, actualRound, stage, soundtrack } from './utils/game/objects.js';
+import { actualRound, stage, soundtrack } from './utils/game/objects.js';
 import { select_fighters } from './utils/select/fighters.js';
 import { select_specials } from './utils/select/specials.js';
 import { isPlaying } from './utils/soundtrack/isPlaying.js';
@@ -84,7 +84,6 @@ let introPagePressed = false;
 let activateLoading = false;
 let firstDialogueIteration = false;
 let secondDialogueIteration = false;
-let actualMatch = null;
 
 ctx.font = '16px Pixelify Sans';
 
@@ -234,12 +233,6 @@ function animate() {
             entity.changeSprite('attack_basic');
             spriteAnimations.attack_basic.active = true;
             setTimeout(() => {
-              if (
-                entity.getActualSprite() !== 'dead' ||
-                entity.getActualSprite() !== 'death'
-              ) {
-                entity.changeSprite('pose');
-              }
               spriteAnimations.attack_basic.active = false;
             }, spriteAnimations.attack_basic.time);
           }
@@ -380,7 +373,17 @@ function animate() {
               ctx.fillText(
                 'THE PROTECTORS WILL CONTINUE FIGHTING TO KEEP THE KINGDOM SAFE',
                 0,
-                ctx.canvas.height / 1.7
+                ctx.canvas.height / 2.4
+              );
+              ctx.fillText(
+                `YOUR TOTAL POINTS: ${references.playerPoints}`,
+                ctx.canvas.width / 3.1,
+                ctx.canvas.height / 1.6
+              );
+              ctx.fillText(
+                'THANKS FOR PLAYING!',
+                ctx.canvas.width / 2.87,
+                ctx.canvas.height / 1.3
               );
             }
           } else {
@@ -407,6 +410,24 @@ function animate() {
         drawWidth = 417;
       }
 
+      ctx.font = '16px Pixelify Sans';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('COMMANDS', ctx.canvas.width / 2 - 40, ctx.canvas.height - 200);
+      ctx.fillText('W - JUMP', ctx.canvas.width / 2 - 82, ctx.canvas.height - 170);
+      ctx.fillText('R - SPECIAL ATTACK', ctx.canvas.width / 2, ctx.canvas.height - 170);
+      ctx.fillText(
+        'LEFT MOVE - A S D - RIGHT MOVE',
+        ctx.canvas.width / 3.15,
+        ctx.canvas.height - 150
+      );
+      ctx.fillText('|', ctx.canvas.width / 2.36, ctx.canvas.height - 135);
+      ctx.fillText('BLOCK', ctx.canvas.width / 2.48, ctx.canvas.height - 120);
+      ctx.fillText(
+        'SPACE - BASIC ATTACK',
+        ctx.canvas.width / 2.3,
+        ctx.canvas.height - 100
+      );
+      ctx.font = '32px Pixelify Sans';
       ctx.fillText(
         `${references.matchInfo.name} MATCH`,
         drawWidth,
@@ -487,25 +508,6 @@ function animate() {
     } else {
       references.specialAttacks = [];
     }
-
-    ctx.fillStyle = 'limegreen';
-    ctx.fillText(
-      `actual match ${matchInfo.number}`,
-      canvas.width / 2.25,
-      canvas.height / 5
-    );
-    ctx.fillText(
-      `actual round ${actualRound.number}`,
-      canvas.width / 2.25,
-      canvas.height / 4
-    );
-    ctx.fillText(
-      `actual enemy level ${enemyLevel.actual} ${
-        enemyLevel.actual === enemyLevel.max ? 'BOSS' : ''
-      }`,
-      canvas.width / 2.25,
-      canvas.height / 3.25
-    );
   } else if (gameInterfaces.actual === 'select') {
     if (!selectStarted) {
       contentElement.innerHTML = '';
@@ -649,6 +651,21 @@ function animate() {
         'PRESS SPACE TO FIGHT',
         ctx.canvas.width / 2 - 82,
         ctx.canvas.height - 50
+      );
+      ctx.fillText('COMMANDS', ctx.canvas.width / 2 - 40, ctx.canvas.height - 200);
+      ctx.fillText('W - JUMP', ctx.canvas.width / 2 - 82, ctx.canvas.height - 170);
+      ctx.fillText('R - SPECIAL ATTACK', ctx.canvas.width / 2, ctx.canvas.height - 170);
+      ctx.fillText(
+        'LEFT MOVE - A S D - RIGHT MOVE',
+        ctx.canvas.width / 3.15,
+        ctx.canvas.height - 150
+      );
+      ctx.fillText('|', ctx.canvas.width / 2.36, ctx.canvas.height - 135);
+      ctx.fillText('BLOCK', ctx.canvas.width / 2.48, ctx.canvas.height - 120);
+      ctx.fillText(
+        'SPACE - BASIC ATTACK',
+        ctx.canvas.width / 2.3,
+        ctx.canvas.height - 100
       );
       ctx.font = '32px Pixelify Sans';
       ctx.fillText(`FIRST MATCH`, 420, ctx.canvas.height / 3);

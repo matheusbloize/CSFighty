@@ -102,6 +102,7 @@ export function startGame(ctx, fighter, special) {
     differenceSpace,
     dialogue: { active: false, winner: '' },
     isInBetweenFights: false,
+    playerPoints: 0,
   };
   manageInterval('set', intervals, 'countdown', 1000);
   manageInterval('set', intervals, 'bars', 100);

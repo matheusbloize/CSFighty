@@ -31,9 +31,11 @@ export function defeatOpponent(ui, actualRound, references) {
       }
     }
     references.secondFighter.setFramesHold(20);
+    references.firstFighter.changeSprite('pose');
   } else {
     references.firstFighter.changeSprite('death');
     references.firstFighter.setFramesHold(20);
+    references.secondFighter.changeSprite('pose');
   }
 
   ui.style.width = 0;

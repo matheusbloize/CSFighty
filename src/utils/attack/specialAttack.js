@@ -15,6 +15,10 @@ export function specialAttack(
   // change opponent sprite when get hit
   opponent.changeSprite('hit');
 
+  if (actualFighter.getRole() === 'player') {
+    references.playerPoints += 30;
+  }
+
   if (opponent.getLife() - references.damageSpec.special >= 0) {
     opponent.setLife(opponent.getLife() - references.damageSpec.special);
     ui.style.width = `${

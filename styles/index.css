@@ -453,7 +453,8 @@ span {
 
 /* media queries */
 
-@media screen and (min-width: 1024px) {
+/* 1024x576 */
+@media screen and (min-width: 64em) and (min-height: 36em) {
   .observation {
     display: none;
   }

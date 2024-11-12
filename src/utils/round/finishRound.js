@@ -62,25 +62,6 @@ function restartRound(battleInfo, status) {
       references.secondFighter = entities[1];
       document.querySelector('#hud .hud_fighter-2_name').innerHTML =
         entities[1].getName();
-
-      soundtrack.actual.pause();
-      switch (battleInfo.matchInfo.number) {
-        case 2: {
-          soundtrack.actual = document.querySelector('#soundtrack_second_enemy');
-          break;
-        }
-        case 3: {
-          soundtrack.actual = document.querySelector('#soundtrack_third_enemy');
-          break;
-        }
-        case 4: {
-          soundtrack.actual = document.querySelector('#soundtrack_boss');
-          break;
-        }
-      }
-      if (!isPlaying()) {
-        soundtrack.actual.play();
-      }
     }
 
     // change to default stage
@@ -115,19 +96,23 @@ function changeMatch(status, battleInfo) {
       battleInfo.matchInfo.number = 1;
       enemyLevel.actual = enemyLevel.initial;
     }
+    soundtrack.actual.pause();
     switch (battleInfo.matchInfo.number) {
       case 2: {
         references.matchInfo.name = 'SECOND';
+        soundtrack.actual = document.querySelector('#soundtrack_second_enemy');
         if (status === 'won') enemyLevel.actual = 2;
         break;
       }
       case 3: {
         references.matchInfo.name = 'THIRD';
+        soundtrack.actual = document.querySelector('#soundtrack_third_enemy');
         if (status === 'won') enemyLevel.actual = 2;
         break;
       }
       case 4: {
         references.matchInfo.name = 'FINAL';
+        soundtrack.actual = document.querySelector('#soundtrack_boss');
         if (status === 'won') enemyLevel.actual = 3;
         break;
       }
@@ -135,12 +120,15 @@ function changeMatch(status, battleInfo) {
         battleInfo.matchInfo.name = 'FIRST';
       }
     }
+    if (!isPlaying()) {
+      soundtrack.actual.play();
+    }
+    battleInfo.firstFighter.setSpecialBar(0);
+    battleInfo.secondFighter.setSpecialBar(0);
     battleInfo.actualRound.number = 0;
     battleInfo.winners.round1 = null;
     battleInfo.winners.round2 = null;
     battleInfo.winners.round3 = null;
-    battleInfo.firstFighter.setSpecialBar(0);
-    battleInfo.secondFighter.setSpecialBar(0);
 
     restartRound(battleInfo, status);
   }, 4000);
@@ -159,10 +147,12 @@ export function finishRound(battleInfo) {
   const winner = getRoundWinner(battleInfo);
 
   if (winner === 'player') {
-    references.firstFighter.changeSprite('pose');
+    references.playerPoints += references.firstFighter.getLife() + 50;
   } else {
-    references.secondFighter.changeSprite('pose');
+    references.playerPoints -= 50;
   }
+
+  console.log(references.playerPoints);
 
   // check if match ended
   let hasMatchWinner = false;
@@ -210,6 +200,10 @@ export function finishRound(battleInfo) {
       winner,
     };
 
+    if (winner === 'player') {
+      references.playerPoints += 75;
+    }
+
     if (firstFighterRoundsWon == 2) {
       // player won match, go to the next level
       if (battleInfo.matchInfo.number !== 4) {
@@ -238,6 +232,8 @@ export function finishRound(battleInfo) {
           soundtrack.actual.play();
         }
 
+        references.playerPoints += 500;
+
         // defeat boss animation
         battleInfo.stage.actual = 'final';
 
@@ -248,6 +244,7 @@ export function finishRound(battleInfo) {
     } else {
       // player lost match, restart from first level
       changeMatch('lost', battleInfo);
+      references.playerPoints = 0;
     }
   }
 }

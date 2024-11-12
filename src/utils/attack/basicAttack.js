@@ -43,6 +43,10 @@ export function basicAttack(actualFighter, opponent, ui, references) {
     // change opponent sprite when get hit
     canShowHitted && opponent.changeSprite('hit');
 
+    if (actualFighter.getRole() === 'player') {
+      references.playerPoints += 10;
+    }
+
     // get basic attack damage
     const damage =
       actualFighter.getName() !== 'nightborne' ? references.damageSpec.attack : 30;
