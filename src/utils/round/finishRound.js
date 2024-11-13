@@ -147,12 +147,12 @@ export function finishRound(battleInfo) {
   const winner = getRoundWinner(battleInfo);
 
   if (winner === 'player') {
+    references.firstFighter.changeSprite('pose');
     references.playerPoints += references.firstFighter.getLife() + 50;
   } else {
+    references.secondFighter.changeSprite('pose');
     references.playerPoints -= 50;
   }
-
-  console.log(references.playerPoints);
 
   // check if match ended
   let hasMatchWinner = false;

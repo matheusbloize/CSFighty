@@ -58,23 +58,25 @@ export function enemyBattleAction(specialAttacks) {
   // perform action
   switch (battleAction) {
     case 0: {
-      if (enemy.isBlocking()) {
-        undoBlock(enemy, battleInfo.secondFighterBlockBar);
-      }
-      const isEnemyBoss = enemy.getName() === 'nightborne';
-      enemy.changeSprite('attack_basic');
-      if (isEnemyBoss) {
-        spriteAnimations.boss_attack_basic.active = true;
-        setTimeout(() => {
-          if (!references.actualRound.finished) {
-            basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
-          }
-        }, 600);
-        setTimeout(() => {
-          spriteAnimations.boss_attack_basic.active = false;
-        }, spriteAnimations.boss_attack_basic.time);
-      } else {
-        basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+      if (!battleInfo.actualRound.finished) {
+        if (enemy.isBlocking()) {
+          undoBlock(enemy, battleInfo.secondFighterBlockBar);
+        }
+        const isEnemyBoss = enemy.getName() === 'nightborne';
+        enemy.changeSprite('attack_basic');
+        if (isEnemyBoss) {
+          spriteAnimations.boss_attack_basic.active = true;
+          setTimeout(() => {
+            if (!references.actualRound.finished) {
+              basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+            }
+          }, 600);
+          setTimeout(() => {
+            spriteAnimations.boss_attack_basic.active = false;
+          }, spriteAnimations.boss_attack_basic.time);
+        } else {
+          basicAttack(enemy, player, battleInfo.firstFighterHealthBar, battleInfo);
+        }
       }
       break;
     }

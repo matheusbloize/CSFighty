@@ -233,6 +233,12 @@ function animate() {
             entity.changeSprite('attack_basic');
             spriteAnimations.attack_basic.active = true;
             setTimeout(() => {
+              if (
+                entity.getActualSprite() !== 'dead' &&
+                entity.getActualSprite() !== 'death'
+              ) {
+                entity.changeSprite('pose');
+              }
               spriteAnimations.attack_basic.active = false;
             }, spriteAnimations.attack_basic.time);
           }
